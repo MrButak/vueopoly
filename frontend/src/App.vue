@@ -18,7 +18,7 @@ export default defineComponent({
         const { lsInUse } = vueGlobalState();
         return { // make it available in <template>
             lsInUse,
-            //handleLs
+            
         }
     },
 
@@ -42,7 +42,9 @@ export default defineComponent({
                 console.log("local storge objects of existing game was present");
                 // if approveRestoreGame() {restoreGame()}
                 // else initNewGame()
-            }
+                return;
+            };
+            console.log(this.lsInUse)
             // initNewGame()
         }
     }
@@ -50,7 +52,6 @@ export default defineComponent({
 
 </script>
 <style lang="scss">
-
 
 
 </style>

@@ -3,29 +3,31 @@ const { lsInUse, vueopoly, players } = vueGlobalState();
 
 // Function handles all function calls below
 exports.handleLs = () => {
-    
-    if(checkLsAvailable) {
+
+    if(checkLsAvailable()) {
         // if local storge for game already in use, set global state from local storage
-        if(localStorage.getItem("players") !== "") {
+        if(localStorage.getItem('players') !== '0' &&
+        localStorage.getItem('players') !== null) {
             restoreLs();
             return true;
         };
         // if no game local storage in use, set local storage
+        
         setLs()
         return false;
     };
+    
+    
     return false;
 };
 
 // Function checks if local storage is available for use on browser
 let checkLsAvailable = () => {
-
-    let tmpStr = "is local storage available?";
+    //console.log(lsInUse.value, "hereffff")
 
     try {
-        localStorage.setItem("test", tmpStr);
-        console.log(localStorage.test)
-        localStorage.removeItem(test);
+        localStorage.setItem('test', 'is local storage available?');
+        localStorage.removeItem('test');
         lsInUse.value = true; // set global state
         return true;
     }
@@ -35,13 +37,14 @@ let checkLsAvailable = () => {
         lsInUse.value = false; // set global state
         return false;
     };
+    
 };
 
 // Function sets local storage objects if doesn't exist
 let setLs = () => {
 
     localStorage.setItem("vueopoly", "");
-    localStorage.setItem("players", "");
+    localStorage.setItem("players", "0");
     return;
 };
 
