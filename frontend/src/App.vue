@@ -5,10 +5,13 @@
   <router-view/>
 </template>
 <script>
+
 const handleLs = require('../src/javascripts/handleLs')
 import { defineComponent } from 'vue';
 import { vueGlobalState } from '../src/javascripts/stateStore';
+
 export default defineComponent({
+
     setup() {
 
         //const handleLs = handleLs();
@@ -27,12 +30,21 @@ export default defineComponent({
 
     mounted() {
         
-        handleLs.handleLs();
-        console.log(this.lsInUse)
+        this.checkForGameinProgress();
+        
     },
 
     methods: {
-    
+        
+        checkForGameinProgress() {
+            
+            if(handleLs.handleLs()) {
+                console.log("local storge objects of existing game was present");
+                // if approveRestoreGame() {restoreGame()}
+                // else initNewGame()
+            }
+            // initNewGame()
+        }
     }
 });
 
