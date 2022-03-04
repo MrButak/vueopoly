@@ -6,18 +6,18 @@
 </template>
 <script>
 
-const handleLs = require('../src/javascripts/handleLs')
 import { defineComponent } from 'vue';
+const handleLs = require('../src/javascripts/handleLs')
 import { vueGlobalState } from '../src/javascripts/stateStore';
 
 export default defineComponent({
 
     setup() {
 
-        //const handleLs = handleLs();
-        const { lsInUse } = vueGlobalState();
+        const { lsInUse, players } = vueGlobalState();
         return { // make it available in <template>
             lsInUse,
+            players
             
         }
     },
@@ -44,7 +44,8 @@ export default defineComponent({
                 // else initNewGame()
                 return;
             };
-            console.log(this.lsInUse)
+            // console.log(this.lsInUse)
+            // console.log(this.players)
             // initNewGame()
         }
     }

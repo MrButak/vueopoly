@@ -12,12 +12,9 @@ exports.handleLs = () => {
             return true;
         };
         // if no game local storage in use, set local storage
-        
         setLs()
         return false;
     };
-    
-    
     return false;
 };
 
@@ -37,7 +34,6 @@ let checkLsAvailable = () => {
         lsInUse.value = false; // set global state
         return false;
     };
-    
 };
 
 // Function sets local storage objects if doesn't exist
@@ -45,6 +41,8 @@ let setLs = () => {
 
     localStorage.setItem("vueopoly", "");
     localStorage.setItem("players", "0");
+    // initially set global state to 0 so I know wether to start a new game (ChoosePlayers.vue)
+    players.value = 0;
     return;
 };
 
@@ -52,9 +50,9 @@ let setLs = () => {
 let restoreLs = () => {
 
     // convert local storage string to object
-    let lsVueopoly = localStorage.getItem("vueopoly");
+    let lsVueopoly = localStorage.getItem('vueopoly');
     lsVueopoly = JSON.parse(lsVueopoly);
-    let lsPlayers = localStorage.getItem("players");
+    let lsPlayers = localStorage.getItem('players');
     lsPlayers = JSON.parse(lsPlayers);
 
     // set global state variables
