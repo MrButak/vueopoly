@@ -4,7 +4,39 @@
 
   <router-view/>
 </template>
+<script>
+const handleLs = require('../src/javascripts/handleLs')
+import { defineComponent } from 'vue';
+import { vueGlobalState } from '../src/javascripts/stateStore';
+export default defineComponent({
+    setup() {
 
+        //const handleLs = handleLs();
+        const { lsInUse } = vueGlobalState();
+        return { // make it available in <template>
+            lsInUse,
+            //handleLs
+        }
+    },
+
+    data() {
+
+        return {
+        }
+    },
+
+    mounted() {
+        
+        handleLs.handleLs();
+        console.log(this.lsInUse)
+    },
+
+    methods: {
+    
+    }
+});
+
+</script>
 <style lang="scss">
 
 

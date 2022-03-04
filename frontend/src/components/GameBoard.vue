@@ -189,6 +189,12 @@ export default {
 </script>
 
 <style lang="scss">
+/**
+*       Monopoly layout using CSS3
+*
+*       by Angelo Palmieri - 2017
+*
+*/
 div {
 	box-sizing: border-box;
 	text-transform: uppercase;
