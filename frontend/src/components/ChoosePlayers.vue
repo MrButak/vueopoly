@@ -1,7 +1,6 @@
 <template>
-
-<div class="choose-players-wrapper-main">
-    
+<!-- start new game (only shown if previous game not found in storage) -->
+<div v-if="this.players === 0 || this.players === null" class="choose-players-wrapper-main">
     <label for="player-count">Number of players:</label>
     <select name="player-count" id="player-count">
         <option value="2">2</option>
@@ -11,9 +10,14 @@
     </select>
     <br><br>
     <button @click="this.startGame($event)" value="Start Game">Start Game</button>
-    
+    <button @click="this.tmp()">test players</button>
 </div>
-
+<!-- if previous game found in storage -->
+<!-- <div v-else>
+    <p>Previous game found</p>
+    <button @click="this.restoreGame()">continue game</button>
+    <button @click="this.players = 0">start new game</button>
+</div> -->
 </template>
 
 <script>
@@ -26,11 +30,11 @@ export default defineComponent({
 
     setup() {
 
-        const { lsInUse, players } = vueGlobalState();
+        const { lsInUse, players, vueopoly } = vueGlobalState();
         return { // make it available in <template>
             lsInUse,
-            players
-            
+            players,
+            vueopoly
         }
     },
 
@@ -49,7 +53,8 @@ export default defineComponent({
     methods: {
         startGame(event) {
 
-            let players = {
+            // TODO: get data from form above and create obj structured like the one below
+            let newPlayers = {
 
                 'Player 1': {
 
@@ -64,8 +69,19 @@ export default defineComponent({
                 }
             };
             
-            initNewGame.initNewGame(players)
+            // assign new players to global state and local storage
+            let gameObjs = initNewGame.initNewGame(newPlayers);
+            this.players = gameObjs['playersArr'];
+            this.vueopoly = gameObjs['gameJson'];
             
+        },
+        restoreGame() {
+
+            console.log('not yet available')
+        },
+        tmp() {
+
+            console.log(this.players)
         }
     }
 

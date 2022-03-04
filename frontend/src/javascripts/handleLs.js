@@ -39,7 +39,7 @@ let checkLsAvailable = () => {
 // Function sets local storage objects if doesn't exist
 let setLs = () => {
 
-    localStorage.setItem("vueopoly", "");
+    // localStorage.setItem("vueopoly", "");
     localStorage.setItem("players", "0");
     // initially set global state to 0 so I know wether to start a new game (ChoosePlayers.vue)
     players.value = 0;
