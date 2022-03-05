@@ -1,16 +1,28 @@
 <template>
-<!-- start new game (only shown if previous game not found in storage) -->
-<div v-if="this.players === 0 || this.players === null" class="choose-players-wrapper-main">
-    <label for="player-count">Number of players:</label>
-    <select name="player-count" id="player-count">
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select>
-    <br><br>
+<!-- start new game (only shown if previous game not found in storage) v-if="this.players === 0 || this.players === null -->
+
+<div class="new-game-wrapper-main">
+    <div class="new-game-title">
+        <h3>Welcome to Vueopoly</h3>
+    </div>
+
+    <div class="choose-players-wrapper">
+        <label for="player-count">Number of players:</label>
+        <select name="player-count" id="player-count">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+    </div>
+    <div class="choose-players-wrapper">
+        <span v-for="n in this.tempCount">
+            <label for="`player-name${n}`">Player {{ n }} name</label>
+            <input name="`player-name${n}`" type="text">
+        </span>
+    </div>
+    
     <button @click="this.startGame($event)" value="Start Game">Start Game</button>
-    <button @click="this.tmp()">test players</button>
 </div>
 <!-- if previous game found in storage -->
 <!-- <div v-else>
@@ -41,6 +53,7 @@ export default defineComponent({
     data() {
 
         return {
+            tempCount: 2
         }
     },
 
@@ -90,13 +103,25 @@ export default defineComponent({
 
 <style lang="scss">
 
-.choose-players-wrapper-main {
+.new-game-wrapper-main {
 
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 100%;
     height: 200px;
     border: 1px solid black;
 }
+.new-game-title {
 
+}
+.choose-players-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+}
+#player-count {
+    width: 30px;
+}
 </style>
