@@ -1,18 +1,16 @@
 <template>
-<!-- start new game (only shown if previous game not found in storage) v-if="this.players === 0 || this.players === null -->
 
-<div class="new-game-wrapper-main">
+<!-- start new game (only shown if previous game not found in storage) v-if="this.players === 0 || this.players === null -->
+<div v-if="this.players === 0 || this.players === null" class="new-game-wrapper-main">
     <div class="new-game-title">
         <h3>Welcome to Vueopoly</h3>
     </div>
 
     <div class="choose-players-wrapper">
         <label for="player-count">Number of players:</label>
-        <select @click="this.getValue()" name="player-count" id="player-count">
+        <select name="player-count" id="player-count">
             <option value="2">2</option>
             <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
         </select>
     </div>
     <div class="choose-players-wrapper">
@@ -25,6 +23,7 @@
     <button @click="this.startGame($event)" value="Start Game">Start Game</button>
     <button @click="this.tmp()">testing</button>
 </div>
+
 <!-- if previous game found in storage -->
 <!-- <div v-else>
     <p>Previous game found</p>
@@ -55,29 +54,27 @@ export default defineComponent({
 
         return {
             
-            playerCount: 2
+            playerCount: 3
         }
     },
 
     mounted() {
         
-        // this.playerCount = document.querySelector('#player-count')
+        
         
     },
 
     methods: {
 
-        getValue() {
+        // getValue() {
 
-            let select = document.getElementById('player-count');
-            let option = select.options[select.selectedIndex];
-            this.playerCount = option.value;
-        },
+        //     let select = document.getElementById('player-count');
+        //     let option = select.options[select.selectedIndex];
+        //     this.playerCount = option.value;
+        //     console.log(this.playerCount)
+        // },
 
-        tmp() {
-
-            console.log(this.playerCount);
-        },
+        
         startGame(event) {
 
             // TODO: get data from form above and create obj structured like the one below
@@ -93,6 +90,11 @@ export default defineComponent({
 
                     alias: 'Yohana',
                     symbol: 'Cat'
+                },
+                'Player 3': {
+
+                    alias: 'Johnny',
+                    symbol: 'Snake'
                 }
             };
             
