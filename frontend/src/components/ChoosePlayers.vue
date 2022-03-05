@@ -8,7 +8,7 @@
 
     <div class="choose-players-wrapper">
         <label for="player-count">Number of players:</label>
-        <select name="player-count" id="player-count">
+        <select @click="this.getValue()" name="player-count" id="player-count">
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
@@ -16,13 +16,14 @@
         </select>
     </div>
     <div class="choose-players-wrapper">
-        <span v-for="n in this.tempCount">
+        <span v-for="n in this.playerCount">
             <label for="`player-name${n}`">Player {{ n }} name</label>
             <input name="`player-name${n}`" type="text">
         </span>
     </div>
     
     <button @click="this.startGame($event)" value="Start Game">Start Game</button>
+    <button @click="this.tmp()">testing</button>
 </div>
 <!-- if previous game found in storage -->
 <!-- <div v-else>
@@ -53,17 +54,30 @@ export default defineComponent({
     data() {
 
         return {
-            tempCount: 2
+            
+            playerCount: 2
         }
     },
 
     mounted() {
         
-        
+        // this.playerCount = document.querySelector('#player-count')
         
     },
 
     methods: {
+
+        getValue() {
+
+            let select = document.getElementById('player-count');
+            let option = select.options[select.selectedIndex];
+            this.playerCount = option.value;
+        },
+
+        tmp() {
+
+            console.log(this.playerCount);
+        },
         startGame(event) {
 
             // TODO: get data from form above and create obj structured like the one below
@@ -91,11 +105,8 @@ export default defineComponent({
         restoreGame() {
 
             console.log('not yet available')
-        },
-        tmp() {
-
-            console.log(this.players)
         }
+        
     }
 
 });
