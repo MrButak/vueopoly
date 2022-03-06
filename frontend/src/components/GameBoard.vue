@@ -7,78 +7,80 @@
 		<div class="mainSquare">
 
 			<div class="row top">
-				<div class="square2" data-id="freeparking"><span class="corner corner1">free <br /> parking</span></div>
-				<div class="square1" data-id="kentuckyave">
-					<div class="header header-top red"></div>
-					<div class="firstLine firstLine-top rotation2">kentucky <br /> avenue</div>
+                
+				<div id="clickable" data-id="freeparking" class="square2 game-square"><span data-id="freeparking" class="corner corner1">free <br /> parking</span></div>
+                
+				<div id="clickable" data-id="kentuckyave" class="game-square square1">
+					<div data-id="kentuckyave" class="header header-top red"></div>
+					<div data-id="kentuckyave" class="firstLine firstLine-top rotation2">kentucky <br /> avenue</div>
 				</div>
-				<div class="square1" data-id="chance">					
-					<div class="firstLine firstLine-top no-color rotation2">chance</div>
+				<div id="clickable" data-id="chance" class="square1 game-square">					
+					<div data-id="chance" class="firstLine firstLine-top no-color rotation2">chance</div>
 				</div>
-				<div class="square1"  data-id="indianaave">
-					<div class="header header-top red"></div>
-					<div class="firstLine firstLine-top rotation2">indiana <br /> avenue</div>
+				<div id="clickable" data-id="indianaave" class="square1 game-square">
+					<div data-id="indianaave" class="header header-top red"></div>
+					<div data-id="indianaave" class="firstLine firstLine-top rotation2">indiana <br /> avenue</div>
 				</div>
-				<div class="square1"  data-id="illiniosave">
-					<div class="header header-top red"></div>
-					<div class="firstLine firstLine-top rotation2">illinios <br /> avenue</div>
+				<div id="clickable" data-id="illiniosave" class="square1 game-square">
+					<div data-id="illiniosave" class="header header-top red"></div>
+					<div data-id="illiniosave" class="firstLine firstLine-top rotation2">illinios <br /> avenue</div>
 				</div>
-				<div class="square1"  data-id="borailroad">
-					<div class="firstLine firstLine-top no-color rotation2">b. & o. <br /> railroad</div>
+				<div id="clickable" data-id="borailroad" class="square1 game-square">
+					<div data-id="borailroad" class="firstLine firstLine-top no-color rotation2">b. & o. <br /> railroad</div>
 				</div>
-				<div class="square1" data-id="atlanticave">
-					<div class="header header-top yellow"></div>
-					<div class="firstLine firstLine-top rotation2">atlantic <br /> avenue</div>
+				<div id="clickable" data-id="atlanticave" class="square1 game-square">
+					<div data-id="atlanticave" class="header header-top yellow"></div>
+					<div data-id="atlanticave" class="firstLine firstLine-top rotation2">atlantic <br /> avenue</div>
 				</div>
-				<div class="square1"  data-id="ventorave">
-					<div class="header header-top yellow"></div>
-					<div class="firstLine firstLine-top rotation2">ventnor <br /> avenue</div>
+				<div id="clickable" data-id="ventorave" class="square1 game-square">
+					<div data-id="ventorave" class="header header-top yellow"></div>
+					<div data-id="ventorave" class="firstLine firstLine-top rotation2">ventnor <br /> avenue</div>
 				</div>
-				<div class="square1"  data-id="waterworks">
+				<div id="clickable" data-id="waterworks" class="square1 game-square">
                     <!-- waterworks not in this.vueopoly.properties -->
-					<div class="firstLine firstLine-top no-color rotation2">water <br /> works</div>
+					<div data-id="waterworks" class="firstLine firstLine-top no-color rotation2">water <br /> works</div>
 				</div>
-				<div class="square1" data-id="marvingardens">
-					<div class="header header-top yellow"></div>
-					<div class="firstLine firstLine-top rotation2">marvin <br /> gardens</div>
+				<div id="clickable" data-id="marvingardens" class="square1 game-square">
+					<div data-id="marvingardens" class="header header-top yellow"></div>
+					<div data-id="marvingardens" class="firstLine firstLine-top rotation2">marvin <br /> gardens</div>
 				</div>
-				<div class="square2" data-id="gotojail"><span class="corner corner2">go to<br />jail</span></div>
+				<div id="clickable" data-id="gotojail" class="square2 game-square"><span data-id="gotojail" class="corner corner2">go to<br />jail</span></div>
 			</div>
 			
 			<div class="row center">
 				<div class="square2">
-					<div class="squareSide" data-id="newyorkave">
-						<div class="headerSide header-left orange"></div>
-						<div class="firstLine firstLine-left rotation1">new york <br /> avenue</div>
+					<div id="clickable" data-id="newyorkave" class="squareSide game-square">
+						<div data-id="newyorkave" class="headerSide header-left orange"></div>
+						<div data-id="newyorkave" class="firstLine firstLine-left rotation1">new york <br /> avenue</div>
 					</div>
-					<div class="squareSide" data-id="tennesseave">
-						<div class="headerSide header-left orange"></div>
-						<div class="firstLine firstLine-left rotation1">tennessee <br /> avenue</div>
+					<div id="clickable" data-id="tennesseave" class="squareSide game-square">
+						<div data-id="tennesseave" class="headerSide header-left orange"></div>
+						<div data-id="tennesseave" class="firstLine firstLine-left rotation1">tennessee <br /> avenue</div>
 					</div>
-					<div class="squareSide" data-id="communitychest">						
-						<div class="firstLine firstLine-left no-color rotation1">community<br /> chest</div>
+					<div id="clickable" data-id="communitychest" class="squareSide game-square">						
+						<div data-id="communitychest" class="firstLine firstLine-left no-color rotation1">community<br /> chest</div>
 					</div>
-					<div class="squareSide" data-id="stjamesplace">
-						<div class="headerSide header-left orange"></div>
-						<div class="firstLine firstLine-left rotation1">st.james <br />place</div>
+					<div id="clickable" data-id="stjamesplace" class="squareSide game-square">
+						<div data-id="stjamesplace" class="headerSide header-left orange"></div>
+						<div data-id="stjamesplace" class="firstLine firstLine-left rotation1">st.james <br />place</div>
 					</div>
-					<div class="squareSide" data-id="pennsylvaniarailroad">						
-						<div class="firstLine firstLine-left no-color rotation1">pennsylvania<br> railroad</div>
+					<div id="clickable" data-id="pennsylvaniarailroad" class="squareSide game-square">						
+						<div data-id="pennsylvaniarailroad" class="firstLine firstLine-left no-color rotation1">pennsylvania<br> railroad</div>
 					</div>
-					<div class="squareSide" data-id="virginaave">
-						<div class="headerSide header-left purple"></div>
-						<div class="firstLine firstLine-left rotation1">virginia<br /> avenue</div>
+					<div id="clickable" data-id="virginaave" class="squareSide game-square">
+						<div data-id="virginaave" class="headerSide header-left purple"></div>
+						<div data-id="virginaave" class="firstLine firstLine-left rotation1">virginia<br /> avenue</div>
 					</div>
-					<div class="squareSide" data-id="statesave">
-						<div class="headerSide header-left purple"></div>
-						<div class="firstLine firstLine-left rotation1">states<br /> avenue</div>
+					<div id="clickable" data-id="statesave" class="squareSide game-square">
+						<div data-id="statesave" class="headerSide header-left purple"></div>
+						<div data-id="statesave" class="firstLine firstLine-left rotation1">states<br /> avenue</div>
 					</div>
-					<div class="squareSide" data-id="electriccompany">						
-						<div class="firstLine firstLine-left no-color rotation1">electric<br />company</div>
+					<div id="clickable" data-id="electriccompany" class="squareSide game-square">						
+						<div data-id="electriccompany" class="firstLine firstLine-left no-color rotation1">electric<br />company</div>
 					</div>
-					<div class="squareSide" data-id="stcharlesplace">
-						<div class="headerSide header-left purple"></div>
-						<div class="firstLine firstLine-left rotation1">st. charles<br />place</div>
+					<div id="clickable" data-id="stcharlesplace" class="squareSide game-square">
+						<div data-id="stcharlesplace" class="headerSide header-left purple"></div>
+						<div data-id="stcharlesplace" class="firstLine firstLine-left rotation1">st. charles<br />place</div>
 					</div>
 				</div>
 				<div class="square9">
@@ -93,83 +95,85 @@
 					</div>
 				</div>
 				<div class="square2">
-					<div class="squareSide" data-id="pacificave">
-						<div class="headerSide header-right green"></div>
-						<div class="firstLine firstLine-right rotation3">pacific<br /> avenue</div>
+					<div id="clickable" data-id="pacificave" class="squareSide game-square">
+						<div data-id="pacificave" class="headerSide header-right green"></div>
+						<div data-id="pacificave" class="firstLine firstLine-right rotation3">pacific<br /> avenue</div>
 					</div>
-					<div class="squareSide" data-id="northcarolinaave">
-						<div class="headerSide header-right green"></div>
-						<div class="firstLine firstLine-right rotation3">north<br />carolina<br />avenue</div>
+					<div id="clickable" data-id="northcarolinaave" class="squareSide game-square">
+						<div data-id="northcarolinaave" class="headerSide header-right green"></div>
+						<div data-id="northcarolinaave" class="firstLine firstLine-right rotation3">north<br />carolina<br />avenue</div>
 					</div>
-					<div class="squareSide" data-id="communitychest">						
-						<div class="firstLine firstLine-right no-color rotation3">community<br />chest</div>
+					<div id="clickable" data-id="communitychest" class="squareSide game-square">						
+						<div data-id="communitychest" class="firstLine firstLine-right no-color rotation3">community<br />chest</div>
 					</div>
-					<div class="squareSide" data-id="pennsylvaniaave">
-						<div class="headerSide header-right green"></div>
-						<div class="firstLine firstLine-right rotation3">pennsylvania<br /> avenue</div>
+					<div id="clickable" data-id="pennsylvaniaave" class="squareSide game-square">
+						<div data-id="pennsylvaniaave" class="headerSide header-right green"></div>
+						<div data-id="pennsylvaniaave" class="firstLine firstLine-right rotation3">pennsylvania<br /> avenue</div>
 					</div>
-					<div class="squareSide" data-id="shortlinerailroad">						
-						<div class="firstLine firstLine-right no-color rotation3">short<br /> line</div>
+					<div id="clickable" data-id="shortlinerailroad" class="squareSide game-square">						
+						<div data-id="shortlinerailroad" class="firstLine firstLine-right no-color rotation3">short<br /> line</div>
 					</div>
-					<div class="squareSide" data-id="chance">
-						<div class="firstLine firstLine-right no-color rotation3">chance</div>
+                    
+                    <div id="clickable" data-id="chance" class="squareSide game-square">
+                        <div data-id="chance" class="firstLine firstLine-right no-color rotation3">chance</div>
+                    </div>
+                    
+					<div id="clickable" data-id="parkplace" class="squareSide game-square">						
+						<div data-id="parkplace" class="headerSide header-right blue"></div>
+						<div data-id="parkplace" class="firstLine firstLine-right rotation3">park<br /> place</div>
 					</div>
-					<div class="squareSide" data-id="parkplace">						
-						<div class="headerSide header-right blue"></div>
-						<div class="firstLine firstLine-right rotation3">park<br /> place</div>
+					<div id="clickable" data-id="luxerytax" class="squareSid game-square">						
+						<div data-id="luxerytax" class="firstLine firstLine-right no-color rotation3">luxury<br /> tax</div>
 					</div>
-					<div class="squareSide" data-id="luxerytax">						
-						<div class="firstLine firstLine-right no-color rotation3">luxury<br /> tax</div>
-					</div>
-					<div class="squareSide" data-id="tennesseeave">
-						<div class="headerSide header-right blue"></div>
-						<div class="firstLine firstLine-right rotation3">tennessee<br /> avenue</div>
+					<div id="clickable" data-id="tennesseeave" class="squareSide game-square">
+						<div data-id="tennesseeave" class="headerSide header-right blue"></div>
+						<div data-id="tennesseeave" class="firstLine firstLine-right rotation3">tennessee<br /> avenue</div>
 					</div>
 				</div>
 			</div>
 
 			<div class="row top">
-				<div class="square2" data-id="jail">
-					<span class="corner4-left">just</span>
-					<div class="squareCorner">
-						<span class="corner corner4">in <br />jail</span>
+				<div id="clickable" data-id="jail" class="square2 game-square">
+					<span data-id="jail" class="corner4-left">just</span>
+					<div data-id="jail" class="squareCorner">
+						<span data-id="jail" class="corner corner4">in <br />jail</span>
 					</div>
-					<span class="corner4-bottom">visiting</span>
+					<span data-id="jail" class="corner4-bottom">visiting</span>
 				</div>
-				<div class="square1" data-id="connecticutave">
-					<div class="header header-bottom lightblue"></div>
-					<div class="firstLine firstLine-bottom">connecticut avenue</div>
+				<div id="clickable" data-id="connecticutave" class="square1 game-square">
+					<div data-id="connecticutave" class="header header-bottom lightblue"></div>
+					<div data-id="connecticutave" class="firstLine firstLine-bottom">connecticut avenue</div>
 				</div>
-				<div class="square1" data-id="vermontave">
-					<div class="header header-bottom lightblue"></div>
-					<div class="firstLine firstLine-bottom">vermont<br /> avenue</div>
+				<div id="clickable" data-id="vermontave" class="square1 game-square">
+					<div data-id="vermontave" class="header header-bottom lightblue"></div>
+					<div data-id="vermontave" class="firstLine firstLine-bottom">vermont<br /> avenue</div>
 				</div>
-				<div class="square1" data-id="chance">
-					<div class="firstLine firstLine-bottom no-color">chance</div>
+				<div id="clickable" data-id="chance" class="square1 game-square">
+					<div data-id="chance" class="firstLine firstLine-bottom no-color">chance</div>
 				</div>
-				<div class="square1" data-id="orientalave">
-					<div class="header header-bottom lightblue"></div>
-					<div class="firstLine firstLine-bottom">oriental<br /> avenue</div>
+				<div id="clickable" data-id="orientalave" class="square1 game-square">
+					<div data-id="orientalave" class="header header-bottom lightblue"></div>
+					<div data-id="orientalave" class="firstLine firstLine-bottom">oriental<br /> avenue</div>
 				</div>
-				<div class="square1" data-id="readingrailroad">					
-					<div class="firstLine firstLine-bottom no-color">reading<br /> railroad</div>
+				<div id="clickable" data-id="readingrailroad" class="square1 game-square">					
+					<div data-id="readingrailroad" class="firstLine firstLine-bottom no-color">reading<br /> railroad</div>
 				</div>
-				<div class="square1" data-id="incometax">
-					<div class="firstLine firstLine-bottom no-color">income<br /> tax</div>
+				<div id="clickable" data-id="incometax" class="square1 game-square">
+					<div data-id="incometax" class="firstLine firstLine-bottom no-color">income<br /> tax</div>
 				</div>
-				<div class="square1" data-id="balticave">
-					<div class="header header-bottom brown"></div>
-					<div class="firstLine firstLine-bottom">baltic<br /> avenue</div>
+				<div id="clickable" data-id="balticave" class="square1 game-square">
+					<div data-id="balticave" class="header header-bottom brown"></div>
+					<div data-id="balticave" class="firstLine firstLine-bottom">baltic<br /> avenue</div>
 				</div>
-				<div class="square1" data-id="communitychest">
-					<div class="firstLine firstLine-bottom no-color">community<br /> chest</div>
+				<div id="clickable" data-id="communitychest" class="square1 game-square">
+					<div data-id="communitychest" class="firstLine firstLine-bottom no-color">community<br /> chest</div>
 				</div>
-				<div class="square1" data-id="mediterraneanave">
-					<div class="header header-bottom brown"></div>
-					<div class="firstLine firstLine-bottom">mediter-<br /> ranean <br /> avenue</div>
+				<div id="clickable" data-id="mediterraneanave" class="square1 game-square">
+					<div data-id="mediterraneanave" class="header header-bottom brown"></div>
+					<div data-id="mediterraneanave" class="firstLine firstLine-bottom">mediter-<br /> ranean <br /> avenue</div>
 				</div>
-				<div class="square2" data-id="go">
-					<span class="corner corner3">collect<br />M200 salary<br />as you pass</span>
+				<div id="clickable" data-id="go" class="square2 game-square">
+					<span data-id="go" class="corner corner3">collect<br />M200 salary<br />as you pass</span>
 				</div>
 			</div>
 
@@ -203,7 +207,7 @@ export default defineComponent({
     data() {
 
         return {
-            
+            clickable: null
             
         }
     },
@@ -216,14 +220,23 @@ export default defineComponent({
 
     methods: {
 
+        // Function add an onclick / hover event to display information about the property
         initEventListeners() {
-            console.log(this.vueopoly)
-            let tmpPropertiesArry = [];
+            
             console.log("init event listeners")
-            let sideProperties = document.querySelectorAll('.squareSide')
-            sideProperties.forEach((property) => {
-                tmpPropertiesArry.push()
-            })
+            
+            this.clickable = document.querySelectorAll('#clickable')
+            
+            this.clickable.forEach((property) => {
+               
+                property.addEventListener('click', (event) => {
+                    // event.stopImmediatePropagation();
+                    //event.stopImmediatePropagation()
+                    console.log(event.target.dataset.id)
+                    console.log
+                });
+                // console.log(property)
+            });
         }
     }
 });
@@ -236,6 +249,7 @@ export default defineComponent({
 *       by Angelo Palmieri - 2017
 *
 */
+
 div {
 	box-sizing: border-box;
 	text-transform: uppercase;
