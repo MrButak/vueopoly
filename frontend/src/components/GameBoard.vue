@@ -7,75 +7,76 @@
 		<div class="mainSquare">
 
 			<div class="row top">
-				<div class="square2"><span class="corner corner1">free <br /> parking</span></div>
-				<div class="square1">
+				<div class="square2" data-id="freeparking"><span class="corner corner1">free <br /> parking</span></div>
+				<div class="square1" data-id="kentuckyave">
 					<div class="header header-top red"></div>
 					<div class="firstLine firstLine-top rotation2">kentucky <br /> avenue</div>
 				</div>
-				<div class="square1">					
+				<div class="square1" data-id="chance">					
 					<div class="firstLine firstLine-top no-color rotation2">chance</div>
 				</div>
-				<div class="square1">
+				<div class="square1"  data-id="indianaave">
 					<div class="header header-top red"></div>
 					<div class="firstLine firstLine-top rotation2">indiana <br /> avenue</div>
 				</div>
-				<div class="square1">
+				<div class="square1"  data-id="illiniosave">
 					<div class="header header-top red"></div>
 					<div class="firstLine firstLine-top rotation2">illinios <br /> avenue</div>
 				</div>
-				<div class="square1">
+				<div class="square1"  data-id="borailroad">
 					<div class="firstLine firstLine-top no-color rotation2">b. & o. <br /> railroad</div>
 				</div>
-				<div class="square1">
+				<div class="square1" data-id="atlanticave">
 					<div class="header header-top yellow"></div>
 					<div class="firstLine firstLine-top rotation2">atlantic <br /> avenue</div>
 				</div>
-				<div class="square1">
+				<div class="square1"  data-id="ventorave">
 					<div class="header header-top yellow"></div>
 					<div class="firstLine firstLine-top rotation2">ventnor <br /> avenue</div>
 				</div>
-				<div class="square1">					
+				<div class="square1"  data-id="waterworks">
+                    <!-- waterworks not in this.vueopoly.properties -->
 					<div class="firstLine firstLine-top no-color rotation2">water <br /> works</div>
 				</div>
-				<div class="square1">
+				<div class="square1" data-id="marvingardens">
 					<div class="header header-top yellow"></div>
 					<div class="firstLine firstLine-top rotation2">marvin <br /> gardens</div>
 				</div>
-				<div class="square2"><span class="corner corner2">go to<br />jail</span></div>
+				<div class="square2" data-id="gotojail"><span class="corner corner2">go to<br />jail</span></div>
 			</div>
 			
 			<div class="row center">
 				<div class="square2">
-					<div class="squareSide">
+					<div class="squareSide" data-id="newyorkave">
 						<div class="headerSide header-left orange"></div>
 						<div class="firstLine firstLine-left rotation1">new york <br /> avenue</div>
 					</div>
-					<div class="squareSide">
+					<div class="squareSide" data-id="tennesseave">
 						<div class="headerSide header-left orange"></div>
 						<div class="firstLine firstLine-left rotation1">tennessee <br /> avenue</div>
 					</div>
-					<div class="squareSide">						
+					<div class="squareSide" data-id="communitychest">						
 						<div class="firstLine firstLine-left no-color rotation1">community<br /> chest</div>
 					</div>
-					<div class="squareSide">
+					<div class="squareSide" data-id="stjamesplace">
 						<div class="headerSide header-left orange"></div>
 						<div class="firstLine firstLine-left rotation1">st.james <br />place</div>
 					</div>
-					<div class="squareSide">						
+					<div class="squareSide" data-id="pennsylvaniarailroad">						
 						<div class="firstLine firstLine-left no-color rotation1">pennsylvania<br> railroad</div>
 					</div>
-					<div class="squareSide">
+					<div class="squareSide" data-id="virginaave">
 						<div class="headerSide header-left purple"></div>
 						<div class="firstLine firstLine-left rotation1">virginia<br /> avenue</div>
 					</div>
-					<div class="squareSide">
+					<div class="squareSide" data-id="statesave">
 						<div class="headerSide header-left purple"></div>
 						<div class="firstLine firstLine-left rotation1">states<br /> avenue</div>
 					</div>
-					<div class="squareSide">						
+					<div class="squareSide" data-id="electriccompany">						
 						<div class="firstLine firstLine-left no-color rotation1">electric<br />company</div>
 					</div>
-					<div class="squareSide">
+					<div class="squareSide" data-id="stcharlesplace">
 						<div class="headerSide header-left purple"></div>
 						<div class="firstLine firstLine-left rotation1">st. charles<br />place</div>
 					</div>
@@ -92,35 +93,35 @@
 					</div>
 				</div>
 				<div class="square2">
-					<div class="squareSide">
+					<div class="squareSide" data-id="pacificave">
 						<div class="headerSide header-right green"></div>
 						<div class="firstLine firstLine-right rotation3">pacific<br /> avenue</div>
 					</div>
-					<div class="squareSide">
+					<div class="squareSide" data-id="northcarolinaave">
 						<div class="headerSide header-right green"></div>
 						<div class="firstLine firstLine-right rotation3">north<br />carolina<br />avenue</div>
 					</div>
-					<div class="squareSide">						
+					<div class="squareSide" data-id="communitychest">						
 						<div class="firstLine firstLine-right no-color rotation3">community<br />chest</div>
 					</div>
-					<div class="squareSide">
+					<div class="squareSide" data-id="pennsylvaniaave">
 						<div class="headerSide header-right green"></div>
 						<div class="firstLine firstLine-right rotation3">pennsylvania<br /> avenue</div>
 					</div>
-					<div class="squareSide">						
+					<div class="squareSide" data-id="shortlinerailroad">						
 						<div class="firstLine firstLine-right no-color rotation3">short<br /> line</div>
 					</div>
-					<div class="squareSide">
+					<div class="squareSide" data-id="chance">
 						<div class="firstLine firstLine-right no-color rotation3">chance</div>
 					</div>
-					<div class="squareSide">						
+					<div class="squareSide" data-id="parkplace">						
 						<div class="headerSide header-right blue"></div>
 						<div class="firstLine firstLine-right rotation3">park<br /> place</div>
 					</div>
-					<div class="squareSide">						
+					<div class="squareSide" data-id="luxerytax">						
 						<div class="firstLine firstLine-right no-color rotation3">luxury<br /> tax</div>
 					</div>
-					<div class="squareSide">
+					<div class="squareSide" data-id="tennesseeave">
 						<div class="headerSide header-right blue"></div>
 						<div class="firstLine firstLine-right rotation3">tennessee<br /> avenue</div>
 					</div>
@@ -128,46 +129,46 @@
 			</div>
 
 			<div class="row top">
-				<div class="square2">
+				<div class="square2" data-id="jail">
 					<span class="corner4-left">just</span>
 					<div class="squareCorner">
 						<span class="corner corner4">in <br />jail</span>
 					</div>
 					<span class="corner4-bottom">visiting</span>
 				</div>
-				<div class="square1">
+				<div class="square1" data-id="connecticutave">
 					<div class="header header-bottom lightblue"></div>
 					<div class="firstLine firstLine-bottom">connecticut avenue</div>
 				</div>
-				<div class="square1">
+				<div class="square1" data-id="vermontave">
 					<div class="header header-bottom lightblue"></div>
 					<div class="firstLine firstLine-bottom">vermont<br /> avenue</div>
 				</div>
-				<div class="square1">
+				<div class="square1" data-id="chance">
 					<div class="firstLine firstLine-bottom no-color">chance</div>
 				</div>
-				<div class="square1">
+				<div class="square1" data-id="orientalave">
 					<div class="header header-bottom lightblue"></div>
 					<div class="firstLine firstLine-bottom">oriental<br /> avenue</div>
 				</div>
-				<div class="square1">					
+				<div class="square1" data-id="readingrailroad">					
 					<div class="firstLine firstLine-bottom no-color">reading<br /> railroad</div>
 				</div>
-				<div class="square1">
+				<div class="square1" data-id="incometax">
 					<div class="firstLine firstLine-bottom no-color">income<br /> tax</div>
 				</div>
-				<div class="square1">
+				<div class="square1" data-id="balticave">
 					<div class="header header-bottom brown"></div>
 					<div class="firstLine firstLine-bottom">baltic<br /> avenue</div>
 				</div>
-				<div class="square1">
+				<div class="square1" data-id="communitychest">
 					<div class="firstLine firstLine-bottom no-color">community<br /> chest</div>
 				</div>
-				<div class="square1">
+				<div class="square1" data-id="mediterraneanave">
 					<div class="header header-bottom brown"></div>
 					<div class="firstLine firstLine-bottom">mediter-<br /> ranean <br /> avenue</div>
 				</div>
-				<div class="square2">
+				<div class="square2" data-id="go">
 					<span class="corner corner3">collect<br />M200 salary<br />as you pass</span>
 				</div>
 			</div>
@@ -180,12 +181,52 @@
 </template>
 
 <script>
-export default {
-  name: 'GameBoard',
-  props: {
-    
-  }
-}
+
+import { defineComponent } from 'vue';
+import { vueGlobalState } from '/src/javascripts/stateStore';
+
+export default defineComponent({
+    name: 'GameBoard',
+    setup() {
+
+        const { lsInUse, players, vueopoly } = vueGlobalState();
+        return { // make it available in <template>
+            lsInUse,
+            players,
+            vueopoly
+        }
+    },
+    components: {
+        
+    },
+
+    data() {
+
+        return {
+            
+            
+        }
+    },
+
+    mounted() {
+        
+        this.initEventListeners();
+        
+    },
+
+    methods: {
+
+        initEventListeners() {
+            console.log(this.vueopoly)
+            let tmpPropertiesArry = [];
+            console.log("init event listeners")
+            let sideProperties = document.querySelectorAll('.squareSide')
+            sideProperties.forEach((property) => {
+                tmpPropertiesArry.push()
+            })
+        }
+    }
+});
 </script>
 
 <style scoped lang="scss">

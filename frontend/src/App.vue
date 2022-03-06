@@ -44,7 +44,7 @@ export default defineComponent({
                 console.log("local storge objects of existing game was present");
                 console.log(this.players);
                 console.log("saved players");
-                console.log(this.vueopoly.properties[0].posistion)
+                console.log(this.vueopoly.properties)
                 // if approveRestoreGame() {restoreGame()}
                 return;
             };
