@@ -96,16 +96,27 @@ export default defineComponent({
             console.log(event)
             let formElements = event.target.form;
             Object.keys(formElements).forEach((key) => {
-                
-                console.log(formElements[key].value);
+                    
+                    if(formElements[key].tagName == "BUTTON") {
+                        console.log("button here")
+                    }
+            //     if(formElements[key].value == "") {
+            //         console.log('yea');
+            //         console.log(formElements[key].value)
+            //         return;
+            //     }
+            //     console.log('nah')
+            //     console.log(formElements[key].value)
+
             });
+            event.target.form.tagName
         },
 
         startGame(event) {
 
             event.preventDefault();
 
-            // create newPlayers object which I use to create new players from class
+            // create newPlayers object which I then use to create new players from Class
             let tmpStr = "Player ";
             let tmpArry = [];
             let newPlayers = {}
