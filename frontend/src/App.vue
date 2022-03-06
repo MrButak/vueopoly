@@ -40,6 +40,8 @@ export default defineComponent({
             
             if(handleLs.handleLs()) {
                 console.log("local storge objects of existing game was present");
+                console.log(this.players);
+                console.log("saved players")
                 // if approveRestoreGame() {restoreGame()}
                 // else initNewGame()
                 return;

@@ -1,28 +1,37 @@
 <template>
 
 <!-- start new game (only shown if previous game not found in storage) v-if="this.players === 0 || this.players === null -->
-<div v-if="this.players === 0 || this.players === null" class="new-game-wrapper-main">
-    <div class="new-game-title">
-        <h3>Welcome to Vueopoly</h3>
-    </div>
 
+<div v-if="this.viewNumber == 1" id="choose-players-form">
     <div class="choose-players-wrapper">
         <label for="player-count">Number of players:</label>
-        <select name="player-count" id="player-count">
+        <select @change="updatePlayerCount" name="player-count" id="player-count">
             <option value="2">2</option>
             <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
         </select>
     </div>
-    <div class="choose-players-wrapper">
-        <span v-for="n in this.playerCount">
-            <label for="`player-name${n}`">Player {{ n }} name</label>
-            <input name="`player-name${n}`" type="text">
-        </span>
-    </div>
-    
-    <button @click="this.startGame($event)" value="Start Game">Start Game</button>
-    <button @click="this.tmp()">testing</button>
+    <button @click="this.viewNumber = 2" type="submit">Continue</button>
 </div>
+
+
+<div v-if="this.viewNumber == 2" class="choose-players-wrapper">
+    <form>
+        <div v-for="count in this.playerCount">
+            
+            <label for="player-name">Player {{ count }} name</label>
+            <input name="player-name" type="text">
+        </div>
+        <button @click="this.viewNumber = 1" type="submit">Back</button>
+        <button @click="this.startGame($event)" type="submit">Start game</button>
+    </form>
+</div>
+        
+        
+    
+
 
 <!-- if previous game found in storage -->
 <!-- <div v-else>
@@ -39,7 +48,7 @@ import { vueGlobalState } from '../../src/javascripts/stateStore';
 const initNewGame = require('../../src/javascripts/initNewGame');
 
 export default defineComponent({
-
+    name: 'ChoosePlayers',
     setup() {
 
         const { lsInUse, players, vueopoly } = vueGlobalState();
@@ -54,7 +63,8 @@ export default defineComponent({
 
         return {
             
-            playerCount: 3
+            playerCount: 2,
+            viewNumber: 1
         }
     },
 
@@ -66,44 +76,36 @@ export default defineComponent({
 
     methods: {
 
-        // getValue() {
+        updatePlayerCount(event) {
 
-        //     let select = document.getElementById('player-count');
-        //     let option = select.options[select.selectedIndex];
-        //     this.playerCount = option.value;
-        //     console.log(this.playerCount)
-        // },
+            console.log(event.target)
+            this.playerCount = parseInt(event.target.value)
 
-        
+        },
         startGame(event) {
 
-            // TODO: get data from form above and create obj structured like the one below
-            let newPlayers = {
+            event.preventDefault();
 
-                'Player 1': {
-
-                    alias: 'Matthew',
-                    symbol: 'Horse'
-
-                },
-                'Player 2': {
-
-                    alias: 'Yohana',
-                    symbol: 'Cat'
-                },
-                'Player 3': {
-
-                    alias: 'Johnny',
-                    symbol: 'Snake'
-                }
+            // create newPlayers object which I use to create new players from class and set local storage and global state
+            let tmpStr = "Player ";
+            let tmpArry = [];
+            let newPlayers = {}
+            for(let i = 0; i < event.target.form.length - 2; i++) {
+                // console.log(event.target.form[i].value)
+                tmpArry[i] = `${tmpStr}` + (i + 1);
+                newPlayers[tmpArry[i]] = {
+                    'alias': event.target.form[i + 1].value,
+                    'symbol' : "Dog"
+                };
             };
             
             // assign new players to global state and local storage
             let gameObjs = initNewGame.initNewGame(newPlayers);
             this.players = gameObjs['playersArr'];
             this.vueopoly = gameObjs['gameJson'];
-            
+            console.log(this.vueopoly)
         },
+
         restoreGame() {
 
             console.log('not yet available')
@@ -122,7 +124,7 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 200px;
+    
     border: 1px solid black;
 }
 .new-game-title {
@@ -136,5 +138,11 @@ export default defineComponent({
 }
 #player-count {
     width: 30px;
+}
+#choose-players-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 </style>
