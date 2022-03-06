@@ -47,8 +47,8 @@
 <script>
 
 import { defineComponent } from 'vue';
-import { vueGlobalState } from '../../src/javascripts/stateStore';
-const initNewGame = require('../../src/javascripts/initNewGame');
+import { vueGlobalState } from '/src/javascripts/stateStore';
+const initNewGame = require('/src/javascripts/initNewGame');
 
 export default defineComponent({
     name: 'ChoosePlayers',
@@ -87,14 +87,14 @@ export default defineComponent({
             this.errorMessage = null;
             this.viewNumber = 1;
         },
-        
-        // Function updates the number of players being created
+
+        // Function updates the number of players being created (used to determine the amount of name and symbol inputs to display)
         updatePlayerCount(event) {
 
             this.playerCount = parseInt(event.target.value);
         },
 
-        // Function validates new player form. If not valid, error message is displayed, if valid startGame function is called
+        // Function validates new player form. If not valid, error message is displayed, if valid this.startGame() function is called
         validateNewGameForm(event) {
 
             event.preventDefault();
@@ -103,47 +103,46 @@ export default defineComponent({
             let symbolArry = [];
             let formElements = event.target.form; 
 
-            // iterate through all form elements, check for duplicates and blank form elements
+            // iterate through all form elements, check for duplicates and blanks ("")
             Object.keys(formElements).forEach((key) => {
 
                 switch(formElements[key].tagName) {
 
-                    case 'BUTTON':
-                        return;
-
                     case 'INPUT':
                         if(aliasArry.includes(formElements[key].value)) {
                             validForm = false;
-                            this.errorMessage = 'Name already taken';
+                            this.errorMessage = 'Unique names required';
                             return;
                         }
                         else if(formElements[key].value == "") {
                             validForm = false;
-                            this.errorMessage = 'name required';
+                            this.errorMessage = 'Name required';
                             return;
-                        }
+                        };
                         aliasArry.push(formElements[key].value);
                         return;
                         
                     case 'SELECT':
                         if(symbolArry.includes(formElements[key].value)) {
-                            this.errorMessage = 'Symbol already taken';
+                            this.errorMessage = 'Unique symbols required';
                             validForm = false;
                             return;
                         }
                         else if(formElements[key].value == "") {
                             validForm = false;
-                            this.errorMessage = 'symbol required';
+                            this.errorMessage = 'Symbol required';
                             return;
-                        }
+                        };
                         symbolArry.push(formElements[key].value);
+                        return;
+
+                    case 'BUTTON':
                         return;
 
                     default:
                         validForm = false;
                         this.errorMessage = 'unexpected error, try again';
                         return;
-                        console.log(formElements[key].tagName)
                         
                 }
 
@@ -156,12 +155,13 @@ export default defineComponent({
                     
             };
             // invalid form
+            console.log('valid form false');
             return;
         },
 
         startGame(aliasArry, symbolArry) {
 
-            // create newPlayers object which I then use to create new players from Class
+            // create newPlayers object which I then sent to initNewGame.initNewGame() to create new players from Class
             let tmpStr = "Player ";
             let tmpArry = [];
             let newPlayers = {}
@@ -174,17 +174,15 @@ export default defineComponent({
                 };
             };
             
-            // assign new players to global state and local storage
+            // function call to create players from Class and set in localStorage
             let gameObjs = initNewGame.initNewGame(newPlayers);
+            // assign new players to global state
             this.players = gameObjs['playersArr'];
             this.vueopoly = gameObjs['gameJson'];
-            console.log(this.players)
+            console.log(this.players);
+            console.log("players successfully created");
+            console.log(this.viewNumber)
         },
-
-        restoreGame() {
-
-            console.log('not yet available')
-        }
         
     }
 
@@ -193,18 +191,8 @@ export default defineComponent({
 
 <style lang="scss">
 
-.new-game-wrapper-main {
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    
-    border: 1px solid black;
-}
-.new-game-title {
 
-}
 .choose-players-wrapper {
     display: flex;
     flex-direction: column;

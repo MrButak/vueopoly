@@ -50,13 +50,15 @@ let setLs = () => {
 let restoreLs = () => {
 
     // convert local storage string to object
-    let lsVueopoly = localStorage.getItem('vueopoly');
-    lsVueopoly = JSON.parse(lsVueopoly);
+    // let lsVueopoly = localStorage.getItem('vueopoly');
+    // lsVueopoly = JSON.parse(lsVueopoly);
     let lsPlayers = localStorage.getItem('players');
     lsPlayers = JSON.parse(lsPlayers);
 
     // set global state variables
-    vueopoly.value = lsVueopoly;
+    // vueopoly.value = lsVueopoly;
     players.value = lsPlayers;
+    vueopoly.value = gameJson = require('../../vueopoly.json');
+    
     return;
 };

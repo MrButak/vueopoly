@@ -188,7 +188,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 /**
 *       Monopoly layout using CSS3
 *
