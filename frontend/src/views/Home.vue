@@ -1,20 +1,22 @@
 <template>
-<ChoosePlayers />
-<!-- put if clause here to show or not. If 'continue game' don't show this -->
+<InitGame />
 <GameBoard />
+<PlayerDashboard />
 </template>
 
 <script>
 // @ is an alias to /src
 // const main = require('../../public/javascripts/initNewGame');
 import GameBoard from '@/components/GameBoard.vue';
-import ChoosePlayers from '@/components/ChoosePlayers.vue';
+import InitGame from '@/components/initGame/InitGame.vue';
+import PlayerDashboard from '@/components/playerDashboard/PlayerDashboard.vue';
 
 export default {
     name: 'Home',
     components: {
         GameBoard,
-        ChoosePlayers
+        InitGame,
+        PlayerDashboard
     },
 
     // mounted() {

@@ -14,10 +14,11 @@ export default defineComponent({
 
     setup() {
 
-        const { lsInUse, players } = vueGlobalState();
+        const { lsInUse, players, vueopoly } = vueGlobalState();
         return { // make it available in <template>
             lsInUse,
-            players
+            players,
+            vueopoly
             
         }
     },
@@ -38,15 +39,16 @@ export default defineComponent({
         
         checkForGameinProgress() {
             
+            // call function to check for game in localStorage (handleLs.handleLs() also creates localStorage objects if available and none exist)
             if(handleLs.handleLs()) {
                 console.log("local storge objects of existing game was present");
+                console.log(this.players);
+                console.log("saved players");
+                console.log(this.vueopoly.properties)
                 // if approveRestoreGame() {restoreGame()}
-                // else initNewGame()
                 return;
             };
-            // console.log(this.lsInUse)
-            // console.log(this.players)
-            // initNewGame()
+            
         }
     }
 });
