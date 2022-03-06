@@ -18,8 +18,8 @@
 
 
 <div v-if="this.viewNumber == 2" class="choose-players-wrapper">
+    <p v-if="this.errorMessage">{{ this.errorMessage }}</p>
     <form>
-        
             <div v-for="count in this.playerCount">
                 <label for="player-name">Player {{ count }} name</label>
                 <input name="player-name" type="text">
@@ -30,17 +30,12 @@
                 
             </div>
         
-        <button @click="this.viewNumber = 1" type="submit">Back</button>
-        <!-- <button @click="this.startGame($event)" type="submit">Start game</button> -->
+        <button @click="this.restartForm" type="submit">Back</button>
         <button @click="this.validateNewGameForm($event)" type="submit">Start game</button>
         
     </form>
 </div>
         
-        
-    
-
-
 <!-- if previous game found in storage -->
 <!-- <div v-else>
     <p>Previous game found</p>
@@ -73,7 +68,8 @@ export default defineComponent({
             
             playerCount: 2,
             playerSymbols: ["", "horse", "dog", "monkey", "cat", "beaver", "snake"],
-            viewNumber: 1
+            viewNumber: 1,
+            errorMessage: null
         }
     },
 
@@ -85,47 +81,96 @@ export default defineComponent({
 
     methods: {
 
+        // Function resets form to original values when 'back button' clicked
+        restartForm() {
+            this.playerCount = 2;
+            this.errorMessage = null;
+            this.viewNumber = 1;
+        },
+        
+        // Function updates the number of players being created
         updatePlayerCount(event) {
 
             this.playerCount = parseInt(event.target.value);
         },
 
+        // Function validates new player form. If not valid, error message is displayed, if valid startGame function is called
         validateNewGameForm(event) {
 
             event.preventDefault();
-            console.log(event)
-            let formElements = event.target.form;
+            let validForm = true;
+            let aliasArry = [];
+            let symbolArry = [];
+            let formElements = event.target.form; 
+
+            // iterate through all form elements, check for duplicates and blank form elements
             Object.keys(formElements).forEach((key) => {
-                    
-                    if(formElements[key].tagName == "BUTTON") {
-                        console.log("button here")
-                    }
-            //     if(formElements[key].value == "") {
-            //         console.log('yea');
-            //         console.log(formElements[key].value)
-            //         return;
-            //     }
-            //     console.log('nah')
-            //     console.log(formElements[key].value)
+
+                switch(formElements[key].tagName) {
+
+                    case 'BUTTON':
+                        return;
+
+                    case 'INPUT':
+                        if(aliasArry.includes(formElements[key].value)) {
+                            validForm = false;
+                            this.errorMessage = 'Name already taken';
+                            return;
+                        }
+                        else if(formElements[key].value == "") {
+                            validForm = false;
+                            this.errorMessage = 'name required';
+                            return;
+                        }
+                        aliasArry.push(formElements[key].value);
+                        return;
+                        
+                    case 'SELECT':
+                        if(symbolArry.includes(formElements[key].value)) {
+                            this.errorMessage = 'Symbol already taken';
+                            validForm = false;
+                            return;
+                        }
+                        else if(formElements[key].value == "") {
+                            validForm = false;
+                            this.errorMessage = 'symbol required';
+                            return;
+                        }
+                        symbolArry.push(formElements[key].value);
+                        return;
+
+                    default:
+                        validForm = false;
+                        this.errorMessage = 'unexpected error, try again';
+                        return;
+                        console.log(formElements[key].tagName)
+                        
+                }
 
             });
-            event.target.form.tagName
+            // if the form is valid send values to startGame function which will then create players from Class
+            if(validForm) {
+                    console.log('valid form true');
+                    this.startGame(aliasArry, symbolArry);
+                    return;
+                    
+            };
+            // invalid form
+            return;
         },
 
-        startGame(event) {
-
-            event.preventDefault();
+        startGame(aliasArry, symbolArry) {
 
             // create newPlayers object which I then use to create new players from Class
             let tmpStr = "Player ";
             let tmpArry = [];
             let newPlayers = {}
-            for(let i = 0; i < event.target.form.length - 2; i++) {
-                // console.log(event.target.form[i].value)
+            for(let i = 0; i < aliasArry.length; i++) {
+                
                 tmpArry[i] = `${tmpStr}` + (i + 1);
                 newPlayers[tmpArry[i]] = {
-                    'alias': event.target.form[i + 1].value,
-                    'symbol' : "Dog"
+                    'alias': aliasArry[i],
+                    'symbol' : symbolArry[i]
                 };
             };
             
@@ -133,6 +178,7 @@ export default defineComponent({
             let gameObjs = initNewGame.initNewGame(newPlayers);
             this.players = gameObjs['playersArr'];
             this.vueopoly = gameObjs['gameJson'];
+            console.log(this.players)
         },
 
         restoreGame() {
@@ -163,7 +209,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50%;
+    width: 100%;
 }
 #player-count {
     width: 30px;
