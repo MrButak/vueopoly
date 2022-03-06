@@ -19,13 +19,21 @@
 
 <div v-if="this.viewNumber == 2" class="choose-players-wrapper">
     <form>
-        <div v-for="count in this.playerCount">
-            
-            <label for="player-name">Player {{ count }} name</label>
-            <input name="player-name" type="text">
-        </div>
+        
+            <div v-for="count in this.playerCount">
+                <label for="player-name">Player {{ count }} name</label>
+                <input name="player-name" type="text">
+                <!-- <label for="player-symbol">Symbol</label> -->
+                <select name="player-symbol">
+                    <option v-for="symbol in this.playerSymbols">{{ symbol }}</option>
+                </select>
+                
+            </div>
+        
         <button @click="this.viewNumber = 1" type="submit">Back</button>
-        <button @click="this.startGame($event)" type="submit">Start game</button>
+        <!-- <button @click="this.startGame($event)" type="submit">Start game</button> -->
+        <button @click="this.validateNewGameForm($event)" type="submit">Start game</button>
+        
     </form>
 </div>
         
@@ -64,6 +72,7 @@ export default defineComponent({
         return {
             
             playerCount: 2,
+            playerSymbols: ["", "horse", "dog", "monkey", "cat", "beaver", "snake"],
             viewNumber: 1
         }
     },
@@ -78,15 +87,25 @@ export default defineComponent({
 
         updatePlayerCount(event) {
 
-            console.log(event.target)
-            this.playerCount = parseInt(event.target.value)
-
+            this.playerCount = parseInt(event.target.value);
         },
+
+        validateNewGameForm(event) {
+
+            event.preventDefault();
+            console.log(event)
+            let formElements = event.target.form;
+            Object.keys(formElements).forEach((key) => {
+                
+                console.log(formElements[key].value);
+            });
+        },
+
         startGame(event) {
 
             event.preventDefault();
 
-            // create newPlayers object which I use to create new players from class and set local storage and global state
+            // create newPlayers object which I use to create new players from class
             let tmpStr = "Player ";
             let tmpArry = [];
             let newPlayers = {}
@@ -103,7 +122,6 @@ export default defineComponent({
             let gameObjs = initNewGame.initNewGame(newPlayers);
             this.players = gameObjs['playersArr'];
             this.vueopoly = gameObjs['gameJson'];
-            console.log(this.vueopoly)
         },
 
         restoreGame() {
