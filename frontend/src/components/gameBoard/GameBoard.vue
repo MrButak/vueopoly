@@ -182,12 +182,14 @@
 	</div>
 
 </body>
+<ViewProperty ref="viewProperty"/>
 </template>
 
 <script>
 
 import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
+import ViewProperty from '@/components/gameBoard/ViewProperty.vue';
 
 export default defineComponent({
     name: 'GameBoard',
@@ -201,7 +203,7 @@ export default defineComponent({
         }
     },
     components: {
-        
+        ViewProperty
     },
 
     data() {
@@ -222,20 +224,22 @@ export default defineComponent({
 
         // Function add an onclick / hover event to display information about the property
         initEventListeners() {
-            
+
+            // @click this.toggleModal
             console.log("init event listeners")
             
             this.clickable = document.querySelectorAll('#clickable')
             
             this.clickable.forEach((property) => {
-               
-                property.addEventListener('click', (event) => {
-                    // event.stopImmediatePropagation();
-                    //event.stopImmediatePropagation()
-                    console.log(event.target.dataset.id)
-                    console.log
+                
+                // class added for ViewProperty modal
+                property.classList.add("trigger");
+
+                property.addEventListener('click', (event) => { 
+                    console.log(event.target.dataset.id);
+                    this.$refs.viewProperty.toggleModal(); // call function from ViewProperty
                 });
-                // console.log(property)
+                
             });
         }
     }
