@@ -10,9 +10,15 @@
             <UtilityProperty ref="utilityProperty" />   
         </div>
 
-<!-- <span v-show="this.showUtilityCard"><UtilityProperty ref="utilityProperty" /></span> -->
-        <!-- <span v-show="this.showDeedCard"><TitleProperty ref="titleProperty" /></span>
-        <span v-show="this.showUtilityCard"><UtilityProperty ref="utilityProperty" /></span> -->
+        <div v-show="this.showrrCard" class="box">
+            <RailRoadProperty ref="rrProperty" />   
+        </div>
+
+        <div v-show="this.showSpecialCard" class="box">
+            <SpecialProperty ref="specialProperty" />   
+        </div>
+
+
         
     </div>   
 </div>
@@ -26,6 +32,8 @@ import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
 import TitleProperty from '@/components/gameBoard/viewProperty/TitleProperty.vue';
 import UtilityProperty from '@/components/gameBoard/viewProperty/UtilityProperty.vue';
+import RailRoadProperty from '@/components/gameBoard/viewProperty/RailRoadProperty.vue';
+import SpecialProperty from '@/components/gameBoard/viewProperty/SpecialProperty.vue';
 
 export default defineComponent({
 
@@ -42,7 +50,9 @@ export default defineComponent({
     components: {
         
         TitleProperty,
-        UtilityProperty
+        UtilityProperty,
+        RailRoadProperty,
+        SpecialProperty
     },
 
     data() {
@@ -51,9 +61,10 @@ export default defineComponent({
             modal: null,
             trigger: null,
             closeButton: null,
-            propertyCardGroup: null,
             showDeedCard: false,
-            showUtilityCard: false
+            showUtilityCard: false,
+            showrrCard: false,
+            showSpecialCard: false
 
         }
     },
@@ -74,9 +85,12 @@ export default defineComponent({
         },
 
         toggleModal() {
+            
             // set all card views to false when modal closes
             this.showDeedCard = false;
             this.showUtilityCard = false;
+            this.showrrCard = false;
+            this.showSpecialCard = false;
             this.modal.classList.toggle("show-modal");
         },
 
@@ -99,13 +113,19 @@ export default defineComponent({
             switch(property.group.toLowerCase()) {
 
                 case 'special':
-                   
+                    this.showSpecialCard = true;
+                    this.$refs.specialProperty.setPropertyData(property);
+                    return;
                 case 'railroad':
-                   
+                    this.showrrCard = true;
+                    this.$refs.rrProperty.setPropertyData(property);
+                    return;
+
                 case 'utilities':
                     this.showUtilityCard = true;
                     this.$refs.utilityProperty.setPropertyData(property);
                     return;
+                // all deed properties    
                 default:
                     this.showDeedCard = true;
                     this.$refs.titleProperty.setPropertyData(property);

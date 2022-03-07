@@ -122,7 +122,7 @@
 						<div data-id="parkplace" class="headerSide header-right blue"></div>
 						<div data-id="parkplace" class="firstLine firstLine-right rotation3">park<br /> place</div>
 					</div>
-					<div id="clickable" data-id="luxerytax" class="squareSid ">						
+					<div id="clickable" data-id="luxerytax" class="squareSide">						
 						<div data-id="luxerytax" class="firstLine firstLine-right no-color rotation3">luxury<br /> tax</div>
 					</div>
 					<div id="clickable" data-id="boardwalk" class="squareSide ">
