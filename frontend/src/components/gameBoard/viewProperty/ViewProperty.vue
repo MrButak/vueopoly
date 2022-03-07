@@ -4,8 +4,8 @@
         
         <div class="box">
 
-            <TitleProperty ref="titleProperty"/>
-            
+            <TitleProperty ref="titleProperty" />
+            <UtilityProperty ref="utilityProperty" />
         </div>
         
     </div>   
@@ -18,6 +18,7 @@
 import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
 import TitleProperty from '@/components/gameBoard/viewProperty/TitleProperty.vue';
+import UtilityProperty from '@/components/gameBoard/viewProperty/UtilityProperty.vue';
 export default defineComponent({
     name: 'ViewProperty',
     setup() {
@@ -31,7 +32,8 @@ export default defineComponent({
     },
     components: {
         
-        TitleProperty
+        TitleProperty,
+        UtilityProperty
     },
 
     data() {
@@ -76,56 +78,21 @@ export default defineComponent({
             switch(property.group.toLowerCase()) {
 
                 case 'special':
-                    this.setSpecialCardData();
+                   
                 case 'railroad':
-                    this.setRailroadData();
+                   
                 case 'utilities':
-                    this.setUtilityData();
+                    this.$refs.utilityProperty.setData(property);
+                    return;
                 default:
-                    console.log(this.vueopoly)
-                    this.$refs.titleProperty.setPropertyData(property)
+                    this.$refs.titleProperty.setPropertyData(property);
+                    return;
             }      
 
-            // }
-            // this.propertyName = property.name;
-            // this.rent = property.rent;
             
-            // // add rent prices with houses to this.multpliedrent Object
-            // let tmpCnt = 1;
-            // Object.keys(property.multpliedrent).forEach((item) => {
-            //     this.multpliedrent[`rentWith${tmpCnt}House`] = property.multpliedrent[item];
-            //     tmpCnt++;
-            // });
-
-            // if(property.ownedby == -1) {
-            //     this.ownedBy == "none";
-            // }
-            // else {
-            //     // some action to get owners name
-            // }
-            // // set card color from property obj
-            // switch(property.group.toLowerCase()) {
-
-            //     case 'red':
-            //         this.cardColor = 'red';
-            //     case 'purple':
-            //         this.cardColor = 'purple';
-                
-            // }
             
         },
-        setPropertyCardData() {
-            console.log('ok')
-        },
-        setSpecialCardData() {
-            console.log('ok')
-        },
-        setRailroadData() {
-
-        },
-        setUtilityData() {
-
-        }
+        
     }
 });
 

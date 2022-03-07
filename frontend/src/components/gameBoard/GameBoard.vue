@@ -32,9 +32,9 @@
 					<div data-id="atlanticave" class="header header-top yellow"></div>
 					<div data-id="atlanticave" class="firstLine firstLine-top rotation2">atlantic <br /> avenue</div>
 				</div>
-				<div id="clickable" data-id="ventorave" class="square1 ">
-					<div data-id="ventorave" class="header header-top yellow"></div>
-					<div data-id="ventorave" class="firstLine firstLine-top rotation2">ventnor <br /> avenue</div>
+				<div id="clickable" data-id="ventnorave" class="square1 ">
+					<div data-id="ventnorave" class="header header-top yellow"></div>
+					<div data-id="ventnorave" class="firstLine firstLine-top rotation2">ventnor <br /> avenue</div>
 				</div>
 				<div id="clickable" data-id="waterworks" class="square1 ">
                     <!-- waterworks not in this.vueopoly.properties -->
@@ -53,9 +53,9 @@
 						<div data-id="newyorkave" class="headerSide header-left orange"></div>
 						<div data-id="newyorkave" class="firstLine firstLine-left rotation1">new york <br /> avenue</div>
 					</div>
-					<div id="clickable" data-id="tennesseave" class="squareSide ">
-						<div data-id="tennesseave" class="headerSide header-left orange"></div>
-						<div data-id="tennesseave" class="firstLine firstLine-left rotation1">tennessee <br /> avenue</div>
+					<div id="clickable" data-id="tennesseeave" class="squareSide ">
+						<div data-id="tennesseeave" class="headerSide header-left orange"></div>
+						<div data-id="tennesseeave" class="firstLine firstLine-left rotation1">tennessee <br /> avenue</div>
 					</div>
 					<div id="clickable" data-id="communitychest" class="squareSide ">						
 						<div data-id="communitychest" class="firstLine firstLine-left no-color rotation1">community<br /> chest</div>
@@ -125,9 +125,9 @@
 					<div id="clickable" data-id="luxerytax" class="squareSid ">						
 						<div data-id="luxerytax" class="firstLine firstLine-right no-color rotation3">luxury<br /> tax</div>
 					</div>
-					<div id="clickable" data-id="tennesseeave" class="squareSide ">
-						<div data-id="tennesseeave" class="headerSide header-right blue"></div>
-						<div data-id="tennesseeave" class="firstLine firstLine-right rotation3">tennessee<br /> avenue</div>
+					<div id="clickable" data-id="boardwalk" class="squareSide ">
+						<div data-id="boardwalk" class="headerSide header-right blue"></div>
+						<div data-id="boardwalk" class="firstLine firstLine-right rotation3">boardwalk<br /> avenue</div>
 					</div>
 				</div>
 			</div>
