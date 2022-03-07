@@ -2,11 +2,17 @@
 <div class="modal">
     <div class="modal-content">
         
-        <div class="box">
-
-            <span v-show="this.showDeedCard"><TitleProperty ref="titleProperty" /></span>
-            <span v-show="this.showUtilityCard"><UtilityProperty ref="utilityProperty" /></span>
+        <div v-show="this.showDeedCard" class="box">
+            <TitleProperty ref="titleProperty" />    
         </div>
+
+        <div v-show="this.showUtilityCard" class="box">
+            <UtilityProperty ref="utilityProperty" />   
+        </div>
+
+<!-- <span v-show="this.showUtilityCard"><UtilityProperty ref="utilityProperty" /></span> -->
+        <!-- <span v-show="this.showDeedCard"><TitleProperty ref="titleProperty" /></span>
+        <span v-show="this.showUtilityCard"><UtilityProperty ref="utilityProperty" /></span> -->
         
     </div>   
 </div>
@@ -84,7 +90,7 @@ export default defineComponent({
         // Function (called from GameBoard.vue) gets current 'view property' information from this.vueopoly object
         getPropertyData (propertyId) {
 
-            console.log(this.propertyCardGroup)
+          
             
             
             let propertyIndex = this.vueopoly.properties.findIndex(each => each.id == propertyId);
