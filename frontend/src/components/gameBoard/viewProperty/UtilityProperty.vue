@@ -1,10 +1,10 @@
 <template>
     <h2><small>title deed</small><br />{{ this.propertyName }}</h2>
 
-    <p class="align-center">{{ this.propertyDescription }}</p>
-
+    <p>is this on here/?????</p>
+    
     <div class="rent-price-wrapper">
-        
+        <p class="align-center">{{ this.propertyDescription }}</p>
     </div>
 
     
@@ -49,20 +49,24 @@ export default defineComponent({
     methods: {
 
         // Function (called from ViewProperty.vue) gets current 'view property' information from this.vueopoly object
-        setData(property) {
+        setPropertyData(property) {
             
-            console.log("we made it to the big time")
             console.log(property)
 
-            switch(property.id) {
+            this.propertyName = property.name;
+            switch(property.id.toLowerCase()) {
 
                 case 'electriccompany':
                     this.propertyDescription = 'If one utility is "owned...."'
+                    return;
+                    
                 case 'waterworks':
                     this.propertyDescription = "Water works"
+                    return;
+                    
             }
 
-            this.propertyName = property.name;
+            
 
        
         }

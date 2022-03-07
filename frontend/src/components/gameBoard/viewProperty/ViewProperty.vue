@@ -4,12 +4,13 @@
         
         <div class="box">
 
-            <TitleProperty ref="titleProperty" />
-            <UtilityProperty ref="utilityProperty" />
+            <span v-show="this.showDeedCard"><TitleProperty ref="titleProperty" /></span>
+            <span v-show="this.showUtilityCard"><UtilityProperty ref="utilityProperty" /></span>
         </div>
         
     </div>   
 </div>
+
 </template>
 
 
@@ -19,7 +20,9 @@ import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
 import TitleProperty from '@/components/gameBoard/viewProperty/TitleProperty.vue';
 import UtilityProperty from '@/components/gameBoard/viewProperty/UtilityProperty.vue';
+
 export default defineComponent({
+
     name: 'ViewProperty',
     setup() {
 
@@ -39,6 +42,13 @@ export default defineComponent({
     data() {
         return {
 
+            modal: null,
+            trigger: null,
+            closeButton: null,
+            propertyCardGroup: null,
+            showDeedCard: false,
+            showUtilityCard: false
+
         }
     },
     mounted() {
@@ -49,6 +59,7 @@ export default defineComponent({
     methods: {
 
         setViewModal() {
+
             this.modal = document.querySelector(".modal");
             this.trigger = document.querySelector(".trigger");
             this.closeButton = document.querySelector(".close-button");
@@ -57,6 +68,9 @@ export default defineComponent({
         },
 
         toggleModal() {
+            // set all card views to false when modal closes
+            this.showDeedCard = false;
+            this.showUtilityCard = false;
             this.modal.classList.toggle("show-modal");
         },
 
@@ -69,12 +83,13 @@ export default defineComponent({
         },
         // Function (called from GameBoard.vue) gets current 'view property' information from this.vueopoly object
         getPropertyData (propertyId) {
-            console.log(propertyId)
-            // console.log(this.vueopoly.properties)
+
+            console.log(this.propertyCardGroup)
+            
+            
             let propertyIndex = this.vueopoly.properties.findIndex(each => each.id == propertyId);
             let property = this.vueopoly.properties[propertyIndex];
-            console.log(this.vueopoly.properties, "the final one")
-            // console.log(propertyId, "here")
+            
             switch(property.group.toLowerCase()) {
 
                 case 'special':
@@ -82,9 +97,11 @@ export default defineComponent({
                 case 'railroad':
                    
                 case 'utilities':
-                    this.$refs.utilityProperty.setData(property);
+                    this.showUtilityCard = true;
+                    this.$refs.utilityProperty.setPropertyData(property);
                     return;
                 default:
+                    this.showDeedCard = true;
                     this.$refs.titleProperty.setPropertyData(property);
                     return;
             }      
@@ -192,5 +209,8 @@ h2 {
     display: flex;
     flex-direction: column;
     padding: 10px 10px;
+}
+.hidePropertyCardGroup {
+    display: none;
 }
 </style>

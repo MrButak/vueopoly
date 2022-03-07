@@ -77,8 +77,7 @@ export default defineComponent({
 
         // Function (called from ViewProperty.vue) gets current 'view property' information from this.vueopoly object
         setPropertyData(property) {
-            console.log(property)
-            console.log("it's making it here, so why aren't these updating?")
+            
             this.propertyName = property.name;
             this.rent = property.rent;
             this.buildingCount = property.buildings;
@@ -99,33 +98,11 @@ export default defineComponent({
             };
 
             // set card color from property obj
-            switch(property.group.toLowerCase()) {
-
-                case 'red':
-                    this.cardColor = 'red';
-                case 'purple':
-                    this.cardColor = 'purple';
-                
-            }
-            console.log(this.multpliedrent)
+            this.cardColor = property.group.toLowerCase;
+            
+           
         }
  
-        
-            
-            
-        // },
-        // setPropertyCardData() {
-        //     console.log('ok')
-        // },
-        // setSpecialCardData() {
-        //     console.log('ok')
-        // },
-        // setRailroadData() {
-
-        // },
-        // setUtilityData() {
-
-        // }
     }
 });
 
