@@ -1,50 +1,13 @@
 <template>
 <div class="modal">
     <div class="modal-content">
-        <div class="wrapper">
+        
+        <div class="box">
 
-            <div class="box">
-
-                <h2><small>title deed</small><br />Indiana Ave.</h2>
-
-                <p class="align-center">Rent $18</p>
-
-                <div class="rent-price-wrapper">
-                    <div class="name-price-wrapper">
-                        <text>With 1 House</text><text>$90</text>
-                    </div>
-                    
-                    <div class="name-price-wrapper">
-                        <text>With 2 Houses</text><text>$250</text>
-                    </div>
-
-                    <div class="name-price-wrapper">
-                        <text>With 3 Houses</text><text>$700</text>
-                    </div>
-
-                    <div class="name-price-wrapper">
-                        <text>With 4 Houses</text><text>$875</text>
-                    </div>
-                </div>
-
-                <p class="align-center">With HOTEL $1050</p>
-                <small class="align-center">Morgage Value $110</small>
-
-                <div class="player-data-wrapper">
-                    <div class="name-price-wrapper">
-                        <small>Owned By:</small><small>testing</small>
-                    </div>
-                    <div class="name-price-wrapper">
-                        <small>Houses:</small><small>00</small>
-                    </div>
-                    <div class="name-price-wrapper">
-                        <small>Hotels:</small><small>00</small>
-                    </div>
-                </div>
-
-                
-            </div>
+            <TitleProperty ref="titleProperty"/>
+            
         </div>
+        
     </div>   
 </div>
 </template>
@@ -54,7 +17,7 @@
 
 import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
-
+import TitleProperty from '@/components/gameBoard/viewProperty/TitleProperty.vue';
 export default defineComponent({
     name: 'ViewProperty',
     setup() {
@@ -68,25 +31,12 @@ export default defineComponent({
     },
     components: {
         
+        TitleProperty
     },
 
     data() {
         return {
 
-            modal: null,
-            trigger: null,
-            closeButton: null,
-            // property variables
-            propertyTitle: "",
-            rent: 0,
-            rent1House: 0,
-            rent2House: 0,
-            rent3House: 0,
-            rent4House: 0,
-            rentHotel: 0,
-            ownedBy: "",
-            houseCount: 0,
-            hotelCount: 0
         }
     },
     mounted() {
@@ -115,14 +65,66 @@ export default defineComponent({
                 
             }
         },
+        // Function (called from GameBoard.vue) gets current 'view property' information from this.vueopoly object
         getPropertyData (propertyId) {
-            console.log("property id here", propertyId)
-            console.log(this.vueopoly.properties)
+            console.log(propertyId)
+            // console.log(this.vueopoly.properties)
             let propertyIndex = this.vueopoly.properties.findIndex(each => each.id == propertyId);
             let property = this.vueopoly.properties[propertyIndex];
-            console.log(property)
-            // console.log(propertyIndex, "here's the index")
+            console.log(this.vueopoly.properties, "the final one")
+            // console.log(propertyId, "here")
+            switch(property.group.toLowerCase()) {
+
+                case 'special':
+                    this.setSpecialCardData();
+                case 'railroad':
+                    this.setRailroadData();
+                case 'utilities':
+                    this.setUtilityData();
+                default:
+                    console.log(this.vueopoly)
+                    this.$refs.titleProperty.setPropertyData(property)
+            }      
+
+            // }
+            // this.propertyName = property.name;
+            // this.rent = property.rent;
             
+            // // add rent prices with houses to this.multpliedrent Object
+            // let tmpCnt = 1;
+            // Object.keys(property.multpliedrent).forEach((item) => {
+            //     this.multpliedrent[`rentWith${tmpCnt}House`] = property.multpliedrent[item];
+            //     tmpCnt++;
+            // });
+
+            // if(property.ownedby == -1) {
+            //     this.ownedBy == "none";
+            // }
+            // else {
+            //     // some action to get owners name
+            // }
+            // // set card color from property obj
+            // switch(property.group.toLowerCase()) {
+
+            //     case 'red':
+            //         this.cardColor = 'red';
+            //     case 'purple':
+            //         this.cardColor = 'purple';
+                
+            // }
+            
+        },
+        setPropertyCardData() {
+            console.log('ok')
+        },
+        setSpecialCardData() {
+            console.log('ok')
+        },
+        setRailroadData() {
+
+        },
+        setUtilityData() {
+
         }
     }
 });
@@ -130,7 +132,7 @@ export default defineComponent({
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss">
 
 .modal {
     z-index: 2;
@@ -176,10 +178,7 @@ hr {
     background-image: linear-gradient(to right, #ccc, #333, #ccc);
 }
 
-.wrapper {
- /* width:94%;*/
-  margin:auto;
-}
+
 
 .box {
     display: flex;
