@@ -238,6 +238,7 @@ export default defineComponent({
                 property.addEventListener('click', (event) => { 
                     console.log(event.target.dataset.id);
                     this.$refs.viewProperty.toggleModal(); // call function from ViewProperty
+                    this.$refs.viewProperty.getPropertyData(event.target.dataset.id); // call function from ViewProperty
                 });
                 
             });
