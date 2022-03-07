@@ -7,7 +7,7 @@
 <script>
 // @ is an alias to /src
 // const main = require('../../public/javascripts/initNewGame');
-import GameBoard from '@/components/GameBoard.vue';
+import GameBoard from '@/components/gameBoard/GameBoard.vue';
 import InitGame from '@/components/initGame/InitGame.vue';
 import PlayerDashboard from '@/components/playerDashboard/PlayerDashboard.vue';
 

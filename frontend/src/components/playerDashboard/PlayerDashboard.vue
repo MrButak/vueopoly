@@ -51,7 +51,7 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     width: 99vw;
-    top: 37vw;
+    top: 80vw;
     
    
 }
