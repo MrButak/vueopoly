@@ -6,6 +6,7 @@
     </div>
     <ChoosePlayers />
 </div>
+
 <!-- <div v-else class="new-game-wrapper-main">
     <p>save game found</p>
     <p>continue game?</p>
@@ -15,6 +16,7 @@
 
 <script>
 import ChoosePlayers from '@/components/initGame/ChoosePlayers.vue';
+import PlayerDashboard from '@/components/playerDashboard/PlayerDashboard.vue';
 import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
 
@@ -22,22 +24,24 @@ export default defineComponent({
 
     setup() {
 
-        const { lsInUse, players, vueopoly } = vueGlobalState();
+        const { lsInUse, players, vueopoly, gameLogic } = vueGlobalState();
         return { // make it available in <template>
             lsInUse,
             players,
-            vueopoly
+            vueopoly,
+            gameLogic
         }
     },
     components: {
-        ChoosePlayers
+        ChoosePlayers,
+        PlayerDashboard
     },
 
     data() {
 
         return {
             
-            playerCount: null
+            
         }
     },
 
@@ -48,6 +52,7 @@ export default defineComponent({
     },
 
     methods: {
+
     }
 })
 </script>

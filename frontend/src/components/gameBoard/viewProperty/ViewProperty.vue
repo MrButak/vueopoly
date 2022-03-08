@@ -104,9 +104,6 @@ export default defineComponent({
         // Function (called from GameBoard.vue) gets current 'view property' information from this.vueopoly object
         getPropertyData (propertyId) {
 
-          
-            
-            
             let propertyIndex = this.vueopoly.properties.findIndex(each => each.id == propertyId);
             let property = this.vueopoly.properties[propertyIndex];
             
