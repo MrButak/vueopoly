@@ -1,7 +1,10 @@
 <template>
 <InitGame />
 <GameBoard />
-<PlayerDashboard ref='playerDashboard'/>
+<div v-if="this.gameLogic.startGame">
+    <PlayerDashboard ref='playerDashboard'/>
+</div>
+
 </template>
 
 <script>
@@ -10,20 +13,47 @@
 import GameBoard from '@/components/gameBoard/GameBoard.vue';
 import InitGame from '@/components/initGame/InitGame.vue';
 import PlayerDashboard from '@/components/playerDashboard/PlayerDashboard.vue';
+import { defineComponent } from 'vue';
+import { vueGlobalState } from '/src/javascripts/stateStore';
 
-export default {
+export default defineComponent({
+
     name: 'Home',
+    setup() {
+
+        const { lsInUse, players, vueopoly, gameLogic } = vueGlobalState();
+        return { // make it available in <template>
+            lsInUse,
+            players,
+            vueopoly,
+            gameLogic
+        }
+    },
+
     components: {
         GameBoard,
         InitGame,
         PlayerDashboard
     },
 
-   
+    data() {
+
+        return {
+            
+            
+        }
+    },
+
+    mounted() {
+        
+      
+        
+        
+    },
+    
 
     methods: {
-        
-        
+
     }
-}
+})
 </script>

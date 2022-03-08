@@ -1,19 +1,19 @@
 <template>
-<!-- after a new game is created this.gameLogic.startGame is set to true -->
-<div v-show="this.gameLogic.startGame">
-    <div class="player-dashboard-wrapper-main">
-        <div class="player-dashboard-wrapper">
-            <button @click="this.mainGameLoop" id="start-game-btn">Start Game</button>
-            
-            <div class="playerName">
-                {{ this.crntPlayerName }} - {{ this.crntPlayerAlias }}
-            </div>
-            <div class="gameLog">
 
-            </div>
+
+<div class="player-dashboard-wrapper-main">
+    <div class="player-dashboard-wrapper">
+        
+
+        <div class="playerName">
+            {{ this.crntPlayerName }} - {{ this.crntPlayerAlias }}
+        </div>
+        <div class="gameLog">
+
         </div>
     </div>
 </div>
+
 
 <div id="player-position">
 0
@@ -65,7 +65,7 @@ export default defineComponent({
 
     mounted() {
         
-      
+        this.mainGameLoop()
         
         
     },
@@ -95,7 +95,7 @@ export default defineComponent({
         mainGameLoop() {
 
             // remove start game button
-            document.getElementById('start-game-btn').remove()
+         //  document.getElementById('start-game-btn').remove()
             console.log("did it",this.gameLogic)
         //*****
             // 3 lines vs 1. In this case which is better?
