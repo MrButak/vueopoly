@@ -1,7 +1,7 @@
 const { vueGlobalState } = require('../javascripts/stateStore');
 const { lsInUse, vueopoly, players, gameLogic } = vueGlobalState();
 
-// Function handles all function calls below
+// Function handles all function calls below. Is the only one exported
 exports.handleLs = () => {
 
     if(checkLsAvailable()) {
@@ -63,7 +63,6 @@ let restoreLs = () => {
     vueopoly.value = lsVueopoly;
     players.value = lsPlayers;
     gameLogic.value = lsGameLogic;
-    //vueopoly.value = gameJson = require('../../vueopoly.json');
     
     return;
 };

@@ -14,29 +14,37 @@ class Player {
         this.isTurn = isTurn
     };
 
-    payRent = (price, player, proptery) => {
-        if(this.money - price < 1) {
-            return false;
-        };
+    // payRent = (price, player, proptery) => {
+    //     if(this.money - price < 1) {
+    //         return false;
+    //     };
         
-        player.money += value;
-        this.money -= value;
-        // game log: `${this.name} payed ${player} ${value} for rent at ${property}`
-        return true;
-    };
+    //     player.money += value;
+    //     this.money -= value;
+    //     // game log: `${this.name} payed ${player} ${value} for rent at ${property}`
+    //     return true;
+    // }
 
-    buyProperty = (property, cost) => {
-        if(this.money - cost < 1) {
-            return false;
-        };
+    // buyProperty = (property, cost) => {
+    //     if(this.money - cost < 1) {
+    //         return false;
+    //     };
 
-        if(player === "bank") {
-            this.money -= value;
-            this.properties.push(property);
-            return true;
-            // game log: `${this.name} purchased ${property} from The Bank for ${value}`
-        };
-    };
+    //     if(player === "bank") {
+    //         this.money -= value;
+    //         this.properties.push(property);
+    //         return true;
+    //         // game log: `${this.name} purchased ${property} from The Bank for ${value}`
+    //     };
+    // }
+    // get tmp() {
+    //     return(this.tmps)
+    // }
+    
+    // tmps () {
+    //     console.log(this.vueopoly)
+    //     return(this.money)
+    // }
 };
 
 exports.initNewGame = (newPlayers) => {
@@ -53,7 +61,10 @@ exports.initNewGame = (newPlayers) => {
     
     // TODO
     let gameLogic = {
+        'startGame': true,
         'playerCount': tmpCnt,
+        'whosTurn': 0,
+        'gameLog': []
     }
     
     let gameJson = require('../../vueopoly.json');

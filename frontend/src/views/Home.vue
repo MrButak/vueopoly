@@ -1,7 +1,7 @@
 <template>
 <InitGame />
 <GameBoard />
-<PlayerDashboard />
+<PlayerDashboard ref='playerDashboard'/>
 </template>
 
 <script>
@@ -19,14 +19,11 @@ export default {
         PlayerDashboard
     },
 
-    // mounted() {
-    //     this.callMain()
-    // },
+   
 
-    // methods: {
-    //     callMain() {
-    //         main.initNewGame()
-    //     }
-    // }
+    methods: {
+        
+        
+    }
 }
 </script>

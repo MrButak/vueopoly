@@ -37,7 +37,9 @@
         
     </form>
 </div>
-        
+
+
+
 <!-- if previous game found in storage ask to restore game or start new game-->
 <!-- <div v-else>
     <p>Previous game found</p>
@@ -51,7 +53,7 @@
 import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
 const initNewGame = require('/src/javascripts/initNewGame');
-
+import PlayerDashboard from '@/components/playerDashboard/PlayerDashboard.vue';
 export default defineComponent({
     name: 'ChoosePlayers',
     setup() {
@@ -63,6 +65,10 @@ export default defineComponent({
             vueopoly,
             gameLogic
         }
+    },
+
+    components: {
+        PlayerDashboard
     },
 
     data() {
@@ -183,10 +189,8 @@ export default defineComponent({
             this.players = gameObjs['playersArr'];
             this.vueopoly = gameObjs['gameJson'];
             this.gameLogic = gameObjs['gameLogic'];
-            // console.log(this.players);
-            // console.log("players successfully created");
-            console.log("where is my game logic?")
-            console.log(this.gameLogic)
+
+            
         },
         
     }
@@ -195,8 +199,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-
-
 
 .choose-players-wrapper {
     display: flex;
