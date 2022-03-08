@@ -181,7 +181,6 @@ export default defineComponent({
             this.vueopoly = gameObjs['gameJson'];
             console.log(this.players);
             console.log("players successfully created");
-            console.log(this.viewNumber)
         },
         
     }

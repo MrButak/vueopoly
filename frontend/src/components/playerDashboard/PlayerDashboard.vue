@@ -4,6 +4,30 @@
         <p>Player Dashboard</p>
     </div>
 </div>
+<div id="player-position">
+0
+</div>
+<div id="player-position">
+0
+</div>
+<div id="player-position">
+0
+</div>
+<div id="player-position">
+0
+</div>
+<div id="player-position">
+0
+</div>
+<div id="player-position">
+0
+</div>
+<div id="player-position">
+0
+</div>
+<div id="player-position">
+0
+</div>
 </template>
 
 <script>
@@ -30,19 +54,27 @@ export default defineComponent({
 
         return {
             
+            playerPosition: null
         
         }
     },
 
     mounted() {
         
-        
+        this.initDom();
         
     },
 
     methods: {
+
+        initDom() {
+            console.log(this.vueopoly)
+            this.playerPosition = document.getElementById('player-position');
+            // this.playerPosition.style.left = '70vw'
+        }
+
     }
-})
+});
 </script>
 <style scoped>
 .player-dashboard-wrapper-main {
@@ -60,6 +92,14 @@ export default defineComponent({
     
     border: 1px solid black;
     background-color: white;
+}
+#player-position {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 77vw;
+    left: 86vw;
 }
 
 </style>
