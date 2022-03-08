@@ -1,16 +1,33 @@
 <template>
 
-
 <div class="player-dashboard-wrapper-main">
     <div class="player-dashboard-wrapper">
         
-
         <div class="playerName">
             {{ this.crntPlayerName }} - {{ this.crntPlayerAlias }}
         </div>
-        <div class="gameLog">
 
+        <div class="manage-trade-btn-wrapper">
+            <button>Manage</button>
+            <text>${{ this.crntPlayerMoney }}</text>
+            <button>Trade</button>
         </div>
+
+        <div class="roll-dice-end-turn-btn-wrapper">
+            <button @click="this.rollDice">Roll Dice</button>
+        </div>
+
+        <div class="log-and-dice-wrapper">
+            <div class="gamelog-wrapper-main">
+                <text v-for="log in this.gameLogic.gameLog">
+                    {{ log }}
+                </text>
+            </div>
+            <div class="show-dice-wrapper-main">
+                {{ this.crntDiceRoll[0] }} , {{ this.crntDiceRoll[1] }}
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -60,48 +77,25 @@ export default defineComponent({
             crntPlayerAlias: "",
             crntPlayerMoney: 0,
             crntPlayerProperties: [],
+            crntDiceRoll: []
         }
     },
 
     mounted() {
         
         this.mainGameLoop()
-        
-        
     },
-    // onmounted() {
-    //     this.startGame();
-    // },
 
     methods: {
 
-        initDom() {
-
-
-            // console.log(this.vueopoly)
-            // this.playerPosition = document.getElementById('player-position');
-            // this.playerPosition.style.left = '70vw'
-        },
-
-        // startGame() {
-        //     console.log(typeof(this.players), 'here made it to main loop')
-        //     if(this.gameLogic.gameStart) {
-        //         this.mainGameLoop()
-        //         return;
-        //     }
-        //     return
-        // },
-
         mainGameLoop() {
 
-            // remove start game button
-         //  document.getElementById('start-game-btn').remove()
-            console.log("did it",this.gameLogic)
         //*****
             // 3 lines vs 1. In this case which is better?
             // let crntPlayerIndex = gameFunctions.getCrntPlayer();
             // let crntPlayer = this.players[crntPlayerIndex];
             // this.getCrntPlayerData(crntPlayer);
+
             this.getCrntPlayerData(this.players[gameFunctions.getCrntPlayer()]);
         //*****
 
@@ -109,18 +103,17 @@ export default defineComponent({
 
         getCrntPlayerData(crntPlayer) {
 
+            this.gameLogic.gameLog.push(`${crntPlayer.name}'s turn.`)
             console.log(crntPlayer)
             this.crntPlayerName = crntPlayer.name;
             this.crntPlayerAlias = crntPlayer.alias;
             this.crntPlayerMoney = crntPlayer.money;
-            // console.log(this.gameLogic)
-            // console.log(this.players[0].name)
-            
-            // console.log(this.players[0].tmp)
+        },
 
+        rollDice() {
 
+            this.crntDiceRoll = gameFunctions.rollDice();
         }
-
     }
 });
 </script>
@@ -130,22 +123,54 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 99vw;
-    top: 80vw;
+    width: 50vw;
+    top: 31.4vw;
+    left: 25vw;
     
    
 }
 .player-dashboard-wrapper {
     width: 47vw;
-    
     border: 1px solid black;
     background-color: white;
+    padding: 10px;
+    height: 16vw;
 }
 
 .playerName {
     display: flex;
     justify-content: center;
     width: 100%;
+}
+.manage-trade-btn-wrapper {
+    display: flex;
+    justify-content: space-around;
+}
+.roll-dice-end-turn-btn-wrapper {
+    display: flex;
+    justify-content: center;
+
+}
+.log-and-dice-wrapper {
+    display: flex;
+    justify-content: space-between;
+    
+}
+.gamelog-wrapper-main {
+    display: flex;
+    flex-direction: column;
+    height: 9vw;
+    background-color: gray;
+    border: 1px solid black;
+    overflow-y: scroll;
+    width: 18vw;
+    
+}
+.show-dice-wrapper-main {
+    display: flex;
+    height:9vw;
+    border: 1px solid black;
+    width: 18vw;
 }
 #player-position {
     position: absolute;

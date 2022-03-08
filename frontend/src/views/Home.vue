@@ -1,6 +1,7 @@
 <template>
 <InitGame />
 <GameBoard />
+<!-- v-if over v-show. v-if is not loaded until condition is met -->
 <div v-if="this.gameLogic.startGame">
     <PlayerDashboard ref='playerDashboard'/>
 </div>

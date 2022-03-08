@@ -59,12 +59,13 @@ exports.initNewGame = (newPlayers) => {
         tmpCnt++;
     });
     
-    // TODO
+    
     let gameLogic = {
         'startGame': true,
+        'firstTurn': true,
         'playerCount': tmpCnt,
         'whosTurn': 0,
-        'gameLog': []
+        'gameLog': ["New game created."]
     }
     
     let gameJson = require('../../vueopoly.json');
