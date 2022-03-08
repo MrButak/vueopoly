@@ -90,21 +90,15 @@ export default defineComponent({
 
         mainGameLoop() {
 
-        //*****
-            // 3 lines vs 1. In this case which is better?
-            // let crntPlayerIndex = gameFunctions.getCrntPlayer();
-            // let crntPlayer = this.players[crntPlayerIndex];
-            // this.getCrntPlayerData(crntPlayer);
-
-            this.getCrntPlayerData(this.players[gameFunctions.getCrntPlayer()]);
-        //*****
-
+            // Function call
+            this.startTurn(this.players[gameFunctions.getCrntPlayer()]);
         },
 
-        getCrntPlayerData(crntPlayer) {
-            // this.gameLogin.whosTurn + 1 should be used
+        startTurn(crntPlayer) {
+            
+            // game log
             this.gameLogic.gameLog.push(`${crntPlayer.name}'s turn.`)
-            console.log(crntPlayer)
+            
             this.crntPlayerName = crntPlayer.name;
             this.crntPlayerAlias = crntPlayer.alias;
             this.crntPlayerMoney = crntPlayer.money;
@@ -112,8 +106,23 @@ export default defineComponent({
 
         rollDice() {
 
+            // Function call
             this.crntDiceRoll = gameFunctions.rollDice();
-            gameFunctions.playerPosInfo(this.crntDiceRoll[0] + this.crntDiceRoll[1]);
+            // Function call
+            let propertyInfo = gameFunctions.playerPosInfo(this.crntDiceRoll[0] + this.crntDiceRoll[1]);
+
+            // game log
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
+            this.gameLogic.gameLog.push(`${crntPlayer.name} rolled for ${this.crntDiceRoll[0] + this.crntDiceRoll[1]} and landed on ${propertyInfo.info.name}.`)
+
+            // Function call
+            this.dtrmPropertyAction(propertyInfo)
+        },
+
+        dtrmPropertyAction(propertyInfo) {
+
+            let propertyAction = gameFunctions.dtrmPropertyAction(propertyInfo);
+            console.log(propertyAction)
         }
     }
 });

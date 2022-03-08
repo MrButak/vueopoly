@@ -30,24 +30,62 @@ exports.rollDice = () => {
     return(dice)
 };
 
-// Function adds rolled dice to player position and gets new postions information
+// Function adds rolled dice to player position and gets new postion information
 exports.playerPosInfo = (moveCount) => {
 
     // TODO: modular math
-    // console.log(players.value[gameLogic.value.whosTurn].position);
-    // console.log(moveCount)
+    let propertyInfo = {};
+    // calculate player's new position
     players.value[gameLogic.value.whosTurn].position += moveCount;
-    // console.log(vueopoly.value.properties)
     
-    let propertyIndex = vueopoly.value.properties.findIndex(each => each.position == players.value[gameLogic.value.whosTurn].position) - 2;
-    let property = vueopoly.value.properties[propertyIndex];
+    let propertyInfoIndex = vueopoly.value.properties.findIndex(each => each.position == players.value[gameLogic.value.whosTurn].position);
+    propertyInfo['info'] = vueopoly.value.properties[propertyInfoIndex];
 
-    console.log(vueopoly.value)
+    let propertyCoordIndex = vueopoly.value.tiles.findIndex(each => each.position == players.value[gameLogic.value.whosTurn].position);
+    propertyInfo['coord'] = vueopoly.value.tiles[[propertyCoordIndex]];
 
-    console.log(players.value[gameLogic.value.whosTurn].position)
-    console.log('player position')
-    console.log(propertyIndex)
-    console.log('property index')
-    console.log(property)
-    console.log('property')
+    return(propertyInfo)
+    
+};
+
+exports.dtrmPropertyAction = (propertyInfo) => {
+
+    // console.log(vueopoly.value)
+
+    let handleSpecialProperty = () => {
+
+        switch(propertyInfo.info.id.toLowerCase()) {
+
+            case 'chance':
+                return('chance');
+            case 'communitychest':
+                return('communitychest');
+            case 'freeparking':
+                return('freeparking');
+            case 'incometax':
+                return('incometax');
+            case 'luxerytax':
+                return('luxerytax')
+            // case 'gotojail':
+        }
+       
+    };
+
+    let handleOwnableProperty = () => {
+
+        return 'ownable property'
+
+    };
+
+    switch(propertyInfo.info.group.toLowerCase()) {
+
+        case 'special':
+            return handleSpecialProperty();
+            break;
+        default:
+            return handleOwnableProperty()
+            break;
+    };
+
+    
 };
