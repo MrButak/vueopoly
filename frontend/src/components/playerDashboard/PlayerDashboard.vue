@@ -102,7 +102,7 @@ export default defineComponent({
         },
 
         getCrntPlayerData(crntPlayer) {
-
+            // this.gameLogin.whosTurn + 1 should be used
             this.gameLogic.gameLog.push(`${crntPlayer.name}'s turn.`)
             console.log(crntPlayer)
             this.crntPlayerName = crntPlayer.name;
@@ -113,6 +113,7 @@ export default defineComponent({
         rollDice() {
 
             this.crntDiceRoll = gameFunctions.rollDice();
+            gameFunctions.playerPosInfo(this.crntDiceRoll[0] + this.crntDiceRoll[1]);
         }
     }
 });

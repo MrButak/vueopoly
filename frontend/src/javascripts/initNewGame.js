@@ -3,11 +3,11 @@ const { lsInUse, vueopoly, players } = vueGlobalState();
 
 class Player {
 
-    constructor(name, alias, symbol, postion, properties, money, inJail, isTurn) {
+    constructor(name, alias, symbol, position, properties, money, inJail, isTurn) {
         this.name = name
         this.alias = alias
         this.symbol = symbol
-        this.postion = postion
+        this.position = position
         this.properties = properties
         this.money = money
         this.inJail = inJail

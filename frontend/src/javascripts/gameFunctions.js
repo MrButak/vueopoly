@@ -1,7 +1,7 @@
 const { vueGlobalState } = require('../javascripts/stateStore');
 const { lsInUse, vueopoly, players, gameLogic } = vueGlobalState();
 
-// Function returns a number which represents the index postion of a player in players array
+// Function returns a number which represents the index position of a player in players array
 exports.getCrntPlayer = () => {
 
     // gameLogic.whosTurn is the index postition in players array
@@ -15,7 +15,7 @@ exports.getCrntPlayer = () => {
         return(gameLogic.value.whosTurn);
     };
 
-    // increase index postion
+    // increase index position
     gameLogic.value.whosTurn++;
     return(gameLogic);
 };
@@ -28,4 +28,26 @@ exports.rollDice = () => {
     dice.push(Math.floor(Math.random() * 6 + 1));
       
     return(dice)
+};
+
+// Function adds rolled dice to player position and gets new postions information
+exports.playerPosInfo = (moveCount) => {
+
+    // TODO: modular math
+    // console.log(players.value[gameLogic.value.whosTurn].position);
+    // console.log(moveCount)
+    players.value[gameLogic.value.whosTurn].position += moveCount;
+    // console.log(vueopoly.value.properties)
+    
+    let propertyIndex = vueopoly.value.properties.findIndex(each => each.position == players.value[gameLogic.value.whosTurn].position) - 2;
+    let property = vueopoly.value.properties[propertyIndex];
+
+    console.log(vueopoly.value)
+
+    console.log(players.value[gameLogic.value.whosTurn].position)
+    console.log('player position')
+    console.log(propertyIndex)
+    console.log('property index')
+    console.log(property)
+    console.log('property')
 };
