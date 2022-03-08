@@ -1,5 +1,5 @@
 const { vueGlobalState } = require('../javascripts/stateStore');
-const { lsInUse, vueopoly, players } = vueGlobalState();
+const { lsInUse, vueopoly, players, gameLogic } = vueGlobalState();
 
 // Function handles all function calls below
 exports.handleLs = () => {
@@ -20,7 +20,6 @@ exports.handleLs = () => {
 
 // Function checks if local storage is available for use on browser
 let checkLsAvailable = () => {
-    //console.log(lsInUse.value, "hereffff")
 
     try {
         localStorage.setItem('test', 'is local storage available?');
@@ -39,9 +38,10 @@ let checkLsAvailable = () => {
 // Function sets local storage objects if doesn't exist
 let setLs = () => {
 
-    // localStorage.setItem("vueopoly", "");
-    localStorage.setItem("players", "0");
-    // initially set global state to 0 so I know wether to start a new game (ChoosePlayers.vue)
+    localStorage.setItem('vueopoly', '');
+    localStorage.setItem('players', '0');
+    localStorage.setItem('gamelogic', '');
+    // initially set global state players value to 0 so I know wether to start a new game (ChoosePlayers.vue)
     players.value = 0;
     return;
 };
@@ -50,15 +50,20 @@ let setLs = () => {
 let restoreLs = () => {
 
     // convert local storage string to object
-    // let lsVueopoly = localStorage.getItem('vueopoly');
-    // lsVueopoly = JSON.parse(lsVueopoly);
+    let lsVueopoly = localStorage.getItem('vueopoly');
+    lsVueopoly = JSON.parse(lsVueopoly);
+    
     let lsPlayers = localStorage.getItem('players');
     lsPlayers = JSON.parse(lsPlayers);
 
+    let lsGameLogic = localStorage.getItem('gamelogic');
+    lsGameLogic = JSON.parse(lsGameLogic);
+
     // set global state variables
-    // vueopoly.value = lsVueopoly;
+    vueopoly.value = lsVueopoly;
     players.value = lsPlayers;
-    vueopoly.value = gameJson = require('../../vueopoly.json');
+    gameLogic.value = lsGameLogic;
+    //vueopoly.value = gameJson = require('../../vueopoly.json');
     
     return;
 };

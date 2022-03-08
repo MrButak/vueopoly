@@ -2,6 +2,7 @@ import { ref } from 'vue';
 const vueopoly = ref({});
 const players = ref([]); // array of objs
 const lsInUse = ref(false);
+const gameLogic = ref({})
 
 export const vueGlobalState = function() {
 
@@ -10,6 +11,7 @@ export const vueGlobalState = function() {
     return {
         vueopoly,
         players,
-        lsInUse
+        lsInUse,
+        gameLogic
     };
 };

@@ -50,15 +50,19 @@ exports.initNewGame = (newPlayers) => {
         playersArr[tmpCnt] = new Player(player, newPlayers[player].alias, newPlayers[player].symbol, 0, {}, 500, false, false);
         tmpCnt++;
     });
-
+    
+    // TODO
+    let gameLogic = {
+        'playerCount': tmpCnt,
+    }
     
     let gameJson = require('../../vueopoly.json');
-
     // set local storage
-    // localStorage.setItem('vueopoly', JSON.stringify(gameJson)); // probably don't need to load this to ls
+    localStorage.setItem('vueopoly', JSON.stringify(gameJson));
     localStorage.setItem('players', JSON.stringify(playersArr));
+    localStorage.setItem('gamelogic', JSON.stringify(gameLogic));
     
     // return objs to set as global state
-    return{playersArr, gameJson}
+    return{playersArr, gameJson, gameLogic}
 };
 

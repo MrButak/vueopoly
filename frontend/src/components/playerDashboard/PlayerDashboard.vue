@@ -4,30 +4,12 @@
         <p>Player Dashboard</p>
     </div>
 </div>
+
 <div id="player-position">
 0
 </div>
-<div id="player-position">
-0
-</div>
-<div id="player-position">
-0
-</div>
-<div id="player-position">
-0
-</div>
-<div id="player-position">
-0
-</div>
-<div id="player-position">
-0
-</div>
-<div id="player-position">
-0
-</div>
-<div id="player-position">
-0
-</div>
+
+
 </template>
 
 <script>
@@ -54,7 +36,7 @@ export default defineComponent({
 
         return {
             
-            playerPosition: null
+            playerPosition: []
         
         }
     },

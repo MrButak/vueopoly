@@ -11,6 +11,8 @@
             <option value="4">4</option>
             <option value="5">5</option>
             <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
         </select>
     </div>
     <button @click="this.viewNumber = 2" type="submit">Continue</button>
@@ -36,7 +38,7 @@
     </form>
 </div>
         
-<!-- if previous game found in storage -->
+<!-- if previous game found in storage ask to restore game or start new game-->
 <!-- <div v-else>
     <p>Previous game found</p>
     <button @click="this.restoreGame()">continue game</button>
@@ -54,11 +56,12 @@ export default defineComponent({
     name: 'ChoosePlayers',
     setup() {
 
-        const { lsInUse, players, vueopoly } = vueGlobalState();
+        const { lsInUse, players, vueopoly, gameLogic } = vueGlobalState();
         return { // make it available in <template>
             lsInUse,
             players,
-            vueopoly
+            vueopoly,
+            gameLogic
         }
     },
 
@@ -67,7 +70,7 @@ export default defineComponent({
         return {
             
             playerCount: 2,
-            playerSymbols: ["", "horse", "dog", "monkey", "cat", "beaver", "snake"],
+            playerSymbols: ["green", "yellow", "white", "black", "pink", "brown", "purple", "grey"],
             viewNumber: 1,
             errorMessage: null
         }
@@ -179,8 +182,11 @@ export default defineComponent({
             // assign new players to global state
             this.players = gameObjs['playersArr'];
             this.vueopoly = gameObjs['gameJson'];
-            console.log(this.players);
-            console.log("players successfully created");
+            this.gameLogic = gameObjs['gameLogic'];
+            // console.log(this.players);
+            // console.log("players successfully created");
+            console.log("where is my game logic?")
+            console.log(this.gameLogic)
         },
         
     }

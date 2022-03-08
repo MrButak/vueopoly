@@ -14,11 +14,12 @@ export default defineComponent({
 
     setup() {
 
-        const { lsInUse, players, vueopoly } = vueGlobalState();
+        const { lsInUse, players, vueopoly, gameLogic } = vueGlobalState();
         return { // make it available in <template>
             lsInUse,
             players,
-            vueopoly
+            vueopoly,
+            gameLogic
             
         }
     },
@@ -44,7 +45,7 @@ export default defineComponent({
                 console.log("local storge objects of existing game was present");
                 console.log(this.players);
                 console.log("saved players");
-                // console.log(this.vueopoly.properties[0].id)
+                console.log(this.gameLogic, "???")
                 // if approveRestoreGame() {restoreGame()}
                 return;
             };
