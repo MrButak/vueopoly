@@ -4,18 +4,22 @@
     <div class="player-dashboard-wrapper">
         
         <div class="playerName">
-            {{ this.crntPlayerName }} - {{ this.crntPlayerAlias }}
+            {{ this.crntPlayerLogic.crntPlayerName }} - {{ this.crntPlayerLogic.crntPlayerAlias }}
         </div>
 
         <div class="manage-trade-btn-wrapper">
             <button>Manage</button>
-            <text>${{ this.crntPlayerMoney }}</text>
+            <text>${{ this.crntPlayerLogic.crntPlayerMoney }}</text>
             <button>Trade</button>
         </div>
 
         <div class="roll-dice-end-turn-btn-wrapper">
-            <button @click="this.rollDice">Roll Dice</button>
+            <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
+            <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
+            <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
+            <text>{{ this.actionMessage }}</text>
         </div>
+
 
         <div class="log-and-dice-wrapper">
             <div class="gamelog-wrapper-main">
@@ -24,7 +28,7 @@
                 </text>
             </div>
             <div class="show-dice-wrapper-main">
-                {{ this.crntDiceRoll[0] }} , {{ this.crntDiceRoll[1] }}
+                {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
             </div>
         </div>
 
@@ -35,15 +39,10 @@
 <div id="player-position">
 0
 </div>
-<!-- for each player -->
-<!-- {{  playerName, playerAlias, money, properties, trade option, mortage option }} -->
-<!-- global -->
-<!-- {{ gamelog }} -->
+
 </template>
 
-// functions to run game
-// get current player data
-// 
+
 <script>
 
 const gameFunctions = require('../../../src/javascripts/gameFunctions');
@@ -73,11 +72,22 @@ export default defineComponent({
 
         return {
             
-            crntPlayerName: "",
-            crntPlayerAlias: "",
-            crntPlayerMoney: 0,
-            crntPlayerProperties: [],
-            crntDiceRoll: []
+            buyAvailable: false,
+            diceRolled: false,
+            actionMessage: "",
+
+            crntPlayerLogic: {
+
+                crntPlayerName: "",
+                crntPlayerAlias: "",
+                crntPlayerMoney: 0,
+                crntPlayerProperties: [],
+
+            },
+            crntTurnLogic: {
+                propertyLandedOn: {},
+                crntDiceRoll: [],
+            }
         }
     },
 
@@ -92,6 +102,8 @@ export default defineComponent({
 
             // Function call
             this.startTurn(this.players[gameFunctions.getCrntPlayer()]);
+
+            // this.buyAvailable = false
         },
 
         startTurn(crntPlayer) {
@@ -100,31 +112,69 @@ export default defineComponent({
             this.gameLogic.gameLog.push(`${crntPlayer.name}'s turn.`)
             
             // set dom variables
-            this.crntPlayerName = crntPlayer.name;
-            this.crntPlayerAlias = crntPlayer.alias;
-            this.crntPlayerMoney = crntPlayer.money;
+            this.crntPlayerLogic.crntPlayerName = crntPlayer.name;
+            this.crntPlayerLogic.crntPlayerAlias = crntPlayer.alias;
+            this.crntPlayerLogic.crntPlayerMoney = crntPlayer.money;
+        },
+        endTurn() {
+
         },
 
         rollDice() {
 
+            this.diceRolled = true; // hide roll dice btn
+
             // Function call
-            this.crntDiceRoll = gameFunctions.rollDice();
+            this.crntTurnLogic.crntDiceRoll = gameFunctions.rollDice();
             // Function call
-            let propertyInfo = gameFunctions.playerPosInfo(this.crntDiceRoll[0] + this.crntDiceRoll[1]);
+            this.crntTurnLogic.propertyLandedOn = gameFunctions.playerPosInfo(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
 
             // game log
             let crntPlayer = this.players[this.gameLogic.whosTurn];
-            this.gameLogic.gameLog.push(`${crntPlayer.name} rolled for ${this.crntDiceRoll[0] + this.crntDiceRoll[1]} and landed on ${propertyInfo.info.name}.`)
+            this.gameLogic.gameLog.push(`${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`)
 
             // Function call
-            this.dtrmPropertyAction(propertyInfo)
+            this.dtrmPropertyAction()
         },
 
-        dtrmPropertyAction(propertyInfo) {
+        dtrmPropertyAction() {
 
-            let propertyAction = gameFunctions.dtrmPropertyAction(propertyInfo);
+            
+            // function call
+            let propertyAction = gameFunctions.dtrmPropertyAction(this.crntTurnLogic.propertyLandedOn);
             // switch here
-            console.log(propertyAction)
+            switch(propertyAction[0]) {
+
+                case 'chance':
+                    gameFunctions.handleChanceCard()
+                case 'communitychest':
+                    gameFunctions.handleCommunityChest()
+                case 'freeparking':
+                    // gameFunctions.handleFreeParking()
+                case 'incometax':
+                    // gameFunctions.handleIncomeTax()
+                case 'luxerytax':
+                    // gameFunctions.handleLuxeryTax()
+                case 'notowned':
+                    this.buyAvailable = true; // shows buy btn on dom
+                    return;
+                case 'owned':
+                    if(gameFunctions.moneyCheck(propertyAction)) {
+
+
+                        console.log('enough money')
+                    }
+
+            };
+            console.log(propertyAction);
+        },
+
+        buyProperty() {
+
+            console.log(this.crntTurnLogic.propertyLandedOn)
+            
+            
+            console.log("buy property function here")
         }
     }
 });
@@ -161,7 +211,7 @@ export default defineComponent({
 .roll-dice-end-turn-btn-wrapper {
     display: flex;
     justify-content: center;
-
+    flex-direction: column;
 }
 .log-and-dice-wrapper {
     display: flex;

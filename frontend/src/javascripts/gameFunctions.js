@@ -19,6 +19,14 @@ exports.getCrntPlayer = () => {
     gameLogic.value.whosTurn++;
     return(gameLogic);
 };
+exports.moneyCheck = (priceToPay) => {
+
+    let cost = priceToPay[1];
+    let playerMoney = players.value[gameLogic.value.whosTurn];
+    if(cost > playerMoney) {return false};
+    return true;
+
+};
 
 // Function returns 2 random numbers (1-6)
 exports.rollDice = () => {
@@ -45,45 +53,69 @@ exports.playerPosInfo = (moveCount) => {
     propertyInfo['coord'] = vueopoly.value.tiles[[propertyCoordIndex]];
 
     return(propertyInfo)
-    
 };
 
 
 // Function is main funciton call that handles property which player lands on
 exports.dtrmPropertyAction = (propertyInfo) => {
 
-    console.log(vueopoly.value);
-
-
-    // IDEA: send array back. ['chance', indexOf card in array]
     let handleSpecialProperty = () => {
-
+        let returnData = [];
         switch(propertyInfo.info.id.toLowerCase()) {
 
             case 'chance':
-                return(handleChanceCard());
+                returnData.push('chance');
+                returnData.push(Math.floor(Math.random() * 14));
+                return(returnData);
+
             case 'communitychest':
-                return(handleCommChestCard());
+                returnData.push('communitychest')
+                returnData.push(Math.floor(Math.random() * 15));
+                return(returnData);
+
             case 'freeparking':
-                return(handleFreeParking());
+                returnData.push('freeparking');
+                returnData.push(gameLogic.value.freeParking);
+                return(returnData);
+
             case 'incometax':
-                return(handleIncomeTax());
+                returnData.push('incometax');
+                if(players.value[0].money * .10 > 200) {
+                    returnData.push(200)
+                }
+                else {
+                    returnData.push(players.value[0].money * .10)
+                };
+                return(returnData);
+
             case 'luxerytax':
-                return(handleLuxertyTax());
+                returnData.push('luxurytax');
+                returnData.push(75);
+                return(returnData);
             // case 'gotojail':
-        }
-       
+        };
     };
-
+    
     let handleOwnableProperty = () => {
+        let returnData = [];
+        switch(propertyInfo.info.ownedby) {
 
-        // TODO: determine buy/payrent
-        return 'ownable property'
+            case -1:
+                returnData.push('notowned');
+                returnData.push(propertyInfo.info.price);
+                return(returnData);
+
+            default:
+                returnData.push('owned');
+                returnData.push(propertyInfo.info.price);
+                return(returnData);
+        }
+        
         // return canBuyProperty()
         // return payRent()  // moneyCheck // endGame (calculate property mortgages as well, or just end game btn and display message of not enough money)
 
     };
-
+    
     // main function call
     switch(propertyInfo.info.group.toLowerCase()) {
 
@@ -95,30 +127,10 @@ exports.dtrmPropertyAction = (propertyInfo) => {
     };   
 };
 
-let handleChanceCard = () => {
-
-    let returnData = [];
-    returnData.push('chance');
-    returnData.push(Math.floor(Math.random() * 14));
-    return(returnData);
-};
-
-let handleCommChestCard = () => {
-
-    let returnData = [];
-    returnData.push('communitychest')
-    returnData.push(Math.floor(Math.random() * 15));
-    return(returnData);
-};
-
-let handleFreeParking = () => {
+exports.handleChanceCard = () => {
 
 };
 
-let handleIncomeTax = () => {
-
-};
-
-let handleLuxertyTax = () => {
+exports.handleCommunityChest = () => {
 
 };
