@@ -222,6 +222,14 @@ export default defineComponent({
 
     methods: {
 
+        tmp() { // TODO: receive data-id as argument
+            //return("called this function from another component")
+            let orientalave = "orientalave"
+            let aa = document.querySelector(`[data-id="${orientalave}"]`) //orientalave
+            aa.click()
+            
+        },
+
         // Function add an onclick / hover event to display information about the property
         initEventListeners() {
             

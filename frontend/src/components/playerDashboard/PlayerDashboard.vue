@@ -31,6 +31,7 @@
                 {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
             </div>
         </div>
+        <button @click="this.test">test</button>
 
     </div>
 </div>
@@ -46,9 +47,9 @@
 <script>
 
 const gameFunctions = require('../../../src/javascripts/gameFunctions');
-// import ChoosePlayers from '@/components/initGame/ChoosePlayers.vue';
 import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
+import { ref } from 'vue';
 
 export default defineComponent({
 
@@ -56,16 +57,20 @@ export default defineComponent({
     setup() {
 
         const { lsInUse, players, vueopoly, gameLogic } = vueGlobalState();
+        // let gameBoard = ref(0)
+        const gameBoard = ref(require('../gameBoard/GameBoard.vue')); // component
+
         return { // make it available in <template>
             lsInUse,
             players,
             vueopoly,
-            gameLogic
+            gameLogic,
+            gameBoard
         }
     },
 
     components: {
-        
+        // GameBoard
     },
 
     data() {
@@ -97,6 +102,11 @@ export default defineComponent({
     },
 
     methods: {
+        test() {
+            // console.log(this.GameBoard.tmp)
+            // console.log(this.gameBoard.default.methods.tmp())
+            this.gameBoard.default.methods.tmp()
+        },
 
         mainGameLoop() {
 
