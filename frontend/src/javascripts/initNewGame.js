@@ -59,13 +59,19 @@ exports.initNewGame = (newPlayers) => {
         tmpCnt++;
     });
     
-    
+    // object to handle some game logic. assigned to global state and local storage
     let gameLogic = {
+        
         'startGame': true,
         'firstTurn': true,
         'playerCount': tmpCnt,
-        'whosTurn': 0,
-        'gameLog': ["New game created."]
+        'whosTurn': 0, // index in players array
+        'gameLog': ["New game created."],
+        'chance': vueopoly.value.chance,
+        'usedChance': [],
+        'communitychest': vueopoly.value.communitychest,
+        'usedCommunityChest': [],
+        'freeParking': 0
     }
     
     let gameJson = require('../../vueopoly.json');

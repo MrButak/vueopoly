@@ -48,24 +48,28 @@ exports.playerPosInfo = (moveCount) => {
     
 };
 
+
+// Function is main funciton call that handles property which player lands on
 exports.dtrmPropertyAction = (propertyInfo) => {
 
-    // console.log(vueopoly.value)
+    console.log(vueopoly.value);
 
+
+    // IDEA: send array back. ['chance', indexOf card in array]
     let handleSpecialProperty = () => {
 
         switch(propertyInfo.info.id.toLowerCase()) {
 
             case 'chance':
-                return('chance');
+                return(handleChanceCard());
             case 'communitychest':
-                return('communitychest');
+                return(handleCommChestCard());
             case 'freeparking':
-                return('freeparking');
+                return(handleFreeParking());
             case 'incometax':
-                return('incometax');
+                return(handleIncomeTax());
             case 'luxerytax':
-                return('luxerytax')
+                return(handleLuxertyTax());
             // case 'gotojail':
         }
        
@@ -73,19 +77,48 @@ exports.dtrmPropertyAction = (propertyInfo) => {
 
     let handleOwnableProperty = () => {
 
+        // TODO: determine buy/payrent
         return 'ownable property'
+        // return canBuyProperty()
+        // return payRent()  // moneyCheck // endGame (calculate property mortgages as well, or just end game btn and display message of not enough money)
 
     };
 
+    // main function call
     switch(propertyInfo.info.group.toLowerCase()) {
 
         case 'special':
             return handleSpecialProperty();
-            break;
+            
         default:
-            return handleOwnableProperty()
-            break;
-    };
+            return handleOwnableProperty()  
+    };   
+};
 
-    
+let handleChanceCard = () => {
+
+    let returnData = [];
+    returnData.push('chance');
+    returnData.push(Math.floor(Math.random() * 14));
+    return(returnData);
+};
+
+let handleCommChestCard = () => {
+
+    let returnData = [];
+    returnData.push('communitychest')
+    returnData.push(Math.floor(Math.random() * 15));
+    return(returnData);
+};
+
+let handleFreeParking = () => {
+
+};
+
+let handleIncomeTax = () => {
+
+};
+
+let handleLuxertyTax = () => {
+
 };

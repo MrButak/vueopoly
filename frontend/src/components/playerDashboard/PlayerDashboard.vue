@@ -99,6 +99,7 @@ export default defineComponent({
             // game log
             this.gameLogic.gameLog.push(`${crntPlayer.name}'s turn.`)
             
+            // set dom variables
             this.crntPlayerName = crntPlayer.name;
             this.crntPlayerAlias = crntPlayer.alias;
             this.crntPlayerMoney = crntPlayer.money;
@@ -122,6 +123,7 @@ export default defineComponent({
         dtrmPropertyAction(propertyInfo) {
 
             let propertyAction = gameFunctions.dtrmPropertyAction(propertyInfo);
+            // switch here
             console.log(propertyAction)
         }
     }
