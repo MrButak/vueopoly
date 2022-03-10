@@ -17,7 +17,7 @@
             <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
             <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
             <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
-            <text>{{ this.actionMessage }}</text>
+            <text v-show="this.buyAvailable">{{ this.actionMessage }} is available to buy</text>
         </div>
 
 
@@ -31,7 +31,8 @@
                 {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
             </div>
         </div>
-        <button @click="this.test">test</button>
+        <button @click="this.test">Buy</button>
+        
 
     </div>
 </div>
@@ -167,6 +168,8 @@ export default defineComponent({
                     // gameFunctions.handleLuxeryTax()
                 case 'notowned':
                     this.buyAvailable = true; // shows buy btn on dom
+                    this.actionMessage = gameFunctions.actionMessage(this.crntTurnLogic.propertyLandedOn)
+
                     return;
                 case 'owned':
                     if(gameFunctions.moneyCheck(propertyAction)) {

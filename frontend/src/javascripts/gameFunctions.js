@@ -134,3 +134,9 @@ exports.handleChanceCard = () => {
 exports.handleCommunityChest = () => {
 
 };
+
+exports.actionMessage = () => {
+
+    return("test")
+};
+ 
