@@ -222,11 +222,11 @@ export default defineComponent({
 
     methods: {
 
-        tmp() { // TODO: receive data-id as argument
+        showProperty(propertyId) { // TODO: receive data-id as argument
             //return("called this function from another component")
-            let orientalave = "orientalave"
-            let aa = document.querySelector(`[data-id="${orientalave}"]`) //orientalave
-            aa.click()
+            
+            let propertyToShow = document.querySelector(`[data-id="${propertyId}"]`);
+            propertyToShow.click()
             
         },
 

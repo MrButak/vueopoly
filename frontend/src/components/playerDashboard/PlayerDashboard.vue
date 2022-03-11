@@ -17,7 +17,7 @@
             <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
             <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
             <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
-            <text v-show="this.buyAvailable">{{ this.actionMessage }} is available to buy</text>
+            <text v-show="this.buyAvailable"><a @click="this.showProperty">{{ this.buyPropertyLink }}</a> is available to buy</text>
         </div>
 
 
@@ -31,7 +31,7 @@
                 {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
             </div>
         </div>
-        <button @click="this.test">Buy</button>
+        <!-- <button @click="this.test">Buy</button> -->
         
 
     </div>
@@ -80,8 +80,14 @@ export default defineComponent({
             
             buyAvailable: false,
             diceRolled: false,
-            actionMessage: "",
 
+            crntTurnLogic: {
+                propertyLandedOn: {},
+                crntDiceRoll: [],
+            },
+
+            // dom stuff
+            buyPropertyLink: "",
             crntPlayerLogic: {
 
                 crntPlayerName: "",
@@ -89,10 +95,6 @@ export default defineComponent({
                 crntPlayerMoney: 0,
                 crntPlayerProperties: [],
 
-            },
-            crntTurnLogic: {
-                propertyLandedOn: {},
-                crntDiceRoll: [],
             }
         }
     },
@@ -103,10 +105,12 @@ export default defineComponent({
     },
 
     methods: {
-        test() {
-            // console.log(this.GameBoard.tmp)
-            // console.log(this.gameBoard.default.methods.tmp())
-            this.gameBoard.default.methods.tmp()
+
+        // Function is called @click to view current property player landed on
+        showProperty() {
+
+            // function call to components/gameBoard/GameBoard.vue to preform .click() on current property using property id as argument. (added to this.propertyLink variable in dom)
+            this.gameBoard.default.methods.showProperty(this.crntTurnLogic.propertyLandedOn.info.id)
         },
 
         mainGameLoop() {
@@ -119,6 +123,9 @@ export default defineComponent({
 
         startTurn(crntPlayer) {
             
+
+            console.log("Is the bug ehre?")
+            console.log(crntPlayer)
             // game log
             this.gameLogic.gameLog.push(`${crntPlayer.name}'s turn.`)
             
@@ -127,8 +134,23 @@ export default defineComponent({
             this.crntPlayerLogic.crntPlayerAlias = crntPlayer.alias;
             this.crntPlayerLogic.crntPlayerMoney = crntPlayer.money;
         },
+
         endTurn() {
 
+            // clear local component variables
+            this.buyAvailable = false;
+            this.diceRolled = false;
+            this.crntPlayerLogic.crntPlayerName = "";
+            this.crntPlayerLogic.crntPlayerAlias = "";
+            this.crntPlayerLogic.crntPlayerMoney = 0;
+            this.crntPlayerLogic.crntPlayerProperties = [];
+
+            this.buyPropertyLink = "",
+            this.crntTurnLogic.propertyLandedOn = {};
+            this.crntTurnLogic.crntDiceRoll = {};
+
+           
+            this.mainGameLoop();
         },
 
         rollDice() {
@@ -146,17 +168,20 @@ export default defineComponent({
 
             // Function call
             this.dtrmPropertyAction()
+
+            // does it come back to roll dice?
+            console.log("does it come back here?")
         },
 
+        // Function handles square player lands on
         dtrmPropertyAction() {
 
-            
-            // function call
+            // function call    determines what type of square player lands on, what action to take, then returns and array [case, logic to preform the action]
             let propertyAction = gameFunctions.dtrmPropertyAction(this.crntTurnLogic.propertyLandedOn);
-            // switch here
+            
             switch(propertyAction[0]) {
 
-                case 'chance':
+                case 'chance': // [case, random card number from this.vueopoly.chance[]]
                     gameFunctions.handleChanceCard()
                 case 'communitychest':
                     gameFunctions.handleCommunityChest()
@@ -166,15 +191,18 @@ export default defineComponent({
                     // gameFunctions.handleIncomeTax()
                 case 'luxerytax':
                     // gameFunctions.handleLuxeryTax()
-                case 'notowned':
-                    this.buyAvailable = true; // shows buy btn on dom
-                    this.actionMessage = gameFunctions.actionMessage(this.crntTurnLogic.propertyLandedOn)
 
+                // buyable property
+                case 'notowned':
+                    this.buyAvailable = true; // shows buy btn in dom
+                    this.buyPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
                     return;
+
+                // owned property
                 case 'owned':
                     if(gameFunctions.moneyCheck(propertyAction)) {
 
-
+                        // TODO:
                         console.log('enough money')
                     }
 
@@ -184,7 +212,30 @@ export default defineComponent({
 
         buyProperty() {
 
-            console.log(this.crntTurnLogic.propertyLandedOn)
+            // function call
+            if(gameFunctions.moneyCheck(this.crntTurnLogic.propertyLandedOn.info.price ,this.crntPlayerLogic.crntPlayerMoney)) {
+
+                // deduct the cost of the property from the player (and from the dom money variable)
+                this.players[this.gameLogic.whosTurn].money -= this.crntTurnLogic.propertyLandedOn.info.price;
+                this.crntPlayerLogic.crntPlayerMoney -= this.crntTurnLogic.propertyLandedOn.info.price;
+
+                // add purchased property to players[].properties[]
+                this.players[this.gameLogic.whosTurn].properties.push(this.crntTurnLogic.propertyLandedOn.info);
+
+                // change the owner in vueopoly.properties[].ownedby
+                let propertyIndex = this.vueopoly.properties.findIndex(each => each.id == this.crntTurnLogic.propertyLandedOn.info.id);
+                this.vueopoly.properties[propertyIndex].ownedby = this.players[this.gameLogic.whosTurn];
+
+                // game log
+                let crntPlayer = this.players[this.gameLogic.whosTurn];
+                this.gameLogic.gameLog.push(`${crntPlayer.name} purchased ${this.crntTurnLogic.propertyLandedOn.info.name} for $${this.crntTurnLogic.propertyLandedOn.info.price}.`);
+
+                // remove buy button and buy message
+                this.buyAvailable = false;
+                this.buyPropertyLink = "";
+
+                return;
+            }
             
             
             console.log("buy property function here")

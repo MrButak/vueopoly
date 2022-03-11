@@ -4,27 +4,39 @@ const { lsInUse, vueopoly, players, gameLogic } = vueGlobalState();
 // Function returns a number which represents the index position of a player in players array
 exports.getCrntPlayer = () => {
 
+
+    
     // gameLogic.whosTurn is the index postition in players array
 
     // for first turn of the game
-    if(gameLogic.value.firstTurn){return(gameLogic.value.whosTurn)};
+    if(gameLogic.value.firstTurn){
+        gameLogic.value.firstTurn = false;
+        return(gameLogic.value.whosTurn)
+    };
 
     // if have reached end of player array, return to index 0
     if(gameLogic.value.whosTurn == players.value.length - 1) {
         gameLogic.value.whosTurn = 0;
         return(gameLogic.value.whosTurn);
     };
-
+    console.log("can I make it here???%%%%%%%%%55")
     // increase index position
     gameLogic.value.whosTurn++;
-    return(gameLogic);
+    console.log(gameLogic)
+    return(gameLogic.value.whosTurn);
 };
-exports.moneyCheck = (priceToPay) => {
+exports.moneyCheck = (priceToPay, playersMoney) => {
 
-    let cost = priceToPay[1];
-    let playerMoney = players.value[gameLogic.value.whosTurn];
-    if(cost > playerMoney) {return false};
-    return true;
+    // console.log(priceToPay, playersMoney)
+    // console.log("money check")
+    if(priceToPay < playersMoney) {
+        return true;
+    };
+    return false;
+    // let cost = priceToPay[1];
+    // let playerMoney = players.value[gameLogic.value.whosTurn];
+    // if(cost > playerMoney) {return false};
+    // return true;
 
 };
 
@@ -126,7 +138,12 @@ exports.dtrmPropertyAction = (propertyInfo) => {
             return handleOwnableProperty()  
     };   
 };
-
+exports.buyProperty = (property) => {
+    player.properties.push(property)
+    console.log(players.value[gameLogic.value.whosTurn])
+    console.log("herre ^^^^^^^^^^")
+    
+};
 exports.handleChanceCard = () => {
 
 };
