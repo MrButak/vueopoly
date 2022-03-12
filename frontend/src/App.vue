@@ -51,6 +51,7 @@ export default defineComponent({
                 // this.$refs.playerDashboard.mainGameLoop()
                 // if approveRestoreGame() {restoreGame()}
                 console.log('game found')
+                // console.log(typeof(this.gameLogic))
                 return;
             }
             else {

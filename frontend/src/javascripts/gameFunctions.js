@@ -1,11 +1,9 @@
 const { vueGlobalState } = require('../javascripts/stateStore');
 const { lsInUse, vueopoly, players, gameLogic } = vueGlobalState();
 
-// Function returns a number which represents the index position of a player in players array
+// Function returns an integer which represents the index position of a player in players array
 exports.getCrntPlayer = () => {
 
-
-    
     // gameLogic.whosTurn is the index postition in players array
 
     // for first turn of the game
@@ -21,7 +19,6 @@ exports.getCrntPlayer = () => {
     };
     // increase index position
     gameLogic.value.whosTurn++;
-    console.log(gameLogic)
     return(gameLogic.value.whosTurn);
 };
 exports.moneyCheck = (priceToPay, playersMoney) => {

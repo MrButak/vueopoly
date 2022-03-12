@@ -59,10 +59,35 @@ let restoreLs = () => {
     let lsGameLogic = localStorage.getItem('gamelogic');
     lsGameLogic = JSON.parse(lsGameLogic);
 
+    
+    // console.log("restore state from these local storage objects")
+    // console.log(lsVueopoly)
+    // console.log(lsPlayers)
+    console.log(lsGameLogic)
+    console.log("pulled from ls after save")
     // set global state variables
     vueopoly.value = lsVueopoly;
     players.value = lsPlayers;
     gameLogic.value = lsGameLogic;
     
     return;
+};
+
+// Function saves to local storage (usually after a turn has ended)
+exports.saveToLs = () => {
+
+
+    console.log("save to ls");
+    // console.log(vueopoly.value)
+    // console.log(players.value)
+    // console.log(JSON.stringify(gameLogic.value))
+    
+    // let tmp = JSON.stringify(vueopoly)
+    // console.log(tmp)
+
+    // localStorage.setItem('vueopoly', JSON.stringify(vueopoly.value));
+    // localStorage.setItem('players', JSON.stringify(players.value));
+    // localStorage.setItem('gamelogic', JSON.stringify(gameLogic.value));
+    //localStorage.setItem('vueopoly', lsInUse.value);
+    
 };

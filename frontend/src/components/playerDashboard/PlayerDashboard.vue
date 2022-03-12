@@ -14,6 +14,7 @@
         </div>
 
         <div class="roll-dice-end-turn-btn-wrapper">
+            <!-- different messages and options shown depending on local component variables (data()) -->
             <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
             <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
             <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
@@ -22,7 +23,7 @@
 
         </div>
 
-
+        <!-- shows the game log TODO: make it prettier (player colors) and auto scroll to bottom -->
         <div class="log-and-dice-wrapper">
             <div class="gamelog-wrapper-main">
                 <text v-for="log in this.gameLogic.gameLog">
@@ -33,8 +34,6 @@
                 {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
             </div>
         </div>
-        <!-- <button @click="this.test">Buy</button> -->
-        
 
     </div>
 </div>
@@ -46,9 +45,9 @@
 
 </template>
 
-
 <script>
 
+const handleLs = require('../../../src/javascripts/handleLs');
 const gameFunctions = require('../../../src/javascripts/gameFunctions');
 import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
@@ -148,9 +147,15 @@ export default defineComponent({
 
             this.viewPropertyLink = "",
             this.crntTurnLogic.propertyLandedOn = {};
-            this.crntTurnLogic.crntDiceRoll = {};
+            this.crntTurnLogic.crntDiceRoll = [];
 
-           
+            // save to local storage // issues here
+            localStorage.setItem('vueopoly', JSON.stringify(this.vueopoly));
+            localStorage.setItem('players', JSON.stringify(this.players));
+            console.log(this.players)
+            console.log("here what I want to stringify so I can set in ls")
+            localStorage.setItem('gamelogic', JSON.stringify(this.gameLogic));
+
             this.mainGameLoop();
         },
 
@@ -158,12 +163,12 @@ export default defineComponent({
 
             this.diceRolled = true; // hide roll dice btn
 
-            // Function call
+            // Function call (local component variable)
             this.crntTurnLogic.crntDiceRoll = gameFunctions.rollDice();
-            // Function call
+            // Function call (local component variable)
             this.crntTurnLogic.propertyLandedOn = gameFunctions.playerPosInfo(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
 
-            // game log
+            // game log (global state variable)
             let crntPlayer = this.players[this.gameLogic.whosTurn];
             this.gameLogic.gameLog.push(`${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`)
 
@@ -208,6 +213,9 @@ export default defineComponent({
         },
 
         buyProperty() {
+            
+
+            // TODO: reuse some variables below
 
             // function call
             if(gameFunctions.moneyCheck(this.crntTurnLogic.propertyLandedOn.info.price ,this.players[this.gameLogic.whosTurn].money)) {
@@ -219,9 +227,10 @@ export default defineComponent({
                 // add purchased property to players[].properties[]
                 this.players[this.gameLogic.whosTurn].properties.push(this.crntTurnLogic.propertyLandedOn.info);
 
-                // change the owner in vueopoly.properties[].ownedby
+                // change the owner in vueopoly.properties[].ownedby // possibly here players references vueopoly
+                let currentPlayer = this.players[this.gameLogic.whosTurn]
                 let propertyIndex = this.vueopoly.properties.findIndex(each => each.id == this.crntTurnLogic.propertyLandedOn.info.id);
-                this.vueopoly.properties[propertyIndex].ownedby = this.players[this.gameLogic.whosTurn];
+                this.vueopoly.properties[propertyIndex].ownedby = currentPlayer.name;
 
                 // game log
                 let crntPlayer = this.players[this.gameLogic.whosTurn];
