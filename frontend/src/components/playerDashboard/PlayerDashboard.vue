@@ -17,7 +17,9 @@
             <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
             <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
             <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
-            <text v-show="this.buyAvailable"><a @click="this.showProperty">{{ this.buyPropertyLink }}</a> is available to buy</text>
+            <text v-show="this.buyAvailable"><a @click="this.showProperty">{{ this.viewPropertyLink }}</a> is available to buy</text>
+            <text v-show="this.willPayRent">You payed rent at <a @click="this.showProperty">{{ this.viewPropertyLink }}</a></text>
+
         </div>
 
 
@@ -77,8 +79,9 @@ export default defineComponent({
     data() {
 
         return {
-            
+            // TODO crntPlayerColor: "" // then have logs and other things in that color
             buyAvailable: false,
+            willPayRent: false,
             diceRolled: false,
 
             crntTurnLogic: {
@@ -87,7 +90,7 @@ export default defineComponent({
             },
 
             // dom stuff
-            buyPropertyLink: "",
+            viewPropertyLink: "",
             crntPlayerLogic: {
 
                 crntPlayerName: "",
@@ -123,9 +126,6 @@ export default defineComponent({
 
         startTurn(crntPlayer) {
             
-
-            console.log("Is the bug ehre?")
-            console.log(crntPlayer)
             // game log
             this.gameLogic.gameLog.push(`${crntPlayer.name}'s turn.`)
             
@@ -139,13 +139,14 @@ export default defineComponent({
 
             // clear local component variables
             this.buyAvailable = false;
+            this.willPayRent = false;
             this.diceRolled = false;
             this.crntPlayerLogic.crntPlayerName = "";
             this.crntPlayerLogic.crntPlayerAlias = "";
             this.crntPlayerLogic.crntPlayerMoney = 0;
             this.crntPlayerLogic.crntPlayerProperties = [];
 
-            this.buyPropertyLink = "",
+            this.viewPropertyLink = "",
             this.crntTurnLogic.propertyLandedOn = {};
             this.crntTurnLogic.crntDiceRoll = {};
 
@@ -168,9 +169,6 @@ export default defineComponent({
 
             // Function call
             this.dtrmPropertyAction()
-
-            // does it come back to roll dice?
-            console.log("does it come back here?")
         },
 
         // Function handles square player lands on
@@ -195,25 +193,24 @@ export default defineComponent({
                 // buyable property
                 case 'notowned':
                     this.buyAvailable = true; // shows buy btn in dom
-                    this.buyPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
+                    this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
                     return;
 
                 // owned property
                 case 'owned':
-                    if(gameFunctions.moneyCheck(propertyAction)) {
-
-                        // TODO:
-                        console.log('enough money')
-                    }
+                    this.willPayRent = true;
+                    this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
+                    this.payRent(propertyAction[1]);
+                    
 
             };
-            console.log(propertyAction);
+            
         },
 
         buyProperty() {
 
             // function call
-            if(gameFunctions.moneyCheck(this.crntTurnLogic.propertyLandedOn.info.price ,this.crntPlayerLogic.crntPlayerMoney)) {
+            if(gameFunctions.moneyCheck(this.crntTurnLogic.propertyLandedOn.info.price ,this.players[this.gameLogic.whosTurn].money)) {
 
                 // deduct the cost of the property from the player (and from the dom money variable)
                 this.players[this.gameLogic.whosTurn].money -= this.crntTurnLogic.propertyLandedOn.info.price;
@@ -232,13 +229,36 @@ export default defineComponent({
 
                 // remove buy button and buy message
                 this.buyAvailable = false;
-                this.buyPropertyLink = "";
+                this.viewPropertyLink = "";
 
                 return;
             }
             
+            // TODO handle not enough money to buy
+            console.log("buy property function here, but enough money")
+        },
+
+        payRent(rentAmmount) {
+
+            // TODO add houses i.e. total cost
+            if(gameFunctions.moneyCheck(rentAmmount, this.players[this.gameLogic.whosTurn].money)) {
+                    
+                // deduct the cost of the rent from the player (and from the dom money variable)
+                this.players[this.gameLogic.whosTurn].money -= rentAmmount;
+                this.crntPlayerLogic.crntPlayerMoney -= rentAmmount;
+
+                // game log
+                let crntPlayer = this.players[this.gameLogic.whosTurn];
+                let propertyLandedOnOwner = this.crntTurnLogic.propertyLandedOn.info.ownedby.name;
+                this.gameLogic.gameLog.push(`${crntPlayer.name} payed ${propertyLandedOnOwner} $${rentAmmount} in rent for staying at ${this.crntTurnLogic.propertyLandedOn.info.name}.`);    
+                return;
+            };
+
+            // TODO handle not enough money to pay rent
+            console.log("not enough money to pay rent. must mortgage or sell/trade");
+            return;
             
-            console.log("buy property function here")
+
         }
     }
 });

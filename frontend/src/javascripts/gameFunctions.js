@@ -19,7 +19,6 @@ exports.getCrntPlayer = () => {
         gameLogic.value.whosTurn = 0;
         return(gameLogic.value.whosTurn);
     };
-    console.log("can I make it here???%%%%%%%%%55")
     // increase index position
     gameLogic.value.whosTurn++;
     console.log(gameLogic)
@@ -27,8 +26,7 @@ exports.getCrntPlayer = () => {
 };
 exports.moneyCheck = (priceToPay, playersMoney) => {
 
-    // console.log(priceToPay, playersMoney)
-    // console.log("money check")
+    
     if(priceToPay < playersMoney) {
         return true;
     };
@@ -71,6 +69,7 @@ exports.playerPosInfo = (moveCount) => {
 // Function is main funciton call that handles property which player lands on
 exports.dtrmPropertyAction = (propertyInfo) => {
 
+    // TODO: jail/just visiting
     let handleSpecialProperty = () => {
         let returnData = [];
         switch(propertyInfo.info.id.toLowerCase()) {
@@ -138,12 +137,7 @@ exports.dtrmPropertyAction = (propertyInfo) => {
             return handleOwnableProperty()  
     };   
 };
-exports.buyProperty = (property) => {
-    player.properties.push(property)
-    console.log(players.value[gameLogic.value.whosTurn])
-    console.log("herre ^^^^^^^^^^")
-    
-};
+
 exports.handleChanceCard = () => {
 
 };
