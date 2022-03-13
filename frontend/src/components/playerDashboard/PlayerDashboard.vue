@@ -149,12 +149,8 @@ export default defineComponent({
             this.crntTurnLogic.propertyLandedOn = {};
             this.crntTurnLogic.crntDiceRoll = [];
 
-            // save to local storage // issues here
-            localStorage.setItem('vueopoly', JSON.stringify(this.vueopoly));
-            localStorage.setItem('players', JSON.stringify(this.players));
-            console.log(this.players)
-            console.log("here what I want to stringify so I can set in ls")
-            localStorage.setItem('gamelogic', JSON.stringify(this.gameLogic));
+            // save to local storage
+            handleLs.saveToLs();
 
             this.mainGameLoop();
         },
@@ -185,7 +181,7 @@ export default defineComponent({
             switch(propertyAction[0]) {
 
                 case 'chance': // [case, random card number from this.vueopoly.chance[]]
-                    gameFunctions.handleChanceCard()
+                    this.handleChanceCard(propertyAction[1])
                 case 'communitychest':
                     gameFunctions.handleCommunityChest()
                 case 'freeparking':
@@ -210,6 +206,11 @@ export default defineComponent({
 
             };
             
+        },
+        handleChanceCard(cardIndex) {
+
+            console.log(this.gameLogic.chance[cardIndex])
+            console.log("chance card")
         },
 
         buyProperty() {
@@ -249,17 +250,25 @@ export default defineComponent({
 
         payRent(rentAmmount) {
 
+            // TODO: create function gamefunctions.getTotalRentCost()
             // TODO add houses i.e. total cost
             if(gameFunctions.moneyCheck(rentAmmount, this.players[this.gameLogic.whosTurn].money)) {
                     
+                let ownersName = this.crntTurnLogic.propertyLandedOn.info.ownedby
+
                 // deduct the cost of the rent from the player (and from the dom money variable)
                 this.players[this.gameLogic.whosTurn].money -= rentAmmount;
                 this.crntPlayerLogic.crntPlayerMoney -= rentAmmount;
 
+                // add cost of rent to property owners money
+                let ownersIndex = this.players.findIndex((item) => item.name == ownersName);
+                this.players[ownersIndex].money += rentAmmount;
+                
+
                 // game log
                 let crntPlayer = this.players[this.gameLogic.whosTurn];
-                let propertyLandedOnOwner = this.crntTurnLogic.propertyLandedOn.info.ownedby.name;
-                this.gameLogic.gameLog.push(`${crntPlayer.name} payed ${propertyLandedOnOwner} $${rentAmmount} in rent for staying at ${this.crntTurnLogic.propertyLandedOn.info.name}.`);    
+                
+                this.gameLogic.gameLog.push(`${crntPlayer.name} payed ${ownersName} $${rentAmmount} in rent for staying at ${this.crntTurnLogic.propertyLandedOn.info.name}.`);    
                 return;
             };
 

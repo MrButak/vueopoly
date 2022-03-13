@@ -135,6 +135,8 @@ exports.dtrmPropertyAction = (propertyInfo) => {
     };   
 };
 
+
+
 exports.handleChanceCard = () => {
 
 };
