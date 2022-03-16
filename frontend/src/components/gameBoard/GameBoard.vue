@@ -222,10 +222,11 @@ export default defineComponent({
 
     methods: {
 
-        showProperty(propertyId) { // TODO: receive data-id as argument
+        showProperty(event, propertyId) { // TODO: receive data-id as argument
             //return("called this function from another component")
             
             let propertyToShow = document.querySelector(`[data-id="${propertyId}"]`);
+            console.log(event)
             propertyToShow.click()
             
         },
@@ -239,7 +240,7 @@ export default defineComponent({
                 
                 // class added for ViewProperty modal
                 property.classList.add("trigger");
-
+                // console.log(property.style)
                 property.addEventListener('click', (event) => { 
 
                     this.$refs.viewProperty.toggleModal(); // call function from ViewProperty

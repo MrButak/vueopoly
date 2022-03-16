@@ -18,8 +18,8 @@
             <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
             <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
             <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
-            <text v-show="this.buyAvailable"><a @click="this.showProperty">{{ this.viewPropertyLink }}</a> is available to buy</text>
-            <text v-show="this.willPayRent">You payed rent at <a @click="this.showProperty">{{ this.viewPropertyLink }}</a></text>
+            <text v-show="this.buyAvailable"><a @click="this.showProperty()">{{ this.viewPropertyLink }}</a> is available to buy</text>
+            <text v-show="this.willPayRent">You payed rent at <a @click="this.showProperty()">{{ this.viewPropertyLink }}</a></text>
 
         </div>
 
@@ -39,9 +39,6 @@
 </div>
 
 
-<div id="player-position">
-0
-</div>
 
 </template>
 
@@ -112,7 +109,7 @@ export default defineComponent({
         showProperty() {
 
             // function call to components/gameBoard/GameBoard.vue to preform .click() on current property using property id as argument. (added to this.propertyLink variable in dom)
-            this.gameBoard.default.methods.showProperty(this.crntTurnLogic.propertyLandedOn.info.id)
+            this.gameBoard.default.methods.showProperty(event, this.crntTurnLogic.propertyLandedOn.info.id)
         },
 
         mainGameLoop() {
