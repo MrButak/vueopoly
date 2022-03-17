@@ -1,6 +1,6 @@
 <template>
 
-<!-- TODO insert and remove player divs from here  -->
+<!-- TODO insert and remove player divs from here // this doesn't make sense. dom elements are insereted into property squared -->
 
 <!-- <div v-for="a in this.players.length">
     <div class="player-position">  
@@ -65,23 +65,8 @@ export default defineComponent({
         },
 
         movePlayerPiece(property, player) {
-
-            // TODO: find previous piece using document.querySelector(`[data-player="${player.name}"]`)
             
-            let elementDataId = player.name.replaceAll(' ', '');
-            console.log({elementDataId});
-
-            let playerDiv;
-            // if(document.querySelector(`data-player${elementDataId}`)) {
-            //     console.log("???")
-            //     document.querySelector(`data-player${elementDataId}`).remove();
-            // };
-            // else {
-            //     playerDiv = document.querySelector(`data-player${elementDataId}`)
-            // };`[data-id="${propertyId}"]`
-            playerDiv = document.querySelector(`[data-player${elementDataId}]`)
-            console.log(playerDiv)
-            console.log("^^^^^^^^^^ Where are you? ^^^^^^^^^^^^")
+            let elementDataId = player.name
 
             // Variable value source is determined by the function that called this function. property object is slightly different.
             // From PlayerDashboard.vue property.info.id . From (above) this.initPlayerPosition property.id
@@ -94,22 +79,21 @@ export default defineComponent({
             };
                 
             
-            // console.log(propertyId)
+            
 
             // Reference dom object of property to put player piece using the dataset
             let proptertyToMoveTo = document.querySelectorAll(`[data-id="${propertyId}"]`);
             // Get the location data of that dom object. (More than one dataset attribute with the same names (propertyId) are used on dom elements, so array is returned. Index 0 is the 'out-most' div I position the player pieces on).
             let propertyPosition = proptertyToMoveTo[0].getBoundingClientRect();
 
-            // console.log(proptertyToMoveTo)
-
             // Create player piece
             let playerPiece = document.createElement('div')
             let playerPieceWidth = 10;
+            
             playerPiece.style.width = playerPieceWidth + "px";
             playerPiece.style.height = playerPieceWidth + "px";
             playerPiece.style.backgroundColor = player.symbol
-            playerPiece.dataset.player = elementDataId; // dataset attribute
+            playerPiece.dataset.player = elementDataId.toLowerCase(); // dataset attribute
             
             
             let playerPieceoffSet = playerPieceWidth;

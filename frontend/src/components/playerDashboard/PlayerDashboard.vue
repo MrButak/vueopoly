@@ -96,7 +96,20 @@ export default defineComponent({
                 crntPlayerMoney: 0,
                 crntPlayerProperties: [],
 
+            },
+            // player pieces (PlayerPieces.vew) elements in (Gameboard.vue)
+            playerElements: {
+                p1DomEl: document.querySelector('[data-player="player1"]'),
+                p2DomEl: document.querySelector('[data-player="player2"]'),
+                p3DomEl: document.querySelector('[data-player="player3"]'),
+                p4DomEl: document.querySelector('[data-player="player4"]'),
+                p5DomEl: document.querySelector('[data-player="player5"]'),
+                p6DomEl: document.querySelector('[data-player="player6"]'),
+                p7DomEl: document.querySelector('[data-player="player7"]'),
+                p8DomEl: document.querySelector('[data-player="player8"]')
+
             }
+            
         }
     },
 
@@ -167,7 +180,10 @@ export default defineComponent({
             let crntPlayer = this.players[this.gameLogic.whosTurn];
             this.gameLogic.gameLog.push(`${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`)
 
-            // Function call
+            // remove player piece before moving it
+            let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
+            crntPlayerPiece.remove()
+            // Function call to move player piece
             this.playerPieces.default.methods.movePlayerPiece(this.crntTurnLogic.propertyLandedOn, this.players[this.gameLogic.whosTurn]);
 
             this.dtrmPropertyAction()
