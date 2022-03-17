@@ -58,13 +58,15 @@ export default defineComponent({
         const { lsInUse, players, vueopoly, gameLogic } = vueGlobalState();
         // let gameBoard = ref(0)
         const gameBoard = ref(require('../gameBoard/GameBoard.vue')); // component
+        const playerPieces = ref(require('../gameBoard/PlayerPieces.vue')); // component
 
         return { // make it available in <template>
             lsInUse,
             players,
             vueopoly,
             gameLogic,
-            gameBoard
+            gameBoard,
+            playerPieces
         }
     },
 
@@ -166,6 +168,8 @@ export default defineComponent({
             this.gameLogic.gameLog.push(`${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`)
 
             // Function call
+            this.playerPieces.default.methods.movePlayerPiece(this.crntTurnLogic.propertyLandedOn, this.players[this.gameLogic.whosTurn]);
+
             this.dtrmPropertyAction()
         },
 

@@ -17,8 +17,6 @@
         <div v-show="this.showSpecialCard" class="box">
             <SpecialProperty ref="specialProperty" />   
         </div>
-
-
         
     </div>   
 </div>

@@ -6,53 +6,65 @@
 
 		<div class="mainSquare">
 
-			<div class="row top">
+			<div class="pos-top row top">
                 
-				<div id="clickable" data-id="freeparking" class="square2 "><span data-id="freeparking" class="corner corner1">free <br /> parking</span></div>
+				<div id="clickable" data-id="freeparking" class="square2 "><span data-id="freeparking" class="corner corner1">free <br /> parking</span>
+                </div>
                 
 				<div id="clickable" data-id="kentuckyave" class=" square1">
 					<div data-id="kentuckyave" class="header header-top red"></div>
 					<div data-id="kentuckyave" class="firstLine firstLine-top rotation2">kentucky <br /> avenue</div>
 				</div>
-				<div id="clickable" data-id="chance" class="square1 ">					
+
+				<div id="clickable" data-id="chance" class="square1">		
 					<div data-id="chance" class="firstLine firstLine-top no-color rotation2">chance</div>
 				</div>
+
 				<div id="clickable" data-id="indianaave" class="square1 ">
 					<div data-id="indianaave" class="header header-top red"></div>
 					<div data-id="indianaave" class="firstLine firstLine-top rotation2">indiana <br /> avenue</div>
 				</div>
+
 				<div id="clickable" data-id="illinoisave" class="square1 ">
 					<div data-id="illinoisave" class="header header-top red"></div>
 					<div data-id="illinoisave" class="firstLine firstLine-top rotation2">illinios <br /> avenue</div>
 				</div>
+
 				<div id="clickable" data-id="borailroad" class="square1 ">
 					<div data-id="borailroad" class="firstLine firstLine-top no-color rotation2">b. & o. <br /> railroad</div>
 				</div>
+
 				<div id="clickable" data-id="atlanticave" class="square1 ">
 					<div data-id="atlanticave" class="header header-top yellow"></div>
 					<div data-id="atlanticave" class="firstLine firstLine-top rotation2">atlantic <br /> avenue</div>
 				</div>
+
 				<div id="clickable" data-id="ventnorave" class="square1 ">
 					<div data-id="ventnorave" class="header header-top yellow"></div>
 					<div data-id="ventnorave" class="firstLine firstLine-top rotation2">ventnor <br /> avenue</div>
 				</div>
+
 				<div id="clickable" data-id="waterworks" class="square1 ">
                     <!-- waterworks not in this.vueopoly.properties -->
 					<div data-id="waterworks" class="firstLine firstLine-top no-color rotation2">water <br /> works</div>
 				</div>
+
 				<div id="clickable" data-id="marvingardens" class="square1 ">
 					<div data-id="marvingardens" class="header header-top yellow"></div>
 					<div data-id="marvingardens" class="firstLine firstLine-top rotation2">marvin <br /> gardens</div>
 				</div>
+
 				<div id="clickable" data-id="gotojail" class="square2 "><span data-id="gotojail" class="corner corner2">go to<br />jail</span></div>
 			</div>
 			
 			<div class="row center">
-				<div class="square2">
+				<div class="pos-left square2">
+
 					<div id="clickable" data-id="newyorkave" class="squareSide ">
 						<div data-id="newyorkave" class="headerSide header-left orange"></div>
 						<div data-id="newyorkave" class="firstLine firstLine-left rotation1">new york <br /> avenue</div>
 					</div>
+
 					<div id="clickable" data-id="tennesseeave" class="squareSide ">
 						<div data-id="tennesseeave" class="headerSide header-left orange"></div>
 						<div data-id="tennesseeave" class="firstLine firstLine-left rotation1">tennessee <br /> avenue</div>
@@ -60,10 +72,12 @@
 					<div id="clickable" data-id="communitychest" class="squareSide ">						
 						<div data-id="communitychest" class="firstLine firstLine-left no-color rotation1">community<br /> chest</div>
 					</div>
+
 					<div id="clickable" data-id="stjamesplace" class="squareSide ">
 						<div data-id="stjamesplace" class="headerSide header-left orange"></div>
 						<div data-id="stjamesplace" class="firstLine firstLine-left rotation1">st.james <br />place</div>
 					</div>
+
 					<div id="clickable" data-id="pennsylvaniarailroad" class="squareSide ">						
 						<div data-id="pennsylvaniarailroad" class="firstLine firstLine-left no-color rotation1">pennsylvania<br> railroad</div>
 					</div>
@@ -83,6 +97,7 @@
 						<div data-id="stcharlesplace" class="firstLine firstLine-left rotation1">st. charles<br />place</div>
 					</div>
 				</div>
+
 				<div class="square9">
 					<div class="card-box card-blue">
 						<div class="card-blue-inside"></div>
@@ -94,7 +109,8 @@
 						<div class="card-orange-inside"></div>						
 					</div>
 				</div>
-				<div class="square2">
+
+				<div class="pos-right square2">
 					<div id="clickable" data-id="pacificave" class="squareSide ">
 						<div data-id="pacificave" class="headerSide header-right green"></div>
 						<div data-id="pacificave" class="firstLine firstLine-right rotation3">pacific<br /> avenue</div>
@@ -104,7 +120,7 @@
 						<div data-id="northcarolinaave" class="firstLine firstLine-right rotation3">north<br />carolina<br />avenue</div>
 					</div>
 					<div id="clickable" data-id="communitychest" class="squareSide ">						
-						<div data-id="communitychest" class="firstLine firstLine-right no-color rotation3">community<br />chest</div>
+						<div data-id="communitychestTwo" class="firstLine firstLine-right no-color rotation3">community<br />chest</div>
 					</div>
 					<div id="clickable" data-id="pennsylvaniaave" class="squareSide ">
 						<div data-id="pennsylvaniaave" class="headerSide header-right green"></div>
@@ -132,7 +148,7 @@
 				</div>
 			</div>
 
-			<div class="row top">
+			<div class="pos-bottom row top">
 				<div id="clickable" data-id="jail" class="square2 ">
 					<span data-id="jail" class="corner4-left">just</span>
 					<div data-id="jail" class="squareCorner">
@@ -166,7 +182,7 @@
 					<div data-id="balticave" class="firstLine firstLine-bottom">baltic<br /> avenue</div>
 				</div>
 				<div id="clickable" data-id="communitychest" class="square1 ">
-					<div data-id="communitychest" class="firstLine firstLine-bottom no-color">community<br /> chest</div>
+					<div data-id="communitychestThree" class="firstLine firstLine-bottom no-color">community<br /> chest</div>
 				</div>
 				<div id="clickable" data-id="mediterraneanave" class="square1 ">
 					<div data-id="mediterraneanave" class="header header-bottom brown"></div>
@@ -222,8 +238,24 @@ export default defineComponent({
 
     methods: {
 
-        showProperty(event, propertyId) { // TODO: receive data-id as argument
-            //return("called this function from another component")
+        // movePlayerPiece(property) {
+
+        //     let propertyId = property.info.id;
+        //     console.log(property.info.id)
+        //     let proptertyToMoveTo = document.querySelector(`[data-id="${propertyId}"]`);
+
+        //     let aa = window.getComputedStyle(proptertyToMoveTo).getPropertyValue('width');
+        //     // console.log(window.getComputedStyle(proptertyToMoveTo));
+        //     console.log(aa.slice(0, -2))
+
+            
+            
+            
+            
+            
+        // },
+
+        showProperty(event, propertyId) { 
             
             let propertyToShow = document.querySelector(`[data-id="${propertyId}"]`);
             console.log(event)
@@ -260,6 +292,7 @@ export default defineComponent({
 *       by Angelo Palmieri - 2017
 *
 */
+
 
 div {
 	box-sizing: border-box;

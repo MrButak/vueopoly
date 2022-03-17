@@ -62,7 +62,6 @@ exports.playerPosInfo = (moveCount) => {
     return(propertyInfo)
 };
 
-
 // Function is main funciton call that handles property which player lands on
 exports.dtrmPropertyAction = (propertyInfo) => {
 
