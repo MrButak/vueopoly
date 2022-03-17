@@ -4,19 +4,26 @@
     <div class="player-dashboard-wrapper">
         
         <div class="playerName">
-            {{ this.crntPlayerName }} - {{ this.crntPlayerAlias }}
+            {{ this.crntPlayerLogic.crntPlayerName }} - {{ this.crntPlayerLogic.crntPlayerAlias }}
         </div>
 
         <div class="manage-trade-btn-wrapper">
             <button>Manage</button>
-            <text>${{ this.crntPlayerMoney }}</text>
+            <text>${{ this.crntPlayerLogic.crntPlayerMoney }}</text>
             <button>Trade</button>
         </div>
 
         <div class="roll-dice-end-turn-btn-wrapper">
-            <button @click="this.rollDice">Roll Dice</button>
+            <!-- different messages and options shown depending on local component variables (data()) -->
+            <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
+            <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
+            <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
+            <text v-show="this.buyAvailable"><a @click="this.showProperty()">{{ this.viewPropertyLink }}</a> is available to buy</text>
+            <text v-show="this.willPayRent">You payed rent at <a @click="this.showProperty()">{{ this.viewPropertyLink }}</a></text>
+
         </div>
 
+        <!-- shows the game log TODO: make it prettier (player colors) and auto scroll to bottom -->
         <div class="log-and-dice-wrapper">
             <div class="gamelog-wrapper-main">
                 <text v-for="log in this.gameLogic.gameLog">
@@ -24,7 +31,7 @@
                 </text>
             </div>
             <div class="show-dice-wrapper-main">
-                {{ this.crntDiceRoll[0] }} , {{ this.crntDiceRoll[1] }}
+                {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
             </div>
         </div>
 
@@ -32,24 +39,16 @@
 </div>
 
 
-<div id="player-position">
-0
-</div>
-<!-- for each player -->
-<!-- {{  playerName, playerAlias, money, properties, trade option, mortage option }} -->
-<!-- global -->
-<!-- {{ gamelog }} -->
+
 </template>
 
-// functions to run game
-// get current player data
-// 
 <script>
 
+const handleLs = require('../../../src/javascripts/handleLs');
 const gameFunctions = require('../../../src/javascripts/gameFunctions');
-// import ChoosePlayers from '@/components/initGame/ChoosePlayers.vue';
 import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
+import { ref } from 'vue';
 
 export default defineComponent({
 
@@ -57,27 +56,60 @@ export default defineComponent({
     setup() {
 
         const { lsInUse, players, vueopoly, gameLogic } = vueGlobalState();
+        // let gameBoard = ref(0)
+        const gameBoard = ref(require('../gameBoard/GameBoard.vue')); // component
+        const playerPieces = ref(require('../playerDashboard/PlayerPieces.vue')); // component
+
         return { // make it available in <template>
             lsInUse,
             players,
             vueopoly,
-            gameLogic
+            gameLogic,
+            gameBoard,
+            playerPieces
         }
     },
 
     components: {
-        
+        // GameBoard
     },
 
     data() {
 
         return {
+            // TODO crntPlayerColor: "" // then have logs and other things in that color
+            buyAvailable: false,
+            willPayRent: false,
+            diceRolled: false,
+
+            crntTurnLogic: {
+                propertyLandedOn: {},
+                crntDiceRoll: [],
+            },
+
+            // dom stuff
+            viewPropertyLink: "",
+            crntPlayerLogic: {
+
+                crntPlayerName: "",
+                crntPlayerAlias: "",
+                crntPlayerMoney: 0,
+                crntPlayerProperties: [],
+
+            },
+            // player pieces (PlayerPieces.vew) elements in (Gameboard.vue)
+            playerElements: {
+                p1DomEl: document.querySelector('[data-player="player1"]'),
+                p2DomEl: document.querySelector('[data-player="player2"]'),
+                p3DomEl: document.querySelector('[data-player="player3"]'),
+                p4DomEl: document.querySelector('[data-player="player4"]'),
+                p5DomEl: document.querySelector('[data-player="player5"]'),
+                p6DomEl: document.querySelector('[data-player="player6"]'),
+                p7DomEl: document.querySelector('[data-player="player7"]'),
+                p8DomEl: document.querySelector('[data-player="player8"]')
+
+            }
             
-            crntPlayerName: "",
-            crntPlayerAlias: "",
-            crntPlayerMoney: 0,
-            crntPlayerProperties: [],
-            crntDiceRoll: []
         }
     },
 
@@ -88,10 +120,19 @@ export default defineComponent({
 
     methods: {
 
+        // Function is called @click to view current property player landed on
+        showProperty() {
+
+            // function call to components/gameBoard/GameBoard.vue to preform .click() on current property using property id as argument. (added to this.propertyLink variable in dom)
+            this.gameBoard.default.methods.showProperty(event, this.crntTurnLogic.propertyLandedOn.info.id)
+        },
+
         mainGameLoop() {
 
             // Function call
             this.startTurn(this.players[gameFunctions.getCrntPlayer()]);
+
+            // this.buyAvailable = false
         },
 
         startTurn(crntPlayer) {
@@ -99,30 +140,160 @@ export default defineComponent({
             // game log
             this.gameLogic.gameLog.push(`${crntPlayer.name}'s turn.`)
             
-            this.crntPlayerName = crntPlayer.name;
-            this.crntPlayerAlias = crntPlayer.alias;
-            this.crntPlayerMoney = crntPlayer.money;
+            // set dom variables
+            this.crntPlayerLogic.crntPlayerName = crntPlayer.name;
+            this.crntPlayerLogic.crntPlayerAlias = crntPlayer.alias;
+            this.crntPlayerLogic.crntPlayerMoney = crntPlayer.money;
+        },
+
+        endTurn() {
+
+            // clear local component variables
+            this.buyAvailable = false;
+            this.willPayRent = false;
+            this.diceRolled = false;
+            this.crntPlayerLogic.crntPlayerName = "";
+            this.crntPlayerLogic.crntPlayerAlias = "";
+            this.crntPlayerLogic.crntPlayerMoney = 0;
+            this.crntPlayerLogic.crntPlayerProperties = [];
+
+            this.viewPropertyLink = "",
+            this.crntTurnLogic.propertyLandedOn = {};
+            this.crntTurnLogic.crntDiceRoll = [];
+
+            // save to local storage
+            handleLs.saveToLs();
+
+            this.mainGameLoop();
         },
 
         rollDice() {
 
-            // Function call
-            this.crntDiceRoll = gameFunctions.rollDice();
-            // Function call
-            let propertyInfo = gameFunctions.playerPosInfo(this.crntDiceRoll[0] + this.crntDiceRoll[1]);
+            this.diceRolled = true; // hide roll dice btn
 
-            // game log
+            // Function call (local component variable)
+            this.crntTurnLogic.crntDiceRoll = gameFunctions.rollDice();
+            // Function call (local component variable)
+            this.crntTurnLogic.propertyLandedOn = gameFunctions.playerPosInfo(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
+
+            // game log (global state variable)
             let crntPlayer = this.players[this.gameLogic.whosTurn];
-            this.gameLogic.gameLog.push(`${crntPlayer.name} rolled for ${this.crntDiceRoll[0] + this.crntDiceRoll[1]} and landed on ${propertyInfo.info.name}.`)
+            this.gameLogic.gameLog.push(`${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`)
 
-            // Function call
-            this.dtrmPropertyAction(propertyInfo)
+            // remove player piece before moving it
+            let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
+            crntPlayerPiece.remove()
+            // Function call to move player piece
+            this.playerPieces.default.methods.movePlayerPiece(this.crntTurnLogic.propertyLandedOn, this.players[this.gameLogic.whosTurn]);
+
+            this.dtrmPropertyAction()
         },
 
-        dtrmPropertyAction(propertyInfo) {
+        // Function handles square player lands on
+        dtrmPropertyAction() {
 
-            let propertyAction = gameFunctions.dtrmPropertyAction(propertyInfo);
-            console.log(propertyAction)
+            // function call    determines what type of square player lands on, what action to take, then returns and array [case, logic to preform the action]
+            let propertyAction = gameFunctions.dtrmPropertyAction(this.crntTurnLogic.propertyLandedOn);
+            
+            switch(propertyAction[0]) {
+
+                case 'chance': // [case, random card number from this.vueopoly.chance[]]
+                    this.handleChanceCard(propertyAction[1])
+                case 'communitychest':
+                    gameFunctions.handleCommunityChest()
+                case 'freeparking':
+                    // gameFunctions.handleFreeParking()
+                case 'incometax':
+                    // gameFunctions.handleIncomeTax()
+                case 'luxerytax':
+                    // gameFunctions.handleLuxeryTax()
+
+                // buyable property
+                case 'notowned':
+                    this.buyAvailable = true; // shows buy btn in dom
+                    this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
+                    return;
+
+                // owned property
+                case 'owned':
+                    this.willPayRent = true;
+                    this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
+                    this.payRent(propertyAction[1]);
+                    
+
+            };
+            
+        },
+        handleChanceCard(cardIndex) {
+
+            console.log(this.gameLogic.chance[cardIndex])
+            console.log("chance card")
+        },
+
+        buyProperty() {
+            
+
+            // TODO: reuse some variables below
+
+            // function call
+            if(gameFunctions.moneyCheck(this.crntTurnLogic.propertyLandedOn.info.price ,this.players[this.gameLogic.whosTurn].money)) {
+
+                // deduct the cost of the property from the player (and from the dom money variable)
+                this.players[this.gameLogic.whosTurn].money -= this.crntTurnLogic.propertyLandedOn.info.price;
+                this.crntPlayerLogic.crntPlayerMoney -= this.crntTurnLogic.propertyLandedOn.info.price;
+
+                // add purchased property to players[].properties[]
+                this.players[this.gameLogic.whosTurn].properties.push(this.crntTurnLogic.propertyLandedOn.info);
+
+                // change the owner in vueopoly.properties[].ownedby // possibly here players references vueopoly
+                let currentPlayer = this.players[this.gameLogic.whosTurn]
+                let propertyIndex = this.vueopoly.properties.findIndex(each => each.id == this.crntTurnLogic.propertyLandedOn.info.id);
+                this.vueopoly.properties[propertyIndex].ownedby = currentPlayer.name;
+
+                // game log
+                let crntPlayer = this.players[this.gameLogic.whosTurn];
+                this.gameLogic.gameLog.push(`${crntPlayer.name} purchased ${this.crntTurnLogic.propertyLandedOn.info.name} for $${this.crntTurnLogic.propertyLandedOn.info.price}.`);
+
+                // remove buy button and buy message
+                this.buyAvailable = false;
+                this.viewPropertyLink = "";
+
+                return;
+            }
+            
+            // TODO handle not enough money to buy
+            console.log("buy property function here, but enough money")
+        },
+
+        payRent(rentAmmount) {
+
+            // TODO: create function gamefunctions.getTotalRentCost()
+            // TODO add houses i.e. total cost
+            if(gameFunctions.moneyCheck(rentAmmount, this.players[this.gameLogic.whosTurn].money)) {
+                    
+                let ownersName = this.crntTurnLogic.propertyLandedOn.info.ownedby
+
+                // deduct the cost of the rent from the player (and from the dom money variable)
+                this.players[this.gameLogic.whosTurn].money -= rentAmmount;
+                this.crntPlayerLogic.crntPlayerMoney -= rentAmmount;
+
+                // add cost of rent to property owners money
+                let ownersIndex = this.players.findIndex((item) => item.name == ownersName);
+                this.players[ownersIndex].money += rentAmmount;
+                
+
+                // game log
+                let crntPlayer = this.players[this.gameLogic.whosTurn];
+                
+                this.gameLogic.gameLog.push(`${crntPlayer.name} payed ${ownersName} $${rentAmmount} in rent for staying at ${this.crntTurnLogic.propertyLandedOn.info.name}.`);    
+                return;
+            };
+
+            // TODO handle not enough money to pay rent
+            console.log("not enough money to pay rent. must mortgage or sell/trade");
+            return;
+            
+
         }
     }
 });
@@ -159,7 +330,7 @@ export default defineComponent({
 .roll-dice-end-turn-btn-wrapper {
     display: flex;
     justify-content: center;
-
+    flex-direction: column;
 }
 .log-and-dice-wrapper {
     display: flex;

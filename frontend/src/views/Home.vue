@@ -3,7 +3,8 @@
 <GameBoard />
 <!-- v-if over v-show. v-if is not loaded until condition is met -->
 <div v-if="this.gameLogic.startGame">
-    <PlayerDashboard ref='playerDashboard'/>
+    <PlayerDashboard ref="playerDashboard" />
+    <PlayerPieces ref="playerPieces" />
 </div>
 
 </template>
@@ -12,6 +13,7 @@
 // @ is an alias to /src
 // const main = require('../../public/javascripts/initNewGame');
 import GameBoard from '@/components/gameBoard/GameBoard.vue';
+import PlayerPieces from '@/components/playerDashboard/PlayerPieces.vue';
 import InitGame from '@/components/initGame/InitGame.vue';
 import PlayerDashboard from '@/components/playerDashboard/PlayerDashboard.vue';
 import { defineComponent } from 'vue';
@@ -34,7 +36,8 @@ export default defineComponent({
     components: {
         GameBoard,
         InitGame,
-        PlayerDashboard
+        PlayerDashboard,
+        PlayerPieces
     },
 
     data() {

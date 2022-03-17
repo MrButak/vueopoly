@@ -51,6 +51,11 @@ export default defineComponent({
                 // this.$refs.playerDashboard.mainGameLoop()
                 // if approveRestoreGame() {restoreGame()}
                 console.log('game found')
+                console.log(this.players)
+                console.log(this.vueopoly)
+                console.log(this.gameLogic)
+                
+                // console.log(typeof(this.gameLogic))
                 return;
             }
             else {

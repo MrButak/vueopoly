@@ -94,7 +94,7 @@ export default defineComponent({
                 this.ownedBy = "none";
             }
             else {
-                // some action to get owners name
+                this.ownedBy = property.ownedby.name;
             };
 
             // set card color from property obj

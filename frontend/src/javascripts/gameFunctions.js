@@ -1,23 +1,38 @@
 const { vueGlobalState } = require('../javascripts/stateStore');
 const { lsInUse, vueopoly, players, gameLogic } = vueGlobalState();
 
-// Function returns a number which represents the index position of a player in players array
+// Function returns an integer which represents the index position of a player in players array
 exports.getCrntPlayer = () => {
 
     // gameLogic.whosTurn is the index postition in players array
 
     // for first turn of the game
-    if(gameLogic.value.firstTurn){return(gameLogic.value.whosTurn)};
+    if(gameLogic.value.firstTurn){
+        gameLogic.value.firstTurn = false;
+        return(gameLogic.value.whosTurn)
+    };
 
     // if have reached end of player array, return to index 0
     if(gameLogic.value.whosTurn == players.value.length - 1) {
         gameLogic.value.whosTurn = 0;
         return(gameLogic.value.whosTurn);
     };
-
     // increase index position
     gameLogic.value.whosTurn++;
-    return(gameLogic);
+    return(gameLogic.value.whosTurn);
+};
+exports.moneyCheck = (priceToPay, playersMoney) => {
+
+    
+    if(priceToPay < playersMoney) {
+        return true;
+    };
+    return false;
+    // let cost = priceToPay[1];
+    // let playerMoney = players.value[gameLogic.value.whosTurn];
+    // if(cost > playerMoney) {return false};
+    // return true;
+
 };
 
 // Function returns 2 random numbers (1-6)
@@ -45,47 +60,92 @@ exports.playerPosInfo = (moveCount) => {
     propertyInfo['coord'] = vueopoly.value.tiles[[propertyCoordIndex]];
 
     return(propertyInfo)
-    
 };
 
+// Function is main funciton call that handles property which player lands on
 exports.dtrmPropertyAction = (propertyInfo) => {
 
-    // console.log(vueopoly.value)
-
+    // TODO: jail/just visiting
     let handleSpecialProperty = () => {
-
+        let returnData = [];
         switch(propertyInfo.info.id.toLowerCase()) {
 
             case 'chance':
-                return('chance');
+                returnData.push('chance');
+                returnData.push(Math.floor(Math.random() * 14));
+                return(returnData);
+
             case 'communitychest':
-                return('communitychest');
+                returnData.push('communitychest')
+                returnData.push(Math.floor(Math.random() * 15));
+                return(returnData);
+
             case 'freeparking':
-                return('freeparking');
+                returnData.push('freeparking');
+                returnData.push(gameLogic.value.freeParking);
+                return(returnData);
+
             case 'incometax':
-                return('incometax');
+                returnData.push('incometax');
+                if(players.value[0].money * .10 > 200) {
+                    returnData.push(200)
+                }
+                else {
+                    returnData.push(players.value[0].money * .10)
+                };
+                return(returnData);
+
             case 'luxerytax':
-                return('luxerytax')
+                returnData.push('luxurytax');
+                returnData.push(75);
+                return(returnData);
             // case 'gotojail':
-        }
-       
+        };
     };
-
+    
     let handleOwnableProperty = () => {
+        let returnData = [];
+        switch(propertyInfo.info.ownedby) {
 
-        return 'ownable property'
+            case -1:
+                returnData.push('notowned');
+                returnData.push(propertyInfo.info.price);
+                return(returnData);
+
+            default:
+                returnData.push('owned');
+                returnData.push(propertyInfo.info.price);
+                return(returnData);
+        }
+        
+        // return canBuyProperty()
+        // return payRent()  // moneyCheck // endGame (calculate property mortgages as well, or just end game btn and display message of not enough money)
 
     };
-
+    
+    // main function call
     switch(propertyInfo.info.group.toLowerCase()) {
 
         case 'special':
             return handleSpecialProperty();
-            break;
+            
         default:
-            return handleOwnableProperty()
-            break;
-    };
-
-    
+            return handleOwnableProperty()  
+    };   
 };
+
+
+
+exports.handleChanceCard = () => {
+
+};
+
+exports.handleCommunityChest = () => {
+
+};
+
+exports.actionMessage = () => {
+
+    return("test")
+};
+ 

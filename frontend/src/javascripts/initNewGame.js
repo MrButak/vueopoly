@@ -55,20 +55,28 @@ exports.initNewGame = (newPlayers) => {
     let tmpCnt = 0;
     Object.keys(newPlayers).forEach((player) => {
         playersArr[tmpCnt] = player;
-        playersArr[tmpCnt] = new Player(player, newPlayers[player].alias, newPlayers[player].symbol, 0, {}, 500, false, false);
+        playersArr[tmpCnt] = new Player(player, newPlayers[player].alias, newPlayers[player].symbol, 0, [], 500, false, false);
         tmpCnt++;
     });
-    
-    
+    let gameJson = require('../../vueopoly.json');
+    let communityChestCards = gameJson.communitychest
+    let chanceCards = gameJson.chance
+    // object to handle some game logic. assigned to global state and local storage
     let gameLogic = {
+        
         'startGame': true,
         'firstTurn': true,
         'playerCount': tmpCnt,
-        'whosTurn': 0,
-        'gameLog': ["New game created."]
+        'whosTurn': 0, // index in players array
+        'gameLog': ["New game created."],
+        'chance': chanceCards,
+        'usedChance': [],
+        'communitychest': communityChestCards,
+        'usedCommunityChest': [],
+        'freeParking': 0
     }
     
-    let gameJson = require('../../vueopoly.json');
+    
     // set local storage
     localStorage.setItem('vueopoly', JSON.stringify(gameJson));
     localStorage.setItem('players', JSON.stringify(playersArr));
