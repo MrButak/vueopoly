@@ -58,7 +58,7 @@ export default defineComponent({
         const { lsInUse, players, vueopoly, gameLogic } = vueGlobalState();
         // let gameBoard = ref(0)
         const gameBoard = ref(require('../gameBoard/GameBoard.vue')); // component
-        const playerPieces = ref(require('../gameBoard/PlayerPieces.vue')); // component
+        const playerPieces = ref(require('../playerDashboard/PlayerPieces.vue')); // component
 
         return { // make it available in <template>
             lsInUse,

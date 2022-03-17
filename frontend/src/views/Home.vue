@@ -13,7 +13,7 @@
 // @ is an alias to /src
 // const main = require('../../public/javascripts/initNewGame');
 import GameBoard from '@/components/gameBoard/GameBoard.vue';
-import PlayerPieces from '@/components/gameBoard/PlayerPieces.vue';
+import PlayerPieces from '@/components/playerDashboard/PlayerPieces.vue';
 import InitGame from '@/components/initGame/InitGame.vue';
 import PlayerDashboard from '@/components/playerDashboard/PlayerDashboard.vue';
 import { defineComponent } from 'vue';
