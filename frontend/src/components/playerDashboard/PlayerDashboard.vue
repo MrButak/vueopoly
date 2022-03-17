@@ -97,7 +97,8 @@ export default defineComponent({
                 crntPlayerProperties: [],
 
             },
-            // player pieces (PlayerPieces.vew) elements in (Gameboard.vue)
+            // player pieces (PlayerPieces.vew). elements in (Gameboard.vue)
+            // used to remove player piece when moving to new position. These elements are inserted into the dom from PlayerPieces.vue, and are inserted into GameBoard.vue's html
             playerElements: {
                 p1DomEl: document.querySelector('[data-player="player1"]'),
                 p2DomEl: document.querySelector('[data-player="player2"]'),
@@ -193,7 +194,7 @@ export default defineComponent({
         dtrmPropertyAction() {
 
             // function call    determines what type of square player lands on, what action to take, then returns and array [case, logic to preform the action]
-            let propertyAction = gameFunctions.dtrmPropertyAction(this.crntTurnLogic.propertyLandedOn);
+            let propertyAction = gameFunctions.dtrmPropertyAction(this.crntTurnLogic.propertyLandedOn, this.crntTurnLogic.crntDiceRoll);
             
             switch(propertyAction[0]) {
 
@@ -218,7 +219,7 @@ export default defineComponent({
                 case 'owned':
                     this.willPayRent = true;
                     this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
-                    this.payRent(propertyAction[1]);
+                    this.payRent(propertyAction[1]); //propertyAction[1] is price
                     
 
             };

@@ -1,7 +1,7 @@
 <template>
 <InitGame />
 <GameBoard />
-<!-- v-if over v-show. v-if is not loaded until condition is met -->
+<!-- is not loaded until condition is met (new game started or game in progress)-->
 <div v-if="this.gameLogic.startGame">
     <PlayerDashboard ref="playerDashboard" />
     <PlayerPieces ref="playerPieces" />
@@ -44,15 +44,11 @@ export default defineComponent({
 
         return {
             
-            
         }
     },
 
     mounted() {
-        
-      
-        
-        
+          
     },
     
 
