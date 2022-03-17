@@ -238,23 +238,6 @@ export default defineComponent({
 
     methods: {
 
-        // movePlayerPiece(property) {
-
-        //     let propertyId = property.info.id;
-        //     console.log(property.info.id)
-        //     let proptertyToMoveTo = document.querySelector(`[data-id="${propertyId}"]`);
-
-        //     let aa = window.getComputedStyle(proptertyToMoveTo).getPropertyValue('width');
-        //     // console.log(window.getComputedStyle(proptertyToMoveTo));
-        //     console.log(aa.slice(0, -2))
-
-            
-            
-            
-            
-            
-        // },
-
         showProperty(event, propertyId) { 
             
             let propertyToShow = document.querySelector(`[data-id="${propertyId}"]`);

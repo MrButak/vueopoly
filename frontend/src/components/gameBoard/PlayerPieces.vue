@@ -1,11 +1,12 @@
 <template>
 
-<div v-for="a in this.players.length">
-    <div class="player-position">
-        
+<!-- TODO insert and remove player divs from here  -->
+
+<!-- <div v-for="a in this.players.length">
+    <div class="player-position">  
     <p>{{ a }}</p>
     </div>
-</div>
+</div> -->
 
 
 </template>
@@ -50,25 +51,39 @@ export default defineComponent({
 
         initPlayerPosition() {
             
+            // TODO: detect change in screen width, and call this function
             // function runs after refresh of page or new game 
 
             // Function call. Positions player piece on the game board
             this.players.forEach((player) => {
                 // let indexOfPlayerPosition = this.vueopoly.tiles.findIndex((each => each.position == player.position));
-                this.movePlayerPiece(this.vueopoly.tiles[player.position], player)
+                this.movePlayerPiece(this.vueopoly.tiles[player.position], player);
             });
-            console.log(this.players)
-            console.log("coming from playerpieces")
-          
+
+            // console.log(this.players);
+            // console.log("coming from playerpieces");
         },
 
         movePlayerPiece(property, player) {
 
+            // TODO: find previous piece using document.querySelector(`[data-player="${player.name}"]`)
+            
+            let elementDataId = player.name.replaceAll(' ', '');
+            console.log({elementDataId});
 
-            console.log(player)
-            console.log("player")
+            let playerDiv;
+            // if(document.querySelector(`data-player${elementDataId}`)) {
+            //     console.log("???")
+            //     document.querySelector(`data-player${elementDataId}`).remove();
+            // };
+            // else {
+            //     playerDiv = document.querySelector(`data-player${elementDataId}`)
+            // };`[data-id="${propertyId}"]`
+            playerDiv = document.querySelector(`[data-player${elementDataId}]`)
+            console.log(playerDiv)
+            console.log("^^^^^^^^^^ Where are you? ^^^^^^^^^^^^")
 
-            // Variable name is determined by the function that called this function. property object is slightly different.
+            // Variable value source is determined by the function that called this function. property object is slightly different.
             // From PlayerDashboard.vue property.info.id . From (above) this.initPlayerPosition property.id
             let propertyId;
             try {
@@ -79,14 +94,14 @@ export default defineComponent({
             };
                 
             
-            console.log(propertyId)
+            // console.log(propertyId)
 
-            // Reference dom object of property using the dataset
+            // Reference dom object of property to put player piece using the dataset
             let proptertyToMoveTo = document.querySelectorAll(`[data-id="${propertyId}"]`);
             // Get the location data of that dom object. (More than one dataset attribute with the same names (propertyId) are used on dom elements, so array is returned. Index 0 is the 'out-most' div I position the player pieces on).
             let propertyPosition = proptertyToMoveTo[0].getBoundingClientRect();
 
-            console.log(proptertyToMoveTo)
+            // console.log(proptertyToMoveTo)
 
             // Create player piece
             let playerPiece = document.createElement('div')
@@ -94,16 +109,16 @@ export default defineComponent({
             playerPiece.style.width = playerPieceWidth + "px";
             playerPiece.style.height = playerPieceWidth + "px";
             playerPiece.style.backgroundColor = player.symbol
-            playerPiece.dataset.player = player.name; // dataset attribute
+            playerPiece.dataset.player = elementDataId; // dataset attribute
+            
             
             let playerPieceoffSet = playerPieceWidth;
 
-            // Determine the 'offset' number, so all of the player pieces will not be piled on top of each other.
+            // Determine the 'offset' number to use so all of the player pieces will not be piled on top of each other.
             switch(player.name.toLowerCase()) {
 
                 case 'player 1':
                     playerPieceoffSet = playerPieceWidth;
-                    console.log("case 1 for player 1")
                     break;
                 case 'player 2':
                     playerPieceoffSet = playerPieceWidth * 2;
@@ -128,7 +143,6 @@ export default defineComponent({
                     break;
             };
 
-
             // Each parent element has a different position for player pieces.
             switch(proptertyToMoveTo[0].parentElement.classList[0]) {
                 
@@ -138,7 +152,6 @@ export default defineComponent({
                     playerPiece.style.bottom = (propertyPosition.height) - playerPieceWidth + "px";
                     playerPiece.style.left = (propertyPosition.width / 2) - playerPieceoffSet / 2 + "px";
                     proptertyToMoveTo[0].appendChild(playerPiece);
-                    console.log("top position")
                     return;
 
                 case 'pos-right':
@@ -147,7 +160,6 @@ export default defineComponent({
                     playerPiece.style.top = (propertyPosition.height / 2) - playerPieceoffSet / 2 + "px";
                     playerPiece.style.left = (propertyPosition.width) - playerPieceoffSet + "px";
                     proptertyToMoveTo[0].appendChild(playerPiece);
-                    console.log("right position");
                     return;
 
                 case 'pos-bottom':
@@ -156,7 +168,6 @@ export default defineComponent({
                     playerPiece.style.top = (propertyPosition.height - playerPieceWidth) + "px";
                     playerPiece.style.left = (propertyPosition.width / 2) - playerPieceoffSet / 2 + "px";
                     proptertyToMoveTo[0].appendChild(playerPiece);
-                    console.log("bottom position");
                     return;
 
                 case 'pos-left':
@@ -165,7 +176,6 @@ export default defineComponent({
                     playerPiece.style.top = (propertyPosition.height / 2) - playerPieceoffSet / 2 + "px";
                     playerPiece.style.right = (propertyPosition.width) - playerPieceWidth + "px";
                     proptertyToMoveTo[0].appendChild(playerPiece);
-                    console.log("left position");
                     return;
             };
             
