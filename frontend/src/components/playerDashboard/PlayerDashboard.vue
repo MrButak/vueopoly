@@ -38,6 +38,10 @@
     </div>
 </div>
 
+
+<SpecialCards ref="specialCards" />
+
+
 </template>
 
 <script>
@@ -47,6 +51,7 @@ const gameFunctions = require('../../../src/javascripts/gameFunctions');
 import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
 import { ref } from 'vue';
+import SpecialCards from './SpecialCards.vue';
 
 export default defineComponent({
 
@@ -68,8 +73,8 @@ export default defineComponent({
     },
 
     components: {
-        // GameBoard
-    },
+    SpecialCards
+},
 
     data() {
 
@@ -78,6 +83,7 @@ export default defineComponent({
             buyAvailable: false,
             willPayRent: false,
             diceRolled: false,
+            showSpecialCard: false,
 
             crntTurnLogic: {
                 propertyLandedOn: {},
@@ -184,6 +190,13 @@ export default defineComponent({
             // Function call to move player piece
             this.playerPieces.default.methods.movePlayerPiece(this.crntTurnLogic.propertyLandedOn, this.players[this.gameLogic.whosTurn]);
 
+            // test show special card
+            // console.log(this.$refs.specialCards.toggleModal())
+            this.$refs.specialCards.toggleModal()
+            
+
+            
+
             this.dtrmPropertyAction()
         },
 
@@ -223,7 +236,7 @@ export default defineComponent({
             
         },
 
-        // can consolidate chance and community chest cards?
+        
         handleSpecialCard(cardData) {
 
             let cardType = [];
@@ -240,7 +253,6 @@ export default defineComponent({
 
             // error check
             if(cardType[0] === "") {
-
                 console.log("error happened in handleSpecialCards() for cardType variable");
                 return;
             };

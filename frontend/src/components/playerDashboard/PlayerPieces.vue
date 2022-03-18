@@ -1,21 +1,11 @@
 <template>
 
-<!-- TODO insert and remove player divs from here // this doesn't make sense. dom elements are insereted into property squared -->
-
-<!-- <div v-for="a in this.players.length">
-    <div class="player-position">  
-    <p>{{ a }}</p>
-    </div>
-</div> -->
-
-
 </template>
 
 <script>
 
 import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
-
 
 export default defineComponent({
     name: 'PlayerPieces',
@@ -52,7 +42,7 @@ export default defineComponent({
         initPlayerPosition() {
             
             // TODO: detect change in screen width, and call this function
-            // function runs after refresh of page or new game 
+            // function runs after page refresh or new game 
 
             // Function call. Positions player piece on the game board
             this.players.forEach((player) => {
@@ -60,8 +50,6 @@ export default defineComponent({
                 this.movePlayerPiece(this.vueopoly.tiles[player.position], player);
             });
 
-            // console.log(this.players);
-            // console.log("coming from playerpieces");
         },
 
         movePlayerPiece(property, player) {
@@ -162,9 +150,6 @@ export default defineComponent({
                     proptertyToMoveTo[0].appendChild(playerPiece);
                     return;
             };
-            
-            console.log("^^^^^^^^^^")
-    
         }
     }
 });
@@ -174,13 +159,6 @@ export default defineComponent({
 
 .player-position {
     position: absolute;
-    // display: flex;
-    // flex-direction: column;
-    // align-items: center;
-    // bottom: 13vw;
-    // right: 11vw;
-   /* top: 77vw;
-    left: 86vw; */
     
 }
 

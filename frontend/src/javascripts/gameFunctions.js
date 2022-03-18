@@ -132,7 +132,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                         console.log("rr's owned")
                     };
                 });
-                // return different amounts for amount of railroads ownded
+                // return different rent amounts for amount of railroads owned
                 switch(totalRrOwned.length) {
 
                     case 1: {
