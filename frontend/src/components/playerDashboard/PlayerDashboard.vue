@@ -38,8 +38,6 @@
     </div>
 </div>
 
-
-
 </template>
 
 <script>
@@ -56,7 +54,6 @@ export default defineComponent({
     setup() {
 
         const { lsInUse, players, vueopoly, gameLogic } = vueGlobalState();
-        // let gameBoard = ref(0)
         const gameBoard = ref(require('../gameBoard/GameBoard.vue')); // component
         const playerPieces = ref(require('../playerDashboard/PlayerPieces.vue')); // component
 
@@ -175,13 +172,13 @@ export default defineComponent({
             // Function call (local component variable)
             this.crntTurnLogic.crntDiceRoll = gameFunctions.rollDice();
             // Function call (local component variable)
-            this.crntTurnLogic.propertyLandedOn = gameFunctions.playerPosInfo(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
+            this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
 
             // game log (global state variable)
             let crntPlayer = this.players[this.gameLogic.whosTurn];
             this.gameLogic.gameLog.push(`${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`)
 
-            // remove player piece before moving it
+            // remove player piece before moving to new position
             let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
             crntPlayerPiece.remove()
             // Function call to move player piece
@@ -199,9 +196,11 @@ export default defineComponent({
             switch(propertyAction[0]) {
 
                 case 'chance': // [case, random card number from this.vueopoly.chance[]]
-                    this.handleChanceCard(propertyAction[1])
+                    // this.handleChanceCard(propertyAction[1])
+                    this.handleSpecialCard(propertyAction);
                 case 'communitychest':
-                    this.handleCommunityChest(propertyAction[1])
+                    // this.handleCommunityChest(propertyAction[1])
+                    this.handleSpecialCard(propertyAction);
                 case 'freeparking':
                     // gameFunctions.handleFreeParking()
                 case 'incometax':
@@ -225,69 +224,85 @@ export default defineComponent({
         },
 
         // can consolidate chance and community chest cards?
-        // handleSpecialCards(cardData) {
+        handleSpecialCard(cardData) {
 
-        //     let cardType = "";
+            let cardType = [];
 
-        //     switch(cardData[0]) {
+            switch(cardData[0]) {
 
-        //         case 'chance':
-        //             cardType = "chance";
-        //             return;
-        //         case 'communitychest':
-        //             cardType = "communitychest";
-        //             return;
-        //     };
+                case 'chance':
+                    cardType.push("chance");
+                    return;
+                case 'communitychest':
+                    cardType.push("communitychest");
+                    return;
+            };
 
-        //     if(cardType === "") {
+            // error check
+            if(cardType[0] === "") {
 
-        //         console.log("error happened in handleSpecialCards() for cardType variable");
-        //         return;
+                console.log("error happened in handleSpecialCards() for cardType variable");
+                return;
+            };
 
-        //     };
-
-            
-
-        // },
-
-        handleChanceCard(cardIndex) {
-
-            console.log(this.gameLogic.chance[cardIndex])
-            console.log("chance card")
-            // TODO: push card to used card array, remove this card from array index
-            // switch(this.gameLogic.chance[cardIndex].action) {
-
-            //     case 'addfunds':
-            //         // TODO: addfunds(), gameLog.push()
-            // }
-        },
-
-        handleCommunityChest(cardIndex) {
-            
-            console.log(this.gameLogic.communitychest[cardIndex])
-
-            let communityChestCard = this.gameLogic.communitychest[cardIndex];
-
-            console.log("community chest card")
-            switch(this.communityChestCard.action) {
+            switch(cardData[1].action) {
 
                 case 'addfunds':
-                    // TODO: addfunds(), gameLog.push()
+
                 case 'removefunds':
-                
+
                 case 'move':
 
                 case 'jail':
 
-                    switch(communityChestCard.subaction) {
-
+                    switch(cardData[1].subaction) {
                         case 'getout':
 
                         case 'jail':
                     }
             }
-            
+
+
         },
+
+        // handleChanceCard(cardIndex) {
+
+        //     console.log(this.gameLogic.chance[cardIndex])
+        //     console.log("chance card")
+        //     // TODO: push card to used card array, remove this card from array index
+        //     // switch(this.gameLogic.chance[cardIndex].action) {
+
+        //     //     case 'addfunds':
+        //     //         // TODO: addfunds(), gameLog.push()
+        //     // }
+        // },
+
+        // handleCommunityChest(cardIndex) {
+            
+        //     console.log(this.gameLogic.communitychest[cardIndex])
+
+        //     let communityChestCard = this.gameLogic.communitychest[cardIndex];
+
+        //     console.log("community chest card")
+        //     switch(this.communityChestCard.action) {
+
+        //         case 'addfunds':
+        //             // TODO: addfunds(), gameLog.push()
+        //         case 'removefunds':
+                
+        //         case 'move':
+
+        //         case 'jail':
+
+        //             switch(communityChestCard.subaction) {
+
+        //                 case 'getout':
+
+        //                 case 'jail':
+        //             }
+        //     }
+            
+        // },
 
         buyProperty() {
             

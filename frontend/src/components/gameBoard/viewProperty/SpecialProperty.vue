@@ -7,7 +7,7 @@
 
     <div class="rent-price-wrapper">
         <div class="name-price-wrapper">
-            <text>test</text><text></text>
+            <text>test</text>
         </div>
     </div>
 

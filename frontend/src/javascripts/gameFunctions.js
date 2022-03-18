@@ -21,6 +21,8 @@ exports.getCrntPlayer = () => {
     gameLogic.value.whosTurn++;
     return(gameLogic.value.whosTurn);
 };
+
+
 exports.moneyCheck = (priceToPay, playersMoney) => {
 
     
@@ -35,10 +37,9 @@ exports.moneyCheck = (priceToPay, playersMoney) => {
 
 };
 
+
 // Function returns 2 random numbers (1-6)
 exports.rollDice = () => {
-
-
 
     let dice = [];
     dice.push(Math.floor(Math.random() * 6 + 1));
@@ -47,8 +48,9 @@ exports.rollDice = () => {
     return(dice)
 };
 
+
 // Function adds rolled dice to player position and gets new postion information
-exports.playerPosInfo = (moveCount) => {
+exports.movePlayerPos = (moveCount) => {
 
     // TODO: modular math (wrap around gameboard)
     let propertyInfo = {};
@@ -56,7 +58,7 @@ exports.playerPosInfo = (moveCount) => {
     // calculate player's new position
     players.value[gameLogic.value.whosTurn].position += moveCount;
     
-    // get index of landed on property and add property to object
+    // get index of property landed on and add property to object
     let propertyInfoIndex = vueopoly.value.properties.findIndex(each => each.position == players.value[gameLogic.value.whosTurn].position);
     propertyInfo['info'] = vueopoly.value.properties[propertyInfoIndex];
 
@@ -67,7 +69,8 @@ exports.playerPosInfo = (moveCount) => {
     return(propertyInfo)
 };
 
-// Function is main funciton call that handles property which player lands on
+
+// Function is main funciton call after dice roll. Handles property landed on.
 exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
 
     // TODO: jail/just visiting
@@ -221,7 +224,6 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
             return handleOwnableProperty()  
     };   
 };
-
 
 
 exports.handleChanceCard = () => {
