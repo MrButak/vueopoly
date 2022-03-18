@@ -111,8 +111,11 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
 
     let getTotalRentAmount = () => {
 
+        console.log(propertyInfo.info.group.toLowerCase())
+        
         switch(propertyInfo.info.group.toLowerCase()) {
 
+            // BUG !!! returning wrong amount. if only 1 owned, returning 4 owned
             case 'railroad':
                 let railRoadsOwned = 0;
                 // create array of all railroads
@@ -122,7 +125,8 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                 totalRrOwned.forEach((rr) => {
                     if(rr.ownedby == propertyInfo.info.ownedby) {
                         railRoadsOwned++;
-                        return;
+                        console.log(railRoadsOwned)
+                        console.log("rr's owned")
                     };
                 });
                 // return different amounts for amount of railroads ownded
@@ -142,7 +146,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                     }
                 };
     
-                
+            
             case 'utilities':
 
                 switch(propertyInfo.info.id.toLowerCase()) {
@@ -170,6 +174,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                         // if only this utility owned
                         return((crntDiceRoll[0] + crntDiceRoll[1]) * 4);
                 };
+                return;
 
             default:
                 // no buildings
@@ -196,7 +201,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
             default:
                 // TODO: check if mortgaged
                 returnData.push('owned');
-                returnData.push(getTotalRentAmount)
+                returnData.push(getTotalRentAmount())
                 // returnData.push(propertyInfo.info.price);
                 return(returnData);
         }

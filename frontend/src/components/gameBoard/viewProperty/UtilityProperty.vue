@@ -9,7 +9,7 @@
        
             <text>&emsp;If ONE "Utility" is</text>
             <text>owned, rent is 4 times</text>
-            <text>ammount shown on dice.</text>
+            <text>amount shown on dice.</text>
             <text>&emsp;If BOTH "Utilities"</text>
             <text>are owned, rent is 10</text>
             <text>times amount shown</text>
