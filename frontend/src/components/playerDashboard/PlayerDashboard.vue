@@ -220,11 +220,10 @@ export default defineComponent({
                     this.willPayRent = true;
                     this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
                     this.payRent(propertyAction[1]); //propertyAction[1] is price
-                    
-
             };
             
         },
+
         handleChanceCard(cardIndex) {
 
             console.log(this.gameLogic.chance[cardIndex])
@@ -267,7 +266,8 @@ export default defineComponent({
         },
 
         payRent(rentAmmount) {
-
+            console.log(rentAmmount)
+            console.log("rent amount")
             // TODO: create function gamefunctions.getTotalRentCost()
             // TODO add houses i.e. total cost
             if(gameFunctions.moneyCheck(rentAmmount, this.players[this.gameLogic.whosTurn].money)) {

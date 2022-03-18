@@ -170,7 +170,6 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                         // if only this utility owned
                         return((crntDiceRoll[0] + crntDiceRoll[1]) * 4);
                 };
-            
 
             default:
                 // no buildings
@@ -180,10 +179,11 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                 // with buildings
                 return(propertyInfo.info.multpliedrent[propertyInfo.info.buildings])
         };
-        
     };
 
+
     let handleOwnableProperty = () => {
+
         let returnData = [];
         switch(propertyInfo.info.ownedby) {
 
@@ -196,7 +196,8 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
             default:
                 // TODO: check if mortgaged
                 returnData.push('owned');
-                returnData.push(propertyInfo.info.price);
+                returnData.push(getTotalRentAmount)
+                // returnData.push(propertyInfo.info.price);
                 return(returnData);
         }
         
