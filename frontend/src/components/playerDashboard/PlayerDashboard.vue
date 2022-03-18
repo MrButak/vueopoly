@@ -224,6 +224,32 @@ export default defineComponent({
             
         },
 
+        // can consolidate chance and community chest cards?
+        // handleSpecialCards(cardData) {
+
+        //     let cardType = "";
+
+        //     switch(cardData[0]) {
+
+        //         case 'chance':
+        //             cardType = "chance";
+        //             return;
+        //         case 'communitychest':
+        //             cardType = "communitychest";
+        //             return;
+        //     };
+
+        //     if(cardType === "") {
+
+        //         console.log("error happened in handleSpecialCards() for cardType variable");
+        //         return;
+
+        //     };
+
+            
+
+        // },
+
         handleChanceCard(cardIndex) {
 
             console.log(this.gameLogic.chance[cardIndex])
@@ -239,7 +265,28 @@ export default defineComponent({
         handleCommunityChest(cardIndex) {
             
             console.log(this.gameLogic.communitychest[cardIndex])
+
+            let communityChestCard = this.gameLogic.communitychest[cardIndex];
+
             console.log("community chest card")
+            switch(this.communityChestCard.action) {
+
+                case 'addfunds':
+                    // TODO: addfunds(), gameLog.push()
+                case 'removefunds':
+                
+                case 'move':
+
+                case 'jail':
+
+                    switch(communityChestCard.subaction) {
+
+                        case 'getout':
+
+                        case 'jail':
+                    }
+            }
+            
         },
 
         buyProperty() {
