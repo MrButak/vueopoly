@@ -108,17 +108,41 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
             // case 'gotojail':
         };
     };
-    
-    console.log(propertyInfo.info)
-    console.log("here's the property info")
 
     let getTotalRentAmount = () => {
 
         switch(propertyInfo.info.group.toLowerCase()) {
 
             case 'railroad':
-                // TODO: get total amount of rr's owned
-                return;
+                let railRoadsOwned = 0;
+                // create array of all railroads
+                let totalRrOwned = vueopoly.value.properties.filter(property => property.group.toLowerCase() == 'railroad');
+                console.log(totalRrOwned);
+                // see how many railroads are owned
+                totalRrOwned.forEach((rr) => {
+                    if(rr.ownedby == propertyInfo.info.ownedby) {
+                        railRoadsOwned++;
+                        return;
+                    };
+                });
+                // return different amounts for amount of railroads ownded
+                switch(totalRrOwned.length) {
+
+                    case 1: {
+                        return(25);
+                    }
+                    case 2: {
+                        return(50);
+                    }
+                    case 3: {
+                        return(100);
+                    }
+                    case 4: {
+                        return(200);
+                    }
+                };
+    
+                
             case 'utilities':
 
                 switch(propertyInfo.info.id.toLowerCase()) {
@@ -145,7 +169,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                         };
                         // if only this utility owned
                         return((crntDiceRoll[0] + crntDiceRoll[1]) * 4);
-                }
+                };
             
 
             default:
@@ -157,7 +181,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                 return(propertyInfo.info.multpliedrent[propertyInfo.info.buildings])
         };
         
-    }
+    };
 
     let handleOwnableProperty = () => {
         let returnData = [];
