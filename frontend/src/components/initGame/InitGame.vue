@@ -8,6 +8,7 @@
 </div>
 
 <!-- <div v-else class="new-game-wrapper-main">
+    // TODO make a module to ask user if they would like to load game or start new game
     <p>save game found</p>
     <p>continue game?</p>
     <p>start new game?</p>
