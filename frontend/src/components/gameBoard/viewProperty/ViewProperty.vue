@@ -182,9 +182,6 @@ hr {
     background: #333;
     background-image: linear-gradient(to right, #ccc, #333, #ccc);
 }
-
-
-
 .box {
     display: flex;
     flex-direction: column;
