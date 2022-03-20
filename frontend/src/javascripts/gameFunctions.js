@@ -73,6 +73,39 @@ exports.movePlayerPos = (moveCount) => {
 // Function is main funciton call after dice roll. Handles property landed on.
 exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
 
+    // Function checks if chance or community chest cards are in deck. If not re-asign
+    let checkForEmptyDeck = (cardType) => {
+
+        switch(cardType) {
+
+            case 'chance':
+                console.log(vueopoly.value.chance.length)
+                // if deck is empty. re-asign deck and empty gameLogic.usedChance
+                if(vueopoly.value.chance.length < 1) {
+                    gameLogic.value.chance = this.vueopoly.value.chance;
+                    gameLogic.value.usedChance = [];
+                    return;
+                };
+                return;
+
+            case 'communitychest':
+                console.log(vueopoly.value.communitychest.length)
+                if(vueopoly.value.communitychest.length < 1) {
+                    gameLogic.value.communitychest = this.vueopoly.value.chance;
+                    gameLogic.value.usedCommunityChest = [];
+                    return;
+                };
+            
+            default:
+                console.log("unhandled error dtrmPropertyAction.checkForEmptyDeck() gameFunctions.js")
+            
+        };
+            
+            
+        
+    };
+
+
     // TODO: jail/just visiting
     let handleSpecialProperty = () => {
         let returnData = [];
@@ -80,12 +113,14 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
 
             // returns index of random chance card
             case 'chance':
+                checkForEmptyDeck('chance');
                 returnData.push('chance');
                 returnData.push(Math.floor(Math.random() * 14));
                 return(returnData);
-            // returns index of random community chest card
+            
             case 'communitychest':
-                returnData.push('communitychest')
+                checkForEmptyDeck('communitychest');
+                returnData.push('communitychest');
                 returnData.push(Math.floor(Math.random() * 15));
                 return(returnData);
 
@@ -113,8 +148,6 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
     };
 
     let getTotalRentAmount = () => {
-
-        console.log(propertyInfo.info.group.toLowerCase())
         
         switch(propertyInfo.info.group.toLowerCase()) {
 

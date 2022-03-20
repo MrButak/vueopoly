@@ -190,13 +190,7 @@ export default defineComponent({
             // Function call to move player piece
             this.playerPieces.default.methods.movePlayerPiece(this.crntTurnLogic.propertyLandedOn, this.players[this.gameLogic.whosTurn]);
 
-            // test show special card
-            // console.log(this.$refs.specialCards.toggleModal())
-            this.$refs.specialCards.toggleModal()
             
-
-            
-
             this.dtrmPropertyAction()
         },
 
@@ -240,14 +234,30 @@ export default defineComponent({
         handleSpecialCard(cardData) {
 
             let cardType = [];
+            let crntSpecialCard;
 
             switch(cardData[0]) {
 
                 case 'chance':
                     cardType.push("chance");
+                    // index of random card (cardData[1])
+                    crntSpecialCard = this.gameLogic.chance[cardData[1]];
+                    this.$refs.specialCards.setViewData(cardData, crntSpecialCard);
+                    // add to used card deck
+                    this.gameLogic.usedChance.unshift(this.gameLogic.chance[cardData[1]]);
+                    // remove from original deck
+                    this.gameLogic.chance.splice(cardData[1], 1);
                     return;
+                    
                 case 'communitychest':
                     cardType.push("communitychest");
+                    // index of random card (cardData[1])
+                    crntSpecialCard = this.gameLogic.communitychest[cardData[1]];
+                    this.$refs.specialCards.setViewData(cardData, crntSpecialCard);
+                    // add to used card deck. 0 index so can reference card below
+                    this.gameLogic.usedCommunityChest.unshift(this.gameLogic.communitychest[cardData[1]]);
+                    // remove from original deck
+                    this.gameLogic.communitychest.splice(cardData[1], 1);
                     return;
             };
 
@@ -257,7 +267,7 @@ export default defineComponent({
                 return;
             };
 
-            switch(cardData[1].action) {
+            switch(his.gameLogic.usedChance[0].action) { // card that was drawn
 
                 case 'addfunds':
 
@@ -271,50 +281,12 @@ export default defineComponent({
                         case 'getout':
 
                         case 'jail':
-                    }
-            }
+                    };
+            };
 
 
         },
 
-        // handleChanceCard(cardIndex) {
-
-        //     console.log(this.gameLogic.chance[cardIndex])
-        //     console.log("chance card")
-        //     // TODO: push card to used card array, remove this card from array index
-        //     // switch(this.gameLogic.chance[cardIndex].action) {
-
-        //     //     case 'addfunds':
-        //     //         // TODO: addfunds(), gameLog.push()
-        //     // }
-        // },
-
-        // handleCommunityChest(cardIndex) {
-            
-        //     console.log(this.gameLogic.communitychest[cardIndex])
-
-        //     let communityChestCard = this.gameLogic.communitychest[cardIndex];
-
-        //     console.log("community chest card")
-        //     switch(this.communityChestCard.action) {
-
-        //         case 'addfunds':
-        //             // TODO: addfunds(), gameLog.push()
-        //         case 'removefunds':
-                
-        //         case 'move':
-
-        //         case 'jail':
-
-        //             switch(communityChestCard.subaction) {
-
-        //                 case 'getout':
-
-        //                 case 'jail':
-        //             }
-        //     }
-            
-        // },
 
         buyProperty() {
             

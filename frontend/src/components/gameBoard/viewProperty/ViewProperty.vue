@@ -63,7 +63,6 @@ export default defineComponent({
             showUtilityCard: false,
             showrrCard: false,
             showSpecialCard: false
-
         }
     },
     mounted() {
@@ -191,7 +190,7 @@ hr {
     box-shadow: 0 1px 1px 1px #ccc;
     background-color:white;
   }
-h2 {
+.property-name {
     text-align: center;
     background-color: red;
     color: black;
