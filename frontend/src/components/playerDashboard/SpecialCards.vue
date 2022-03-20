@@ -79,10 +79,12 @@ export default defineComponent({
                 case 'chance':
                     this.cardType = "chance";
                     this.cardDesc = crntSpecialCard.title;
+                    break;
 
                 case 'communitychest':
                     this.cardType = "Community Chest";
                     this.cardDesc = crntSpecialCard.title;
+                    break;
             }
              
             

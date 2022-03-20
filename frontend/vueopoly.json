@@ -808,7 +808,7 @@
             "averageProbability": 1.82995
         },
         {
-            "name": "Community Chest Two",
+            "name": "CommunityChestTwo",
             "id": "communitychest",
             "position": 17,
             "group": "Special",
@@ -821,7 +821,7 @@
             "averageProbability": 1.82995
         },
         {
-            "name": "Community Chest Three",
+            "name": "CommunityChestThree",
             "id": "communitychest",
             "position": 33,
             "group": "Special",

@@ -63,8 +63,8 @@ exports.movePlayerPos = (moveCount) => {
     propertyInfo['info'] = vueopoly.value.properties[propertyInfoIndex];
 
     // add this to object as well. // I can remove this. I'm not using coords as originally planned
-    let propertyCoordIndex = vueopoly.value.tiles.findIndex(each => each.position == players.value[gameLogic.value.whosTurn].position);
-    propertyInfo['coord'] = vueopoly.value.tiles[[propertyCoordIndex]];
+    // let propertyCoordIndex = vueopoly.value.tiles.findIndex(each => each.position == players.value[gameLogic.value.whosTurn].position);
+    // propertyInfo['coord'] = vueopoly.value.tiles[[propertyCoordIndex]];
 
     return(propertyInfo)
 };
@@ -76,8 +76,6 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
     // Function checks if chance or community chest cards are in deck. If not re-asign
     let checkForEmptyDeck = (cardType) => {
 
-        console.log(cardType);
-        console.log("here again")
         switch(cardType) {
             
             case 'chance':
@@ -102,8 +100,6 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
             
         };
             
-            
-        
     };
 
 
@@ -117,6 +113,8 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                 checkForEmptyDeck('chance');
                 returnData.push('chance');
                 returnData.push(Math.floor(Math.random() * 14));
+
+                // handleSpecialCards(returnData)
                 return(returnData);
             
             case 'communitychest':
@@ -261,8 +259,31 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
 };
 
 
-exports.handleSpecialCardAction = () => {
+exports.handleSpecialCard = (cardData) => {
+    // do the dirty here
+    console.log(cardData);
+    console.log("game functions")
+    // switch(this.gameLogic.usedChance[0].action) { // card that was drawn
 
+    //     case 'addfunds':
+
+    //     case 'removefunds':
+
+    //     case 'move':
+
+    //     case 'jail':
+
+    //         switch(cardData[1].subaction) {
+    //             case 'getout':
+    //                 // add 'get out of jail free' card to players special card array
+    //                 this.players[this.gameLogic.whosTurn].specialCards.push(this.gameLogic.usedChance[0]);
+    //                 // remove 'get out of jail free' card from used cards array
+    //                 this.gameLogic.usedChance.splice(0, 1);
+    //                 break;
+    //             case 'jail':
+    //                 // TODO:
+    //         };
+    // };
 };
 
 exports.actionMessage = () => {

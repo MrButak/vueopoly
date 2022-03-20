@@ -12,6 +12,7 @@ class Player {
         this.money = money
         this.inJail = inJail
         this.isTurn = isTurn
+        this.specialCards = specialCards
     };
 };
 

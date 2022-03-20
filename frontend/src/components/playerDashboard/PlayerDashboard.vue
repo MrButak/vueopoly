@@ -187,7 +187,7 @@ export default defineComponent({
             // remove player piece before moving to new position
             let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
             crntPlayerPiece.remove()
-            // Function call to move player piece
+            // Function call to move physical (dom) player piece
             this.playerPieces.default.methods.movePlayerPiece(this.crntTurnLogic.propertyLandedOn, this.players[this.gameLogic.whosTurn]);
 
             
@@ -205,9 +205,11 @@ export default defineComponent({
                 case 'chance': // [case, random card number from this.vueopoly.chance[]]
                     // this.handleChanceCard(propertyAction[1])
                     this.handleSpecialCard(propertyAction);
+                    break;
                 case 'communitychest':
                     // this.handleCommunityChest(propertyAction[1])
                     this.handleSpecialCard(propertyAction);
+                    break;
                 case 'freeparking':
                     // gameFunctions.handleFreeParking()
                 case 'incometax':
@@ -233,58 +235,52 @@ export default defineComponent({
         
         handleSpecialCard(cardData) {
 
-            let cardType = [];
             let crntSpecialCard;
 
             switch(cardData[0]) {
 
-                // TODO: don't remove card from array and add to usedArray until you know if it get's keps in this.players.specialCards
                 case 'chance':
-                    cardType.push("chance");
+
                     // index of random card (cardData[1])
                     crntSpecialCard = this.gameLogic.chance[cardData[1]];
+
+                    // send card info to display 
                     this.$refs.specialCards.setViewData(cardData, crntSpecialCard);
-                    // add to used card deck
+                    // add to used card deck (index 0)
                     this.gameLogic.usedChance.unshift(this.gameLogic.chance[cardData[1]]);
                     // remove from original deck
                     this.gameLogic.chance.splice(cardData[1], 1);
-                    break;
                     
+                    // game log
+                    
+                    
+                    this.gameLogic.gameLog.push(crntSpecialCard.title)
+
+                    // Function call to handle all special card actions
+                    gameFunctions.handleSpecialCard(cardData, this.gameLogic.usedChance[0]);
+                    return;
+                    
+
                 case 'communitychest':
-                    cardType.push("communitychest");
+
                     // index of random card (cardData[1])
                     crntSpecialCard = this.gameLogic.communitychest[cardData[1]];
                     this.$refs.specialCards.setViewData(cardData, crntSpecialCard);
-                    // add to used card deck. 0 index so can reference card below
+                    // add to used card deck. 0 index
                     this.gameLogic.usedCommunityChest.unshift(this.gameLogic.communitychest[cardData[1]]);
                     // remove from original deck
                     this.gameLogic.communitychest.splice(cardData[1], 1);
-                    break;
+
+                    // game log
+                    this.gameLogic.gameLog.push(crntSpecialCard.title);
+
+                    // Function call to handle all special card actions
+                    gameFunctions.handleSpecialCard(cardData[0], this.gameLogic.usedCommunityChest[0]);
+                    return;
+
             };
 
-
-            // error check
-            if(cardType[0] === "") {
-                console.log("error happened in handleSpecialCards() for cardType variable");
-                return;
-            };
-
-            switch(this.gameLogic.usedChance[0].action) { // card that was drawn
-
-                case 'addfunds':
-
-                case 'removefunds':
-
-                case 'move':
-
-                case 'jail':
-
-                    switch(cardData[1].subaction) {
-                        case 'getout':
-
-                        case 'jail':
-                    };
-            };
+            
         },
 
 
@@ -343,7 +339,6 @@ export default defineComponent({
 
                 // game log
                 let crntPlayer = this.players[this.gameLogic.whosTurn];
-                
                 this.gameLogic.gameLog.push(`${crntPlayer.name} payed ${ownersName} $${rentAmount} in rent for staying at ${this.crntTurnLogic.propertyLandedOn.info.name}.`);    
                 return;
             };
@@ -356,6 +351,7 @@ export default defineComponent({
         }
     }
 });
+
 </script>
 <style scoped>
 .player-dashboard-wrapper-main {
