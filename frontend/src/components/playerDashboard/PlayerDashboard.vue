@@ -238,6 +238,7 @@ export default defineComponent({
 
             switch(cardData[0]) {
 
+                // TODO: don't remove card from array and add to usedArray until you know if it get's keps in this.players.specialCards
                 case 'chance':
                     cardType.push("chance");
                     // index of random card (cardData[1])
@@ -247,7 +248,7 @@ export default defineComponent({
                     this.gameLogic.usedChance.unshift(this.gameLogic.chance[cardData[1]]);
                     // remove from original deck
                     this.gameLogic.chance.splice(cardData[1], 1);
-                    return;
+                    break;
                     
                 case 'communitychest':
                     cardType.push("communitychest");
@@ -258,8 +259,9 @@ export default defineComponent({
                     this.gameLogic.usedCommunityChest.unshift(this.gameLogic.communitychest[cardData[1]]);
                     // remove from original deck
                     this.gameLogic.communitychest.splice(cardData[1], 1);
-                    return;
+                    break;
             };
+
 
             // error check
             if(cardType[0] === "") {
@@ -267,7 +269,7 @@ export default defineComponent({
                 return;
             };
 
-            switch(his.gameLogic.usedChance[0].action) { // card that was drawn
+            switch(this.gameLogic.usedChance[0].action) { // card that was drawn
 
                 case 'addfunds':
 
@@ -283,8 +285,6 @@ export default defineComponent({
                         case 'jail':
                     };
             };
-
-
         },
 
 

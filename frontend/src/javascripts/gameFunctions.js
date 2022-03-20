@@ -76,25 +76,26 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
     // Function checks if chance or community chest cards are in deck. If not re-asign
     let checkForEmptyDeck = (cardType) => {
 
+        console.log(cardType);
+        console.log("here again")
         switch(cardType) {
-
+            
             case 'chance':
-                console.log(vueopoly.value.chance.length)
                 // if deck is empty. re-asign deck and empty gameLogic.usedChance
                 if(vueopoly.value.chance.length < 1) {
                     gameLogic.value.chance = this.vueopoly.value.chance;
                     gameLogic.value.usedChance = [];
-                    return;
+                    break;
                 };
-                return;
+                break;
 
             case 'communitychest':
-                console.log(vueopoly.value.communitychest.length)
                 if(vueopoly.value.communitychest.length < 1) {
                     gameLogic.value.communitychest = this.vueopoly.value.chance;
                     gameLogic.value.usedCommunityChest = [];
-                    return;
+                    break;
                 };
+                break;
             
             default:
                 console.log("unhandled error dtrmPropertyAction.checkForEmptyDeck() gameFunctions.js")
@@ -146,7 +147,8 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
             // case 'gotojail':
         };
     };
-
+    
+    // Function
     let getTotalRentAmount = () => {
         
         switch(propertyInfo.info.group.toLowerCase()) {
@@ -222,7 +224,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
         };
     };
 
-
+    // Function
     let handleOwnableProperty = () => {
 
         let returnData = [];
@@ -259,11 +261,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
 };
 
 
-exports.handleChanceCard = () => {
-
-};
-
-exports.handleCommunityChest = () => {
+exports.handleSpecialCardAction = () => {
 
 };
 
