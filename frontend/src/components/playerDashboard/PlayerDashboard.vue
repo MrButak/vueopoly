@@ -178,7 +178,7 @@ export default defineComponent({
             // Function call (local component variable)
             this.crntTurnLogic.crntDiceRoll = gameFunctions.rollDice();
             // Function call (local component variable)
-            this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
+            this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1], [false]); // 2nd argument 'false' is used for a direct move from a special card
 
             // game log (global state variable)
             let crntPlayer = this.players[this.gameLogic.whosTurn];
@@ -252,13 +252,11 @@ export default defineComponent({
                     this.gameLogic.chance.splice(cardData[1], 1);
                     
                     // game log
-                    
-                    
                     this.gameLogic.gameLog.push(crntSpecialCard.title)
 
                     // Function call to handle all special card actions
-                    gameFunctions.handleSpecialCard(cardData, this.gameLogic.usedChance[0]);
-                    return;
+                    gameFunctions.handleSpecialCard(cardData[0], this.gameLogic.usedChance[0]);
+                    break;
                     
 
                 case 'communitychest':
@@ -276,7 +274,7 @@ export default defineComponent({
 
                     // Function call to handle all special card actions
                     gameFunctions.handleSpecialCard(cardData[0], this.gameLogic.usedCommunityChest[0]);
-                    return;
+                    break;
 
             };
 

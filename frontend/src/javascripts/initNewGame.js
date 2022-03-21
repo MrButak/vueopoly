@@ -3,7 +3,7 @@ const { lsInUse, vueopoly, players } = vueGlobalState();
 
 class Player {
 
-    constructor(name, alias, symbol, position, properties, money, inJail, isTurn, specialCards) {
+    constructor(name, alias, symbol, position, properties, money, inJail, isTurn, specialCards, turnsInJail) {
         this.name = name
         this.alias = alias
         this.symbol = symbol
@@ -13,6 +13,7 @@ class Player {
         this.inJail = inJail
         this.isTurn = isTurn
         this.specialCards = specialCards
+        this.turnsInJail = turnsInJail
     };
 };
 
@@ -24,7 +25,7 @@ exports.initNewGame = (newPlayers) => {
     let tmpCnt = 0;
     Object.keys(newPlayers).forEach((player) => {
         playersArr[tmpCnt] = player;
-        playersArr[tmpCnt] = new Player(player, newPlayers[player].alias, newPlayers[player].symbol, 0, [], 500, false, false, []);
+        playersArr[tmpCnt] = new Player(player, newPlayers[player].alias, newPlayers[player].symbol, 0, [], 500, false, false, [], 0);
         tmpCnt++;
     });
     let gameJson = require('../../vueopoly.json');
