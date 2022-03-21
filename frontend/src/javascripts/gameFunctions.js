@@ -109,8 +109,8 @@ exports.movePlayerPos = (moveCount) => {
     // get index of property landed on and add property to object
     let propertyInfoIndex = vueopoly.value.properties.findIndex(each => each.position == players.value[gameLogic.value.whosTurn].position);
     propertyInfo['info'] = vueopoly.value.properties[propertyInfoIndex];
-    console.log("property info")
-    console.log(vueopoly.value.properties[propertyInfoIndex]);
+    console.log("property info", vueopoly.value.properties[propertyInfoIndex])
+    
     
 
     return(propertyInfo)
@@ -202,80 +202,80 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
     };
     
     // Function
-    let getTotalRentAmount = () => {
+    // let getTotalRentAmount = () => {
         
-        switch(propertyInfo.info.group.toLowerCase()) {
+    //     switch(propertyInfo.info.group.toLowerCase()) {
 
             
-            case 'railroad':
-                let railRoadsOwned = 0;
-                // create array of all railroads
-                let totalRrs = vueopoly.value.properties.filter(property => property.group.toLowerCase() == 'railroad');
-                console.log(totalRrs);
-                // see how many railroads are owned
-                totalRrs.forEach((rr) => {
-                    if(rr.ownedby == propertyInfo.info.ownedby) {
-                        railRoadsOwned++;
+    //         case 'railroad':
+    //             let railRoadsOwned = 0;
+    //             // create array of all railroads
+    //             let totalRrs = vueopoly.value.properties.filter(property => property.group.toLowerCase() == 'railroad');
+    //             console.log(totalRrs);
+    //             // see how many railroads are owned
+    //             totalRrs.forEach((rr) => {
+    //                 if(rr.ownedby == propertyInfo.info.ownedby) {
+    //                     railRoadsOwned++;
                         
-                    };
-                });
+    //                 };
+    //             });
                 
-                // return different rent amounts for amount of railroads owned
-                switch(railRoadsOwned) {
+    //             // return different rent amounts for amount of railroads owned
+    //             switch(railRoadsOwned) {
 
-                    case 1: {
-                        return(25);   
-                    }
-                    case 2: {
-                        return(50);
-                    }
-                    case 3: {
-                        return(100);
-                    }
-                    case 4: {
-                        return(200);
-                    }
-                };
+    //                 case 1: {
+    //                     return(25);   
+    //                 }
+    //                 case 2: {
+    //                     return(50);
+    //                 }
+    //                 case 3: {
+    //                     return(100);
+    //                 }
+    //                 case 4: {
+    //                     return(200);
+    //                 }
+    //             };
     
             
-            case 'utilities':
+    //         case 'utilities':
 
-                switch(propertyInfo.info.id.toLowerCase()) {
+    //             switch(propertyInfo.info.id.toLowerCase()) {
 
-                    case 'electriccompany':
-                        // check if both utilities are owned
-                        // get index of waterworks and check ownedby 
-                        let waterWorksIndex = vueopoly.value.properties.findIndex(item => item.id == 'waterworks');
-                        // if owner owns both utilities
-                        if(vueopoly.value.properties[waterWorksIndex].ownedby == propertyInfo.info.ownedby) {
-                            return((crntDiceRoll[0] + crntDiceRoll[1]) * 10)
-                        };
-                        // if only this utility owned
-                        return((crntDiceRoll[0] + crntDiceRoll[1]) * 4)
+    //                 case 'electriccompany':
+    //                     // check if both utilities are owned
+    //                     // get index of waterworks and check ownedby 
+    //                     let waterWorksIndex = vueopoly.value.properties.findIndex(item => item.id == 'waterworks');
+    //                     // if owner owns both utilities
+    //                     if(vueopoly.value.properties[waterWorksIndex].ownedby == propertyInfo.info.ownedby) {
+    //                         return((crntDiceRoll[0] + crntDiceRoll[1]) * 10)
+    //                     };
+    //                     // if only this utility owned
+    //                     return((crntDiceRoll[0] + crntDiceRoll[1]) * 4)
                         
 
-                    case 'waterworks':
-                        // check if both utilities are owned
-                        // get index of waterworks and check ownedby 
-                        let electricCompanyIndex = vueopoly.value.properties.findIndex(item => item.id == 'electriccompany');
-                        // if owner owns both utilities
-                        if(vueopoly.value.properties[electricCompanyIndex].ownedby == propertyInfo.info.ownedby) {
-                            return((crntDiceRoll[0] + crntDiceRoll[1]) * 10)
-                        };
-                        // if only this utility owned
-                        return((crntDiceRoll[0] + crntDiceRoll[1]) * 4);
-                };
-                return;
+    //                 case 'waterworks':
+    //                     // check if both utilities are owned
+    //                     // get index of waterworks and check ownedby 
+    //                     let electricCompanyIndex = vueopoly.value.properties.findIndex(item => item.id == 'electriccompany');
+    //                     // if owner owns both utilities
+    //                     if(vueopoly.value.properties[electricCompanyIndex].ownedby == propertyInfo.info.ownedby) {
+    //                         return((crntDiceRoll[0] + crntDiceRoll[1]) * 10)
+    //                     };
+    //                     // if only this utility owned
+    //                     return((crntDiceRoll[0] + crntDiceRoll[1]) * 4);
+    //             };
+    //             return;
 
-            default:
-                // no buildings
-                if(propertyInfo.info.buildings > 0) {
-                    return(propertyInfo.info.rent)
-                };
-                // with buildings
-                return(propertyInfo.info.multpliedrent[propertyInfo.info.buildings])
-        };
-    };
+    //         default:
+    //             // no buildings
+    //             if(propertyInfo.info.buildings > 0) {
+    //                 return(propertyInfo.info.rent)
+    //             };
+    //             // with buildings
+    //             return(propertyInfo.info.multpliedrent[propertyInfo.info.buildings])
+    //     };
+    // };
 
     // Function
     let handleOwnableProperty = () => {
@@ -292,7 +292,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
             default:
                 // TODO: check if mortgaged
                 returnData.push('owned');
-                returnData.push(getTotalRentAmount())
+                returnData.push(this.getTotalRentAmount(propertyInfo))
                 // returnData.push(propertyInfo.info.price);
                 return(returnData);
         }
@@ -313,9 +313,80 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
     };   
 };
 
-// exports.getTotalRentAmount = () => {
+exports.getTotalRentAmount = (propertyInfo) => {
 
-// }
+    switch(propertyInfo.info.group.toLowerCase()) {
+
+            
+        case 'railroad':
+            let railRoadsOwned = 0;
+            // create array of all railroads
+            let totalRrs = vueopoly.value.properties.filter(property => property.group.toLowerCase() == 'railroad');
+            console.log(totalRrs);
+            // see how many railroads are owned
+            totalRrs.forEach((rr) => {
+                if(rr.ownedby == propertyInfo.info.ownedby) {
+                    railRoadsOwned++;
+                    
+                };
+            });
+            
+            // return different rent amounts for amount of railroads owned
+            switch(railRoadsOwned) {
+
+                case 1: {
+                    return(25);   
+                }
+                case 2: {
+                    return(50);
+                }
+                case 3: {
+                    return(100);
+                }
+                case 4: {
+                    return(200);
+                }
+            };
+
+        
+        case 'utilities':
+
+            switch(propertyInfo.info.id.toLowerCase()) {
+
+                case 'electriccompany':
+                    // check if both utilities are owned
+                    // get index of waterworks and check ownedby 
+                    let waterWorksIndex = vueopoly.value.properties.findIndex(item => item.id == 'waterworks');
+                    // if owner owns both utilities
+                    if(vueopoly.value.properties[waterWorksIndex].ownedby == propertyInfo.info.ownedby) {
+                        return((crntDiceRoll[0] + crntDiceRoll[1]) * 10)
+                    };
+                    // if only this utility owned
+                    return((crntDiceRoll[0] + crntDiceRoll[1]) * 4)
+                    
+
+                case 'waterworks':
+                    // check if both utilities are owned
+                    // get index of waterworks and check ownedby 
+                    let electricCompanyIndex = vueopoly.value.properties.findIndex(item => item.id == 'electriccompany');
+                    // if owner owns both utilities
+                    if(vueopoly.value.properties[electricCompanyIndex].ownedby == propertyInfo.info.ownedby) {
+                        return((crntDiceRoll[0] + crntDiceRoll[1]) * 10)
+                    };
+                    // if only this utility owned
+                    return((crntDiceRoll[0] + crntDiceRoll[1]) * 4);
+            };
+            return;
+
+        default:
+            // no buildings
+            if(propertyInfo.info.buildings > 0) {
+                return(propertyInfo.info.rent)
+            };
+            // with buildings
+            return(propertyInfo.info.multpliedrent[propertyInfo.info.buildings])
+    };
+}
 
 // TODO special cards are also being removed form vueopoly.value.chance/communitychest
 exports.handleSpecialCard = (cardTitle) => {
@@ -323,18 +394,22 @@ exports.handleSpecialCard = (cardTitle) => {
 
     let checkPropOwned = (propertyId) => {
 
+        console.log("checkPropOwned()", propertyId)
         let propertyInfo = []; // [is purchasable?, pay rent?]
+        let propertyIndex = vueopoly.value.properties.findIndex((item => item.id == propertyId));
+
         switch(propertyId.toLowerCase()) {
             case 'go':
-                propertyInfo = [false, false];
+                propertyInfo = [false];
                 return propertyInfo;
             default:
-                let propertyIndex = vueopoly.value.properties.findIndex((item => item.id == propertyId));
+                // propertyIndex = vueopoly.value.properties.findIndex((item => item.id == propertyId));
                 if(vueopoly.value.properties[propertyIndex].ownedby == -1) {
                     propertyInfo = [true, false]
                     return propertyInfo;
                 };
-                propertyInfo = [false, true];
+                
+                propertyInfo = [false, true, this.getTotalRentAmount(vueopoly.value.properties[propertyIndex])];
                 return(propertyInfo);
         };
 
@@ -373,17 +448,21 @@ exports.handleSpecialCard = (cardTitle) => {
                 return([false, "logs for not enough funds for payment on special card"]);
                 // TODO: send not enough money message (possible write a function to handle if moneyCheck() returns false)
             };
+
         case 'addfundsfromplayers':
             console.log("not handled this special card yet");
             console.log([false, "not handled this special card yet"]);
+            return;
             
         case 'removefundstoplayers':
             console.log("not handled this special card yet");
             console.log([false, "not handled this special card yet"]);
+            return;
 
         case 'propertycharges':
             console.log("not handled this special card yet");
             console.log([false, "not handled this special card yet"]);
+            return;
 
         case 'move':
             // movePlayerPos(null, [true, position])
@@ -401,7 +480,7 @@ exports.handleSpecialCard = (cardTitle) => {
                   
                     players.value[gameLogic.value.whosTurn].position = propertyPosIndex;
                     // checkPropOwned // [is purchasable?, pay rent?]
-                    return([true, propertyPosIndex], checkPropOwned(cardDrawn[0].tileid));
+                    return([true, propertyPosIndex, checkPropOwned(cardDrawn[0].tileid)]);
                     
                 
                 // go back 3 spaces
@@ -411,7 +490,7 @@ exports.handleSpecialCard = (cardTitle) => {
                     // this.movePlayerPos(null, [true, players.value[gameLogic.value.whosTurn].position - cardDrawn[0].count]);
                     players.value[gameLogic.value.whosTurn].position -= 3;
     
-                    return([true, players.value[gameLogic.value.whosTurn].position]);
+                    return([true, players.value[gameLogic.value.whosTurn].position, checkPropOwned(cardDrawn[0].tileid)]);
                     
             };
         

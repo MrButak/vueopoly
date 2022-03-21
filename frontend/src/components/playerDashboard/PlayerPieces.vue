@@ -62,7 +62,8 @@ export default defineComponent({
             let propertyId;
             try {
                 propertyId = property.info.id;
-                console.log(`player to move to ${propertyId}`)
+                console.log(`player to move to ${propertyId}`);
+                
             }
             catch {
                 propertyId = property.id;
@@ -70,7 +71,7 @@ export default defineComponent({
             };
                 
             
-            // switch case for all chance, community chest, jail, just visiting. I thin all others can be default
+            // switch case for all chance, community chest, jail, just visiting. I think all others can be default
             // maybe go off of player position for chance and community chest
             // this.players[this.gameLogic.whosTurn].position
 
@@ -82,7 +83,7 @@ export default defineComponent({
             // Create player piece
             let playerPiece = document.createElement('div')
             let playerPieceWidth = 10;
-            
+            playerPiece.textContent = player.name
             playerPiece.style.width = playerPieceWidth + "px";
             playerPiece.style.height = playerPieceWidth + "px";
             playerPiece.style.backgroundColor = player.symbol

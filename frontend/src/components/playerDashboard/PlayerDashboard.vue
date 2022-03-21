@@ -179,7 +179,7 @@ export default defineComponent({
             // Function call (local component variable)
             this.crntTurnLogic.crntDiceRoll = gameFunctions.rollDice();
             // Function call (local component variable)
-            this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1], [false]); // 2nd argument 'false' is used for a direct move from a special card
+            this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
 
             // game log (global state variable)
             let crntPlayer = this.players[this.gameLogic.whosTurn];
@@ -284,6 +284,7 @@ export default defineComponent({
 
             let crntSpecialCard;
             let specialAction;
+
             switch(cardData[0]) {
 
                 case 'chance':
@@ -302,23 +303,9 @@ export default defineComponent({
                     this.gameLogic.gameLog.push(crntSpecialCard.title)
 
                     // Function call to handle all special card actions
-                    // gameFunctions.handleSpecialCard(cardData[0], this.gameLogic.usedChance[0]);
-
                     specialAction = gameFunctions.handleSpecialCard(cardData[0]);
                     
-                    console.log(specialAction);
-                        
-                    if(specialAction[0]) {
-                        
-                        this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id)
-                        // TODO: check to see if buy available
-                        return;
-                    };
-                    
-                    console.log(specialAction[1]);
-                    return;
-                    
-                    
+                    break;
 
                 case 'communitychest':
 
@@ -334,22 +321,43 @@ export default defineComponent({
                     this.gameLogic.gameLog.push(crntSpecialCard.title);
 
                     // Function call to handle all special card actions
-                    // gameFunctions.handleSpecialCard(cardData[0], this.gameLogic.usedCommunityChest[0]);
-                    // break;
                     specialAction = gameFunctions.handleSpecialCard(cardData[0]);
                     
-                    console.log(specialAction)
-                    
+                    break;
+
+                default:
+                    console.log("unhandled in PlayerDashboard.vue handleSpecialCard()")
+
+            };
+            this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(0); // function calculates off of number of spaces to be moved
+            console.log(this.crntTurnLogic.propertyLandedOn)
+            console.log(specialAction)
+            console.log("^^^ current issue")
 
                     if(specialAction[0]) {
                         
-                        this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id);
+                        this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id)
+                        switch(specialAction[2].length) {
+                            case 2:
+                                this.buyAvailable = true; // shows buy btn in dom
+
+                                this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name  // shows property name in dom
+                                break;
+                            case 3:
+                                this.payRent(propertyInfo[2]);
+                                break;
+                            default:
+                                break;
+                        }
                         return;
                     };
+                    // if(specialAction[0]) {
+                        
+                    //     this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id);
+                    //     return;
+                    // };
                     
-                    return;
-
-            };
+                    // return;
 
             
         },
