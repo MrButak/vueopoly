@@ -10,7 +10,6 @@
         <div class="manage-trade-btn-wrapper">
             <button>Manage</button>
             <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
-            <!-- <text>${{ this.crntPlayerLogic.crntPlayerMoney }}</text> -->
             <button>Trade</button>
         </div>
 
@@ -39,11 +38,10 @@
     </div>
 </div>
 
-
 <SpecialCards ref="specialCards" />
 
-
 </template>
+
 
 <script>
 
@@ -311,20 +309,12 @@ export default defineComponent({
 
                 case 'communitychest':
 
-                    // index of random card (cardData[1])
                     crntSpecialCard = this.gameLogic.communitychest[cardData[1]];
                     this.$refs.specialCards.setViewData(cardData, crntSpecialCard);
-                    // add to used card deck. 0 index
                     this.gameLogic.usedCommunityChest.unshift(this.gameLogic.communitychest[cardData[1]]);
-                    // remove from original deck
                     this.gameLogic.communitychest.splice(cardData[1], 1);
-
-                    // game log
                     this.gameLogic.gameLog.push(crntSpecialCard.title);
-
-                    // Function call to handle all special card actions
                     specialAction = gameFunctions.handleSpecialCard(cardData[0]);
-                    
                     break;
 
                 default:
