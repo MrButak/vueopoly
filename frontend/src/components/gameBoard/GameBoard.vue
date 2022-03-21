@@ -16,8 +16,8 @@
 					<div data-id="kentuckyave" class="firstLine firstLine-top rotation2">kentucky <br /> avenue</div>
 				</div>
 
-				<div id="clickable" data-id="chance" class="square1">		
-					<div data-id="chance" class="firstLine firstLine-top no-color rotation2">chance</div>
+				<div id="clickable" data-id="chancetwo" class="square1">		
+					<div data-id="chancetwo" class="firstLine firstLine-top no-color rotation2">chance</div>
 				</div>
 
 				<div id="clickable" data-id="indianaave" class="square1 ">
@@ -69,8 +69,8 @@
 						<div data-id="tennesseeave" class="headerSide header-left orange"></div>
 						<div data-id="tennesseeave" class="firstLine firstLine-left rotation1">tennessee <br /> avenue</div>
 					</div>
-					<div id="clickable" data-id="communitychest" class="squareSide ">						
-						<div data-id="communitychest" class="firstLine firstLine-left no-color rotation1">community<br /> chest</div>
+					<div id="clickable" data-id="communitychesttwo" class="squareSide ">						
+						<div data-id="communitychesttwo" class="firstLine firstLine-left no-color rotation1">community<br /> chest</div>
 					</div>
 
 					<div id="clickable" data-id="stjamesplace" class="squareSide ">
@@ -119,8 +119,8 @@
 						<div data-id="northcarolinaave" class="headerSide header-right green"></div>
 						<div data-id="northcarolinaave" class="firstLine firstLine-right rotation3">north<br />carolina<br />avenue</div>
 					</div>
-					<div id="clickable" data-id="communitychest" class="squareSide ">						
-						<div data-id="communitychestTwo" class="firstLine firstLine-right no-color rotation3">community<br />chest</div>
+					<div id="clickable" data-id="communitychestthree" class="squareSide ">						
+						<div data-id="communitychestthree" class="firstLine firstLine-right no-color rotation3">community<br />chest</div>
 					</div>
 					<div id="clickable" data-id="pennsylvaniaave" class="squareSide ">
 						<div data-id="pennsylvaniaave" class="headerSide header-right green"></div>
@@ -130,8 +130,8 @@
 						<div data-id="shortlinerailroad" class="firstLine firstLine-right no-color rotation3">short<br /> line</div>
 					</div>
                     
-                    <div id="clickable" data-id="chance" class="squareSide ">
-                        <div data-id="chance" class="firstLine firstLine-right no-color rotation3">chance</div>
+                    <div id="clickable" data-id="chancethree" class="squareSide ">
+                        <div data-id="chancethree" class="firstLine firstLine-right no-color rotation3">chance</div>
                     </div>
                     
 					<div id="clickable" data-id="parkplace" class="squareSide ">						

@@ -97,29 +97,21 @@ exports.rollDice = () => {
 
 
 // Function adds rolled dice to player position and gets new postion information
-exports.movePlayerPos = (moveCount, moveDirect) => {
+exports.movePlayerPos = (moveCount) => {
 
     // TODO: modular math (wrap around gameboard)
     let propertyInfo = {};
 
-    // if(moveDirect[0]) {
-    //     players.value[gameLogic.value.whosTurn].position = moveDirect[1];
-    //     console.log("shouldn't be here unless special card");
-    //     return;
-            
-    // };
-    // else {
+    
     players.value[gameLogic.value.whosTurn].position += moveCount;
-    // }
     
     
     // get index of property landed on and add property to object
     let propertyInfoIndex = vueopoly.value.properties.findIndex(each => each.position == players.value[gameLogic.value.whosTurn].position);
     propertyInfo['info'] = vueopoly.value.properties[propertyInfoIndex];
-
-    // add this to object as well. // I can remove this. I'm not using coords as originally planned
-    // let propertyCoordIndex = vueopoly.value.tiles.findIndex(each => each.position == players.value[gameLogic.value.whosTurn].position);
-    // propertyInfo['coord'] = vueopoly.value.tiles[[propertyCoordIndex]];
+    console.log("property info")
+    console.log(vueopoly.value.properties[propertyInfoIndex]);
+    
 
     return(propertyInfo)
 };
@@ -129,6 +121,7 @@ exports.movePlayerPos = (moveCount, moveDirect) => {
 exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
 
     // Function checks if chance or community chest cards are in deck. If not re-asign
+    // TODO: make hard copy of vueopoly.value.chance / communitychest to gameLogic.value.chance / community chest
     let checkForEmptyDeck = (cardType) => {
 
         switch(cardType) {
@@ -197,6 +190,13 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                 returnData.push('luxurytax');
                 returnData.push(75);
                 return(returnData);
+
+            case 'jail':
+                returnData.push('jail');
+                return(returnData);
+
+            default:
+                console.log("unhandled")
             // case 'gotojail':
         };
     };
@@ -313,10 +313,33 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
     };   
 };
 
+// exports.getTotalRentAmount = () => {
 
+// }
 
 // TODO special cards are also being removed form vueopoly.value.chance/communitychest
 exports.handleSpecialCard = (cardTitle) => {
+
+
+    let checkPropOwned = (propertyId) => {
+
+        let propertyInfo = []; // [is purchasable?, pay rent?]
+        switch(propertyId.toLowerCase()) {
+            case 'go':
+                propertyInfo = [false, false];
+                return propertyInfo;
+            default:
+                let propertyIndex = vueopoly.value.properties.findIndex((item => item.id == propertyId));
+                if(vueopoly.value.properties[propertyIndex].ownedby == -1) {
+                    propertyInfo = [true, false]
+                    return propertyInfo;
+                };
+                propertyInfo = [false, true];
+                return(propertyInfo);
+        };
+
+    };
+
     // do the dirty here
     cardTitle = cardTitle.toLowerCase();
 
@@ -375,13 +398,10 @@ exports.handleSpecialCard = (cardTitle) => {
                 case 'readingrailroad':
 
                     let propertyPosIndex = vueopoly.value.tiles.findIndex((each => each.id == cardDrawn[0].tileid));
-                    console.log(propertyPosIndex);
-                    console.log("should be anything but -1 (gameFunctions.handleSpecialCard())");
-                    let propertyPos = vueopoly.value.tiles[propertyPosIndex].position;
-
-                    // this.movePlayerPos(null, [true, propertyPos]);
-                    players.value[gameLogic.value.whosTurn].position = propertyPos;
-                    return([true, propertyPos]);
+                  
+                    players.value[gameLogic.value.whosTurn].position = propertyPosIndex;
+                    // checkPropOwned // [is purchasable?, pay rent?]
+                    return([true, propertyPosIndex], checkPropOwned(cardDrawn[0].tileid));
                     
                 
                 // go back 3 spaces

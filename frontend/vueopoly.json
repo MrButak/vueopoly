@@ -963,7 +963,7 @@
             "right": "86.2vw"
         },
         {
-            "id": "communitychestTwo",
+            "id": "communitychesttwo",
             "position": 17,
             "bottom": "63.5vw",
             "right": "86.2vw"
@@ -993,7 +993,7 @@
             "right": "74.2vw"
         },
         {
-            "id": "chanceTwo",
+            "id": "chancetwo",
             "position": 22,
             "bottom": "86.6vw",
             "right": "68vw"
@@ -1059,7 +1059,7 @@
             "right": "13.7vw"
         },
         {
-            "id": "communitychestTwo",
+            "id": "communitychestthree",
             "position": 33,
             "bottom": "63.2vw",
             "right": "13.7vw"
@@ -1077,7 +1077,7 @@
             "right": "13.7vw"
         },
         {
-            "id": "chance",
+            "id": "chancethree",
             "position": 36,
             "bottom": "45vw",
             "right": "13.7vw"

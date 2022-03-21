@@ -203,7 +203,7 @@ export default defineComponent({
             let crntPlayer = this.players[this.gameLogic.whosTurn];
             let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
             crntPlayerPiece.remove()
-            
+
             // Function call to move physical (dom) player piece
             // TODO may have to find index and send whole property (model after this.crntTurnLogic.propertyLandedOn)
 
@@ -268,6 +268,13 @@ export default defineComponent({
                     this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
                     this.payRent(propertyAction[1]); //propertyAction[1] is price
                     break;
+                
+                case 'jail':
+                    console.log("jail / just visiting")
+                    break;
+                default:
+                    console.log("unhandled")
+                    break;
             };
             
         },
@@ -300,14 +307,14 @@ export default defineComponent({
                     specialAction = gameFunctions.handleSpecialCard(cardData[0]);
                     
                     console.log(specialAction);
-                        console.log("here's the bug^^^^")
+                        
                     if(specialAction[0]) {
                         
                         this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id)
+                        // TODO: check to see if buy available
                         return;
                     };
-                    // console.log(specialAction)
-                    // console.log("here's the bug^^^^")
+                    
                     console.log(specialAction[1]);
                     return;
                     
@@ -332,11 +339,10 @@ export default defineComponent({
                     specialAction = gameFunctions.handleSpecialCard(cardData[0]);
                     
                     console.log(specialAction)
-                    console.log("here's the bug ^^^^^^")
+                    
 
                     if(specialAction[0]) {
-                        // console.log(specialAction)
-                        // console.log("here's the bug ^^^^^^")
+                        
                         this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id);
                         return;
                     };
