@@ -148,7 +148,6 @@ export default defineComponent({
             // set dom variables
             this.crntPlayerLogic.crntPlayerName = crntPlayer.name;
             this.crntPlayerLogic.crntPlayerAlias = crntPlayer.alias;
-            // this.crntPlayerLogic.crntPlayerMoney = crntPlayer.money;
         },
 
         endTurn() {
@@ -159,7 +158,6 @@ export default defineComponent({
             this.diceRolled = false;
             this.crntPlayerLogic.crntPlayerName = "";
             this.crntPlayerLogic.crntPlayerAlias = "";
-            // this.crntPlayerLogic.crntPlayerMoney = 0;
             this.crntPlayerLogic.crntPlayerProperties = [];
 
             this.viewPropertyLink = "",
@@ -195,22 +193,22 @@ export default defineComponent({
             this.dtrmPropertyAction()
         },
 
+        // Function moves player piece after Chance or Community Chest dictates a move
         movePlayerPieceDom(propertyId) {
-            console.log(propertyId)
-            console.log(`movePlayerPieceDom() ${propertyId}`)
+
+            console.log(propertyId);
+            console.log(`movePlayerPieceDom() ${propertyId}`);
 
             // remove player piece before moving to new position
             let crntPlayer = this.players[this.gameLogic.whosTurn];
             let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
             crntPlayerPiece.remove()
 
-            // Function call to move physical (dom) player piece
-            // TODO may have to find index and send whole property (model after this.crntTurnLogic.propertyLandedOn)
-
             let property = {
                 id: propertyId
-            }
+            };
 
+            // Function call to move physical (dom) player piece
             this.playerPieces.default.methods.movePlayerPiece(property, this.players[this.gameLogic.whosTurn]);
 
             return;
@@ -224,7 +222,7 @@ export default defineComponent({
             
             switch(propertyAction[0]) {
 
-                case 'chance': // [case, random card number from this.vueopoly.chance[]]
+                case 'chance': // [case, random card number from this.vueopoly.chance[]] string, integer
                     // this.handleChanceCard(propertyAction[1])
                     this.handleSpecialCard(propertyAction);
                     break;
@@ -271,6 +269,10 @@ export default defineComponent({
                 
                 case 'jail':
                     console.log("jail / just visiting")
+                    break;
+                
+                case 'gotojail':
+                    console.log("handle goto jail here")
                     break;
                 default:
                     console.log("unhandled")
@@ -329,14 +331,17 @@ export default defineComponent({
                     console.log("unhandled in PlayerDashboard.vue handleSpecialCard()")
 
             };
-            this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(0); // function calculates off of number of spaces to be moved
-            console.log(this.crntTurnLogic.propertyLandedOn)
-            console.log(specialAction)
-            console.log("^^^ current issue")
 
                     if(specialAction[0]) {
-                        
-                        this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id)
+
+                        // reassign local component variable
+                        this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(-1); // function calculates off of number of spaces to be moved
+
+                        console.log(this.crntTurnLogic.propertyLandedOn)
+                        console.log("property after Chance or Comm Chest move")
+
+                        this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id);
+
                         switch(specialAction[2].length) {
                             case 2:
                                 this.buyAvailable = true; // shows buy btn in dom
@@ -351,13 +356,8 @@ export default defineComponent({
                         }
                         return;
                     };
-                    // if(specialAction[0]) {
-                        
-                    //     this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id);
-                    //     return;
-                    // };
                     
-                    // return;
+                    return;
 
             
         },
@@ -371,10 +371,9 @@ export default defineComponent({
             // function call
             if(gameFunctions.moneyCheck(this.crntTurnLogic.propertyLandedOn.info.price ,this.players[this.gameLogic.whosTurn].money)) {
 
-                // deduct the cost of the property from the player (and from the dom money variable)
+                // deduct the cost of the property from the player
                 this.players[this.gameLogic.whosTurn].money -= this.crntTurnLogic.propertyLandedOn.info.price;
-                // this.crntPlayerLogic.crntPlayerMoney -= this.crntTurnLogic.propertyLandedOn.info.price;
-
+                
                 // add purchased property to players[].properties[]
                 this.players[this.gameLogic.whosTurn].properties.push(this.crntTurnLogic.propertyLandedOn.info);
 
@@ -399,17 +398,17 @@ export default defineComponent({
         },
 
         payRent(rentAmount) {
+
             console.log(rentAmount)
             console.log("rent amount")
-            // TODO: create function gamefunctions.getTotalRentCost()
-            // TODO add houses i.e. total cost
+            
+
             if(gameFunctions.moneyCheck(rentAmount, this.players[this.gameLogic.whosTurn].money)) {
                     
-                let ownersName = this.crntTurnLogic.propertyLandedOn.info.ownedby
+                let ownersName = this.crntTurnLogic.propertyLandedOn.info.ownedby;
 
                 // deduct the cost of the rent from the player (and from the dom money variable)
                 this.players[this.gameLogic.whosTurn].money -= rentAmount;
-                // this.crntPlayerLogic.crntPlayerMoney -= rentAmount;
 
                 // add cost of rent to property owners money
                 let ownersIndex = this.players.findIndex((item) => item.name == ownersName);
