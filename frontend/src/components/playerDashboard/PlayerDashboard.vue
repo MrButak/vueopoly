@@ -212,22 +212,40 @@ export default defineComponent({
                     break;
                 case 'freeparking':
                     // gameFunctions.handleFreeParking()
+                    console.log("freeparking not yet available");
+                    break;
                 case 'incometax':
-                    // gameFunctions.handleIncomeTax()
+
+                    if(gameFunctions.moneyCheck(propertyAction[1], this.players[this.gameLogic.whosTurn])) { // propertyAction[1] amount of money to pay
+                        this.players[this.gameLogic.whosTurn].money -= propertyAction[1];
+                        break;
+                    }
+                    else {
+                        // TODO: not enough money to pay
+                    };
+                   
                 case 'luxerytax':
-                    // gameFunctions.handleLuxeryTax()
+                    if(gameFunctions.moneyCheck(propertyAction[1], this.players[this.gameLogic.whosTurn])) { // propertyAction[1] amount of money to pay
+                        this.players[this.gameLogic.whosTurn].money -= propertyAction[1];
+                        break;
+                    }
+                    else {
+                        // TODO: not enough money to pay
+                        break;
+                    };
 
                 // buyable property
                 case 'notowned':
                     this.buyAvailable = true; // shows buy btn in dom
                     this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
-                    return;
+                    break;
 
                 // owned property
                 case 'owned':
                     this.willPayRent = true;
                     this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
                     this.payRent(propertyAction[1]); //propertyAction[1] is price
+                    break;
             };
             
         },

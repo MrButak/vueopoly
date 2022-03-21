@@ -69,11 +69,13 @@ exports.getCrntPlayer = () => {
 
 
 exports.moneyCheck = (priceToPay, playersMoney) => {
-
+    
     
     if(priceToPay < playersMoney) {
+        console.log("money check true")
         return true;
     };
+    console.log("money check true")
     return false;
     // let cost = priceToPay[1];
     // let playerMoney = players.value[gameLogic.value.whosTurn];
@@ -182,11 +184,11 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
 
             case 'incometax':
                 returnData.push('incometax');
-                if(players.value[0].money * .10 > 200) {
+                if(players.value[gameLogic.value.whosTurn].money * .10 > 200) {
                     returnData.push(200)
                 }
                 else {
-                    returnData.push(players.value[0].money * .10)
+                    returnData.push(players.value[gameLogic.value.whosTurn].money * .10)
                 };
                 return(returnData);
 
@@ -203,7 +205,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
         
         switch(propertyInfo.info.group.toLowerCase()) {
 
-            // BUG !!! returning wrong amount. if only 1 owned, returning 4 owned
+            
             case 'railroad':
                 let railRoadsOwned = 0;
                 // create array of all railroads
@@ -216,14 +218,12 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                         
                     };
                 });
-                console.log(railRoadsOwned)
-                console.log("rr's owned")
+                
                 // return different rent amounts for amount of railroads owned
-                switch(totalRrOwned) {
+                switch(railRoadsOwned) {
 
                     case 1: {
-                        return(25);
-                        
+                        return(25);   
                     }
                     case 2: {
                         return(50);
@@ -321,20 +321,29 @@ exports.handleSpecialCard = (cardTitle) => {
 
     // determine which special card to take action on
     let cardDrawn;
-    if(cardTitle.toLowerCase() == 'chance') {cardDrawn = gameLogic.value.usedChance[0].action;}
-    else {cardDrawn = gameLogic.value.usedCommunityChest[0].action;};
+    if(cardTitle.toLowerCase() == 'chance') {cardDrawn = gameLogic.value.usedChance;}
+    else {cardDrawn = gameLogic.value.usedCommunityChest;};
     
     
 
-    switch(cardDrawn.action) { // card that was drawn. // used cards are inserted into arry using unshift(), so index always 0 here
+    switch(cardDrawn[0].action) { // card that was drawn. // used cards are inserted into arry using unshift(), so index always 0 here
 
         case 'addfunds':
-            players.value[gameLogic.value.whosTurn].money += gameLogic.value.usedChance[0].amount;
+            console.log("funds were supposed to be added here")
+            console.log(players.value[gameLogic.value.whosTurn].money)
+            console.log("players money before")
+            console.log(cardDrawn[0].amount)
+            console.log("amount to be added")
+            players.value[gameLogic.value.whosTurn].money += cardDrawn[0].amount;
+            console.log(players.value[gameLogic.value.whosTurn].money)
+            console.log("total player money after funds added");
+            break;
 
         case 'removefunds':
             // If enough money to pay
-            if(this.moneyCheck(cardDrawn.amount, players.value[gameLogic.value.whosTurn].money)) {
-                players.value[gameLogic.value.whosTurn].money -= gameLogic.value.usedChance[0].amount;
+            if(this.moneyCheck(cardDrawn[0].amount, players.value[gameLogic.value.whosTurn].money)) {
+                console.log("special card fund deduction")
+                players.value[gameLogic.value.whosTurn].money -= cardDrawn[0].amount;
                 break;
             }
             // If not enough money to pay
@@ -342,28 +351,30 @@ exports.handleSpecialCard = (cardTitle) => {
                 // TODO: send not enough money message (possible write a function to handle if moneyCheck() returns false)
             };
         case 'move':
-            // this.movePlayerPos([true, ])
-            switch(cardDrawn.tileid) {
+            // movePlayerPos([true, position])
+            switch(cardDrawn[0].tileid) {
 
                 case 'go':
                 case 'illinoiseave':
                 case 'boardwalk':
-                    let propertyPosIndex = vueopoly.value.tiles.findIndex((item.id == gameLogic.value.usedChance[0].tileid));
+                    let propertyPosIndex = vueopoly.value.tiles.findIndex((each => each.id == cardDrawn[0].titleid));
+                    console.log(propertyPosIndex)
+                    console.log("should be anything but -1 (gameFunctions.handleSpecialCard())")
                     let propertyPos = vueopoly.value.tiles[propertyPosIndex].position;
-                    this.movePlayPos([true, propertyPos]) 
+                    this.movePlayerPos([true, propertyPos]) 
                     break;
                 
                 // go back 3 spaces
                 default:
                     // shouldn't have to do modular math, as position is -3 and chance is more than 3 ahead of GO
                     // player position - 3
-                    this.movePlayPos([true, players.value[gamelogic.value.whosTurn].position - gameLogic.value.usedChance[0].count]);
+                    this.movePlayerPos([true, players.value[gameLogic.value.whosTurn].position - cardDrawn[0].count]);
                     break;
             };
         
         case 'movenearest':
             // TODO: determine nearest utility and railroad (I think player piece should only move forward)
-            switch(cardDrawn.groupid) {
+            switch(cardDrawn[0].groupid) {
 
                 case 'utility':
 
@@ -371,19 +382,26 @@ exports.handleSpecialCard = (cardTitle) => {
             }
         case 'jail':
 
-            switch(cardDrawn.subaction) {
+            switch(cardDrawn[0].subaction) {
                 case 'getout':
                     // add 'get out of jail free' card to players special card array
-                    this.players[this.gameLogic.whosTurn].specialCards.push(this.gameLogic.usedChance[0]);
+                    players.value[gameLogic.value.whosTurn].specialCards.push(cardDrawn[0]);
+
                     // remove 'get out of jail free' card from used cards array
-                    this.gameLogic.usedChance.splice(0, 1); // used cards are inserted into arry using unshift(), so index always 0 here
+                    if(cardTitle.toLowerCase() == 'chance') {
+                        gameLogic.value.usedChance.splice(0, 1); // used cards are inserted into arry using unshift(), so index always 0 here
+                        break;
+                    };
+                    gameLogic.value.usedCommunityChest.splice(0, 1);
                     break;
+                
                 case 'jail':
-                    // get jail 
-                    let jailPosIndex = vueopoly.value.tiles.findIndex((item.id == cardData[1]));
-                    let jailPosition = vueopoly.value.tileid[jailPosIndex].position;
+                    // send player to jail, set jail variable true
+                    let jailPosIndex = vueopoly.value.tiles.findIndex(each => each.id == cardDrawn[0]);
+                    let jailPosition = vueopoly.value.tiles[jailPosIndex].position;
                     players.value[gameLogic.value.whosTurn].inJail = true;
-                    this.movePlayerPos[true, jailPosition];
+                    // function call [true] tells function this is a direct move to [jailPosition]
+                    this.movePlayerPos([true, jailPosition]);
             };
     };
 };
