@@ -61,9 +61,11 @@ export default defineComponent({
             let propertyId;
             try {
                 propertyId = property.info.id;
+                console.log(`player to move to ${propertyId}`)
             }
             catch {
                 propertyId = property.id;
+                console.log(`player to move to ${propertyId}`)
             };
                 
             

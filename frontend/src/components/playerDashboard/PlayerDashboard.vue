@@ -9,7 +9,8 @@
 
         <div class="manage-trade-btn-wrapper">
             <button>Manage</button>
-            <text>${{ this.crntPlayerLogic.crntPlayerMoney }}</text>
+            <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
+            <!-- <text>${{ this.crntPlayerLogic.crntPlayerMoney }}</text> -->
             <button>Trade</button>
         </div>
 
@@ -147,7 +148,7 @@ export default defineComponent({
             // set dom variables
             this.crntPlayerLogic.crntPlayerName = crntPlayer.name;
             this.crntPlayerLogic.crntPlayerAlias = crntPlayer.alias;
-            this.crntPlayerLogic.crntPlayerMoney = crntPlayer.money;
+            // this.crntPlayerLogic.crntPlayerMoney = crntPlayer.money;
         },
 
         endTurn() {
@@ -158,7 +159,7 @@ export default defineComponent({
             this.diceRolled = false;
             this.crntPlayerLogic.crntPlayerName = "";
             this.crntPlayerLogic.crntPlayerAlias = "";
-            this.crntPlayerLogic.crntPlayerMoney = 0;
+            // this.crntPlayerLogic.crntPlayerMoney = 0;
             this.crntPlayerLogic.crntPlayerProperties = [];
 
             this.viewPropertyLink = "",
@@ -192,6 +193,27 @@ export default defineComponent({
 
             
             this.dtrmPropertyAction()
+        },
+
+        movePlayerPieceDom(propertyId) {
+            console.log(propertyId)
+            console.log(`movePlayerPieceDom() ${propertyId}`)
+
+            // remove player piece before moving to new position
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
+            let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
+            crntPlayerPiece.remove()
+            
+            // Function call to move physical (dom) player piece
+            // TODO may have to find index and send whole property (model after this.crntTurnLogic.propertyLandedOn)
+
+            let property = {
+                id: propertyId
+            }
+
+            this.playerPieces.default.methods.movePlayerPiece(property, this.players[this.gameLogic.whosTurn]);
+
+            return;
         },
 
         // Function handles square player lands on
@@ -254,7 +276,7 @@ export default defineComponent({
         handleSpecialCard(cardData) {
 
             let crntSpecialCard;
-
+            let specialAction;
             switch(cardData[0]) {
 
                 case 'chance':
@@ -273,8 +295,22 @@ export default defineComponent({
                     this.gameLogic.gameLog.push(crntSpecialCard.title)
 
                     // Function call to handle all special card actions
-                    gameFunctions.handleSpecialCard(cardData[0], this.gameLogic.usedChance[0]);
-                    break;
+                    // gameFunctions.handleSpecialCard(cardData[0], this.gameLogic.usedChance[0]);
+
+                    specialAction = gameFunctions.handleSpecialCard(cardData[0]);
+                    
+                    console.log(specialAction);
+                        console.log("here's the bug^^^^")
+                    if(specialAction[0]) {
+                        
+                        this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id)
+                        return;
+                    };
+                    // console.log(specialAction)
+                    // console.log("here's the bug^^^^")
+                    console.log(specialAction[1]);
+                    return;
+                    
                     
 
                 case 'communitychest':
@@ -291,8 +327,21 @@ export default defineComponent({
                     this.gameLogic.gameLog.push(crntSpecialCard.title);
 
                     // Function call to handle all special card actions
-                    gameFunctions.handleSpecialCard(cardData[0], this.gameLogic.usedCommunityChest[0]);
-                    break;
+                    // gameFunctions.handleSpecialCard(cardData[0], this.gameLogic.usedCommunityChest[0]);
+                    // break;
+                    specialAction = gameFunctions.handleSpecialCard(cardData[0]);
+                    
+                    console.log(specialAction)
+                    console.log("here's the bug ^^^^^^")
+
+                    if(specialAction[0]) {
+                        // console.log(specialAction)
+                        // console.log("here's the bug ^^^^^^")
+                        this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id);
+                        return;
+                    };
+                    
+                    return;
 
             };
 
@@ -310,7 +359,7 @@ export default defineComponent({
 
                 // deduct the cost of the property from the player (and from the dom money variable)
                 this.players[this.gameLogic.whosTurn].money -= this.crntTurnLogic.propertyLandedOn.info.price;
-                this.crntPlayerLogic.crntPlayerMoney -= this.crntTurnLogic.propertyLandedOn.info.price;
+                // this.crntPlayerLogic.crntPlayerMoney -= this.crntTurnLogic.propertyLandedOn.info.price;
 
                 // add purchased property to players[].properties[]
                 this.players[this.gameLogic.whosTurn].properties.push(this.crntTurnLogic.propertyLandedOn.info);
@@ -346,7 +395,7 @@ export default defineComponent({
 
                 // deduct the cost of the rent from the player (and from the dom money variable)
                 this.players[this.gameLogic.whosTurn].money -= rentAmount;
-                this.crntPlayerLogic.crntPlayerMoney -= rentAmount;
+                // this.crntPlayerLogic.crntPlayerMoney -= rentAmount;
 
                 // add cost of rent to property owners money
                 let ownersIndex = this.players.findIndex((item) => item.name == ownersName);

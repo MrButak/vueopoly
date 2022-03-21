@@ -28,6 +28,8 @@ exports.initNewGame = (newPlayers) => {
         playersArr[tmpCnt] = new Player(player, newPlayers[player].alias, newPlayers[player].symbol, 0, [], 500, false, false, [], 0);
         tmpCnt++;
     });
+
+    // TODO special cards are also being removed form vueopoly.value.chance/communitychest
     let gameJson = require('../../vueopoly.json');
     let communityChestCards = gameJson.communitychest;
     let chanceCards = gameJson.chance;
