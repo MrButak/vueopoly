@@ -59,16 +59,17 @@ exports.rollDice = () => {
 // Function adds rolled dice to player position and gets new postion information
 exports.movePlayerPos = (moveCount) => {
 
+    let crntPlayer = players.value[gameLogic.value.whosTurn]
     
     let propertyInfo = {};
 
     // wrap piece around gameboard
-    if(players.value[gameLogic.value.whosTurn].position + moveCount > 39) {
-        let newPos = moveCount - (39 - players.value[gameLogic.value.whosTurn].position + 1);
-        players.value[gameLogic.value.whosTurn].position = newPos;
+    if(crntPlayer.position + moveCount > 39) {
+        let newPos = moveCount - (39 - crntPlayer.position + 1);
+        crntPlayer.position = newPos;
     }
     else {
-        players.value[gameLogic.value.whosTurn].position += moveCount;
+        crntPlayer.position += moveCount;
     };
     
     
@@ -76,8 +77,8 @@ exports.movePlayerPos = (moveCount) => {
     let propertyInfoIndex = vueopoly.value.properties.findIndex(each => each.position == players.value[gameLogic.value.whosTurn].position);
     propertyInfo['info'] = vueopoly.value.properties[propertyInfoIndex];
 
-    console.log(vueopoly.value.properties[propertyInfoIndex]);
-    console.log("property info movePlayerPos() ^^^^^^")
+    // console.log(vueopoly.value.properties[propertyInfoIndex]);
+    // console.log("property info movePlayerPos() ^^^^^^")
     
   
     return(propertyInfo)

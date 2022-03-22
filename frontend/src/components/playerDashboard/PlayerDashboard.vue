@@ -185,7 +185,9 @@ export default defineComponent({
             let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
             crntPlayerPiece.remove()
             // Function call to move physical (dom) player piece
-            this.playerPieces.default.methods.movePlayerPiece(this.crntTurnLogic.propertyLandedOn, this.players[this.gameLogic.whosTurn]);
+            let propertyId = this.crntTurnLogic.propertyLandedOn.info.id;
+            
+            this.playerPieces.default.methods.movePlayerPiece(propertyId, crntPlayer);
 
             this.dtrmPropertyAction()
         },
@@ -272,12 +274,8 @@ export default defineComponent({
             let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
             crntPlayerPiece.remove()
 
-            let property = {
-                id: propertyId
-            };
-
             // Function call to move physical (dom) player piece
-            this.playerPieces.default.methods.movePlayerPiece(property, this.players[this.gameLogic.whosTurn]);
+            this.playerPieces.default.methods.movePlayerPiece(propertyId, this.players[this.gameLogic.whosTurn]);
 
             return;
         },

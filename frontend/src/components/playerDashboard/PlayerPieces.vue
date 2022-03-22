@@ -44,54 +44,44 @@ export default defineComponent({
             
             // TODO: detect change in screen width, and call this function
             // function runs after page refresh or new game 
-
+            let propertyId;
+            let propertyIndex;
             // Function call. Positions player piece on the game board
             this.players.forEach((player) => {
-                // let indexOfPlayerPosition = this.vueopoly.tiles.findIndex((each => each.position == player.position));
-                this.movePlayerPiece(this.vueopoly.tiles[player.position], player);
+                propertyIndex = this.vueopoly.properties.findIndex((each => each.position == player.position));
+                propertyId = this.vueopoly.properties[propertyIndex].id;
+                console.log(propertyId, "&&&")
+                this.movePlayerPiece(propertyId, player);
             });
 
         },
 
-        movePlayerPiece(property, player) {
-            
-            let elementDataId = player.name
+        movePlayerPiece(propertyId, player) {
+                        
 
-            // Variable value source is determined by the function that called this function. property object is slightly different.
-            // From PlayerDashboard.vue property.info.id . From (above) this.initPlayerPosition property.id
-            let propertyId;
-            try {
-                propertyId = property.info.id;
-                console.log(`player to move to ${propertyId}`);
-                
-            }
-            catch {
-                propertyId = property.id;
-                console.log(`player to move to ${propertyId}`)
-            };
-                
+
             console.log(propertyId, "in PlayerPieces.vue")
-            // switch case for all chance, community chest, jail, just visiting. I think all others can be default
-            // maybe go off of player position for chance and community chest
-            // this.players[this.gameLogic.whosTurn].position
 
+            
             // Reference dom object of property to put player piece using the dataset
             let proptertyToMoveTo = document.querySelectorAll(`[data-id="${propertyId}"]`);
+            console.log(proptertyToMoveTo);
+            console.log("Should return something everytime")
             // Get the location data of that dom object. (More than one dataset attribute with the same names (propertyId) are used on dom elements, so array is returned. Index 0 is the 'out-most' div I position the player pieces on).
             let propertyPosition = proptertyToMoveTo[0].getBoundingClientRect();
 
             // Create player piece
-            let playerPiece = document.createElement('div')
+            let playerPiece = document.createElement('div');
             let playerPieceWidth = 10;
-            playerPiece.textContent = player.name
+            playerPiece.textContent = player.name;
             playerPiece.style.width = playerPieceWidth + "px";
             playerPiece.style.height = playerPieceWidth + "px";
-            playerPiece.style.backgroundColor = player.symbol
-            playerPiece.dataset.player = elementDataId.toLowerCase(); // dataset attribute
+            playerPiece.style.backgroundColor = player.symbol;
+            playerPiece.dataset.player = player.name.toLowerCase(); // dataset attribute
             
             
             let playerPieceoffSet = playerPieceWidth;
-
+            // do a case for injail
             // Determine the 'offset' number to use so all of the player pieces will not be piled on top of each other.
             switch(player.name.toLowerCase()) {
 
