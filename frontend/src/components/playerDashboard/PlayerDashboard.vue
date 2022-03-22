@@ -187,30 +187,9 @@ export default defineComponent({
             // Function call to move physical (dom) player piece
             this.playerPieces.default.methods.movePlayerPiece(this.crntTurnLogic.propertyLandedOn, this.players[this.gameLogic.whosTurn]);
 
-            
             this.dtrmPropertyAction()
         },
 
-        // Function moves player piece after Chance or Community Chest dictates a move
-        movePlayerPieceDom(propertyId) {
-
-            console.log(propertyId);
-            console.log(`movePlayerPieceDom() ${propertyId}`);
-
-            // remove player piece before moving to new position
-            let crntPlayer = this.players[this.gameLogic.whosTurn];
-            let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
-            crntPlayerPiece.remove()
-
-            let property = {
-                id: propertyId
-            };
-
-            // Function call to move physical (dom) player piece
-            this.playerPieces.default.methods.movePlayerPiece(property, this.players[this.gameLogic.whosTurn]);
-
-            return;
-        },
 
         // Function handles square player lands on
         dtrmPropertyAction() {
@@ -272,6 +251,9 @@ export default defineComponent({
                 case 'gotojail':
                     console.log("handle goto jail here")
                     break;
+
+                case 'go':
+                    console.log("landed on go")
                 default:
                     console.log("unhandled")
                     break;
@@ -279,21 +261,44 @@ export default defineComponent({
             
         },
 
-        
+
+        // Function moves player piece after Chance or Community Chest dictates a move
+        movePlayerPieceDom(propertyId) {
+
+            
+
+            // remove player piece before moving to new position
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
+            let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
+            crntPlayerPiece.remove()
+
+            let property = {
+                id: propertyId
+            };
+
+            // Function call to move physical (dom) player piece
+            this.playerPieces.default.methods.movePlayerPiece(property, this.players[this.gameLogic.whosTurn]);
+
+            return;
+        },
+
+
+        // Function handles all chance and comm chest cards
         handleSpecialCard(cardData) {
 
+        // cardData [chance or commchest, index of random card] (string, integer)
             let crntSpecialCard;
             let specialAction;
-
+            
             switch(cardData[0]) {
 
                 case 'chance':
 
-                    // index of random card (cardData[1])
                     crntSpecialCard = this.gameLogic.chance[cardData[1]];
 
-                    // send card info to display 
+                    // send card info to display on dom
                     this.$refs.specialCards.setViewData(cardData, crntSpecialCard);
+
                     // add to used card deck (index 0)
                     this.gameLogic.usedChance.unshift(this.gameLogic.chance[cardData[1]]);
                     // remove from original deck
@@ -321,33 +326,72 @@ export default defineComponent({
                     console.log("unhandled in PlayerDashboard.vue handleSpecialCard()")
 
             };
+            // let specialAction = {
 
-                    if(specialAction[0]) {
+            //     movePlayer: {
+            //         willMove: false,
+            //         position: 0,
+            //         canOwn: false,
+            //         owned: false,
+            //         backThreeSpaces: false,
+            //         log: "optional string for game logs"
+            //     },
+            //     addFunds: {
 
-                        // reassign local component variable
-                        this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(-1); // function calculates off of number of spaces to be moved
+            //         willAddFunds: false,
+            //         amount: 0,
+            //         log: "optional string for game logs"
+            //     },
+            //     removeFunds: {
+            //         willRemoveFunds: true,
+            //         amount: 0,
+            //         log: "optional string for game logs"
+            //     }
+            // };
 
-                        console.log(this.crntTurnLogic.propertyLandedOn)
-                        console.log("property after Chance or Comm Chest move")
+            console.log(specialAction)
+            console.log("specialAction ^^^^ received from special cards functions")
+            
+            // if card moves player
+            if(specialAction.movePlayer.willMove) {
 
-                        this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id);
-
-                        switch(specialAction[2].length) {
-                            case 2:
-                                this.buyAvailable = true; // shows buy btn in dom
-
-                                this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name  // shows property name in dom
-                                break;
-                            case 3:
-                                this.payRent(propertyInfo[2]);
-                                break;
-                            default:
-                                break;
-                        }
-                        return;
-                    };
-                    
+                if(specialAction.movePlayer.backThreeSpaces) {
+                    // TODO this.dtrmPropertyAction(0)
                     return;
+                };
+
+
+
+                
+            };
+                    // if(specialAction[0]) {
+
+                    //     // reassign local component variable
+                    //     this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(0); // function calculates off of number of spaces to be moved
+
+                    //     console.log(this.crntTurnLogic.propertyLandedOn)
+                    //     console.log("property after Chance or Comm Chest move")
+
+                    //     this.movePlayerPieceDom(this.vueopoly.tiles[specialAction[1]].id);
+
+                    //     switch(specialAction[2].length) {
+
+                    //         case 2:
+                    //             this.buyAvailable = true; // shows buy btn in dom
+                    //             this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name  // shows property name in dom
+                    //             break;
+
+                    //         case 3:
+                    //             this.payRent(propertyInfo[2]);
+                    //             break;
+
+                    //         default:
+                    //             break;
+                    //     }
+                    //     return;
+                    // };
+                    
+                    // return;
 
             
         },

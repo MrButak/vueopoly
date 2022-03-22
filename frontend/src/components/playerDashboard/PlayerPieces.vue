@@ -70,7 +70,7 @@ export default defineComponent({
                 console.log(`player to move to ${propertyId}`)
             };
                 
-            
+            console.log(propertyId, "in PlayerPieces.vue")
             // switch case for all chance, community chest, jail, just visiting. I think all others can be default
             // maybe go off of player position for chance and community chest
             // this.players[this.gameLogic.whosTurn].position

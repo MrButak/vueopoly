@@ -59,11 +59,17 @@ exports.rollDice = () => {
 // Function adds rolled dice to player position and gets new postion information
 exports.movePlayerPos = (moveCount) => {
 
-    // TODO: modular math (wrap around gameboard)
+    
     let propertyInfo = {};
 
-    
-    players.value[gameLogic.value.whosTurn].position += moveCount;
+    // wrap piece around gameboard
+    if(players.value[gameLogic.value.whosTurn].position + moveCount > 39) {
+        let newPos = moveCount - (39 - players.value[gameLogic.value.whosTurn].position + 1);
+        players.value[gameLogic.value.whosTurn].position = newPos;
+    }
+    else {
+        players.value[gameLogic.value.whosTurn].position += moveCount;
+    };
     
     
     // get index of property landed on and add property to object
@@ -90,7 +96,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
             case 'chance':
                 // if deck is empty. re-asign deck and empty gameLogic.usedChance
                 if(vueopoly.value.chance.length < 1) {
-                    gameLogic.value.chance = this.vueopoly.value.chance;
+                    gameLogic.value.chance = this.vueopoly.value.chance; // = gameLogic.value.usedChance
                     gameLogic.value.usedChance = [];
                     break;
                 };
@@ -98,7 +104,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
 
             case 'communitychest':
                 if(vueopoly.value.communitychest.length < 1) {
-                    gameLogic.value.communitychest = this.vueopoly.value.chance;
+                    gameLogic.value.communitychest = this.vueopoly.value.chance; // = gameLogic.value.usedCommunityChest
                     gameLogic.value.usedCommunityChest = [];
                     break;
                 };
@@ -112,24 +118,28 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
     };
 
 
-    // TODO: jail/just visiting
+    
     let handleSpecialProperty = () => {
+
+        let numCardsLeftInDeck;
         let returnData = [];
         switch(propertyInfo.info.id.toLowerCase()) {
 
-            // returns index of random chance card
+            // returns index of random chance and comm chest cards
             case 'chance':
-                // TODO: change random number to length of cards array
+                
                 checkForEmptyDeck('chance');
                 returnData.push('chance');
-                returnData.push(Math.floor(Math.random() * 14));
+                numCardsLeftInDeck = gameLogic.value.chance.length;
+                returnData.push(Math.floor(Math.random() * numCardsLeftInDeck));
                 return(returnData);
             
             case 'communitychest':
-                // TODO: change random number to length of cards array
+                
                 checkForEmptyDeck('communitychest');
                 returnData.push('communitychest');
-                returnData.push(Math.floor(Math.random() * 15));
+                numCardsLeftInDeck = gameLogic.value.communitychest.length;
+                returnData.push(Math.floor(Math.random() * numCardsLeftInDeck));
                 return(returnData);
 
             case 'freeparking':
@@ -151,19 +161,21 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                 returnData.push('luxurytax');
                 returnData.push(75);
                 return(returnData);
-
+            
+            // jail / just visiting
             case 'jail':
                 returnData.push('jail');
-                console.log("what is this? should be jail / just visiting");
                 return(returnData);
 
             case 'gotojail':
                 returnData.push('gotojail');
                 console.log("TODO: handle when land on goto jail");
                 return(returnData);
-
+            case 'go':
+                returnData.push('go');
+                return(returnData);
             default:
-                console.log("unhandled");
+                console.log("unhandled action in gameFunctions.js dtrmPropertyAction()");
         };
     };
     
@@ -201,7 +213,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
     };   
 };
 
-exports.getTotalRentAmount = (propertyInfo) => {
+exports.getTotalRentAmount = (propertyInfo) => { // propertyInfo{info: propertyObject}
 
     switch(propertyInfo.info.group.toLowerCase()) {
 
@@ -252,7 +264,6 @@ exports.getTotalRentAmount = (propertyInfo) => {
                     // if only this utility owned
                     return((crntDiceRoll[0] + crntDiceRoll[1]) * 4)
                     
-
                 case 'waterworks':
                     // get index of waterworks and check to see if owned
                     let electricCompanyIndex = vueopoly.value.properties.findIndex(item => item.id == 'electriccompany');
@@ -278,50 +289,69 @@ exports.getTotalRentAmount = (propertyInfo) => {
 // TODO special cards are also being removed form vueopoly.value.chance/communitychest
 exports.handleSpecialCard = (cardTitle) => {
 
+    let crntPlayer = players.value[gameLogic.value.whosTurn];
+    let propertyIndex;
+    let propertyMovedTo;
+    let specialAction = {
 
-    let checkPropOwned = (propertyId) => {
+        movePlayer: {
+            willMove: false,
+            position: 0,
+            canOwn: false,
+            owned: false,
+            backThreeSpaces: false,
+            log: "optional string for game logs"
+        },
+        addFunds: {
 
-        console.log("checkPropOwned()", propertyId)
-        let propertyInfo = []; // [is purchasable?, pay rent?, rent ammount] boolean, boolean, integer
-        let propertyIndex = vueopoly.value.properties.findIndex((item => item.id == propertyId));
+            willAddFunds: false,
+            amount: 0,
+            log: "optional string for game logs"
+        },
+        removeFunds: {
+            willRemoveFunds: true,
+            amount: 0,
+            log: "optional string for game logs"
+        }
+    };
+    
+    cardTitle = cardTitle.toLowerCase();
 
-        switch(propertyId.toLowerCase()) {
-            case 'go':
-                propertyInfo = [false];
-                return propertyInfo;
-            default:
-                // propertyIndex = vueopoly.value.properties.findIndex((item => item.id == propertyId));
-                if(vueopoly.value.properties[propertyIndex].ownedby == -1) {
-                    propertyInfo = [true, false]
-                    return propertyInfo;
-                };
-                
-                propertyInfo = [false, true, this.getTotalRentAmount(vueopoly.value.properties[propertyIndex])];
-                return(propertyInfo);
+    // Function handles special card "move" action. Checks property moved to, to see if buyable or must pay rent
+    let checkPropOwned = (property) => {
+
+        if(property.ownedby == -1) {
+            specialAction.movePlayer.canOwn = true;
+            specialAction.movePlayer.owned = false;
+            return false;
         };
+        specialAction.movePlayer.canOwn = true;
+        specialAction.movePlayer.owned = true;
+        return true;
 
     };
 
-    cardTitle = cardTitle.toLowerCase();
+    
 
     // determine which special card to take action on
     let cardDrawn;
     if(cardTitle.toLowerCase() == 'chance') {cardDrawn = gameLogic.value.usedChance;}
     else {cardDrawn = gameLogic.value.usedCommunityChest;};
     
+
     switch(cardDrawn[0].action) { // card that was drawn. // used cards are inserted into arry using unshift(), so index always 0 here
 
         case 'addfunds':
            
-            players.value[gameLogic.value.whosTurn].money += cardDrawn[0].amount;
+            crntPlayer.money += cardDrawn[0].amount;
             
             return([false, "logs for receive payment on special card"]);
 
         case 'removefunds':
             // If enough money to pay
-            if(this.moneyCheck(cardDrawn[0].amount, players.value[gameLogic.value.whosTurn].money)) {
+            if(this.moneyCheck(cardDrawn[0].amount, crntPlayer.money)) {
                 
-                players.value[gameLogic.value.whosTurn].money -= cardDrawn[0].amount;
+                crntPlayer.money -= cardDrawn[0].amount;
                 return([false, "logs for payment on special card"]);
             }
             // If not enough money to pay
@@ -349,37 +379,87 @@ exports.handleSpecialCard = (cardTitle) => {
 
         case 'move':
 
+            specialAction.movePlayer.willMove = true;
+
             switch(cardDrawn[0].tileid) {
 
                 case 'go':
+                    crntPlayer.position = 0;
+                    specialAction.movePlayer.position = 0;
+                    specialAction.movePlayer.canOwn = false;
+
                 case 'illinoiseave':
                 case 'boardwalk':
                 case 'stcharlesplace':
                 case 'readingrailroad':
 
-                    let propertyPosIndex = vueopoly.value.tiles.findIndex((each => each.id == cardDrawn[0].tileid));
-                  
-                    players.value[gameLogic.value.whosTurn].position = propertyPosIndex;
-                    return([true, propertyPosIndex, checkPropOwned(cardDrawn[0].tileid)]);
+                    propertyIndex = vueopoly.value.properties.findIndex((each => each.id == cardDrawn[0].tileid));
+                    propertyMovedTo = vueopoly.value.properties[propertyIndex];
+
+                    crntPlayer.position = propertyMovedTo.position;
+
+                    specialAction.movePlayer.position = propertyMovedTo.position;
+                    specialAction.movePlayer.owned = checkPropOwned(propertyMovedTo)
+
+                    return(specialAction);
                     
                 // TODO: try a function call
                 // this.dtrmPropertyAction(property, diceRoll) object, integer
                 // go back 3 spaces
                 default:
-                    
-                    players.value[gameLogic.value.whosTurn].position -= 3;
-                    return([true, players.value[gameLogic.value.whosTurn].position, checkPropOwned(cardDrawn[0].tileid)]);
+                    crntPlayer.position -= 3;
+                    propertyIndex = vueopoly.value.properties.findIndex((each => each.position == crntPlayer.position));
+                    propertyMovedTo = vueopoly.value.properties[propertyIndex];
+
+                    specialAction.movePlayer.position = crntPlayer.position;
+                    specialAction.movePlayer.backThreeSpaces = true;
+
+                    return(specialAction);
                     
             };
         
         case 'movenearest':
-            // TODO: determine nearest utility and railroad (I think player piece should only move forward)
+            // TODO: send back data to handle move
             switch(cardDrawn[0].groupid) {
 
                 case 'utility':
+                    // utility pos 12, 28
+                    switch(crntPlayerPos) {
+                        case (crntPlayer.position > 28): {
+                            crntPlayer.position = 12; // pass go
+                            break;
+                        }
+                        case (crntPlayer.position > 12 && crntPlayer.position < 28): {
+                            crntPlayer.position = 28;
+                            break;
+                        }
+                        
+                    }
                     console.log("nearest utility not available");
                     return([false, "logs for nearest utility"]);
+
+                // rr pos 5,15,25,35
                 case 'railroad':
+
+                    switch(crntPlayer.position) {
+
+                        case (crntPlayer.position > 35):
+                            crntPlayer.position = 5; // pass go
+                            break;
+                        case (crntPlayer.position > 5 && crntPlayer.position < 15): {
+                            crntPlayer.position = 15;
+                            break;
+                        }
+                        case (crntPlayer.position > 15 && crntPlayer.position < 25): {
+                            crntPlayer.position = 25;
+                            break;
+                        }
+                        case (crntPlayer.position > 25 && crntPlayer.position < 35): {
+                            crntPlayer.position = 35;
+                            break;
+                        }
+
+                    }
                     console.log("nearest railroad not available");
                     return([false, "logs for nearest railroad"]);
             }
@@ -389,7 +469,7 @@ exports.handleSpecialCard = (cardTitle) => {
             switch(cardDrawn[0].subaction) {
                 case 'getout':
                     // add 'get out of jail free' card to players special card array
-                    players.value[gameLogic.value.whosTurn].specialCards.push(cardDrawn[0]);
+                    crntPlayer.position.specialCards.push(cardDrawn[0]);
 
                     // remove 'get out of jail free' card from used cards array
                     if(cardTitle.toLowerCase() == 'chance') {
@@ -402,9 +482,9 @@ exports.handleSpecialCard = (cardTitle) => {
                 // BUG HERE ******************
                 case 'goto': // 'jail'
                     // send player to jail, set jail variable true
-                    let jailPosIndex = vueopoly.value.tiles.findIndex(each => each.id == cardDrawn[0]);
+                    let jailPosIndex = vueopoly.value.tiles.findIndex(each => each.id == 'gotojail');
                     let jailPosition = vueopoly.value.tiles[jailPosIndex].position;
-                    players.value[gameLogic.value.whosTurn].inJail = true;
+                    crntPlayer.inJail = true;
                     return([true, jailPosIndex]);
             };
         default:

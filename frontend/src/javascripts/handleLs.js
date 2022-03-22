@@ -59,12 +59,9 @@ let restoreLs = () => {
     let lsGameLogic = localStorage.getItem('gamelogic');
     lsGameLogic = JSON.parse(lsGameLogic);
 
-    
-    // console.log("restore state from these local storage objects")
-    // console.log(lsVueopoly)
-    // console.log(lsPlayers)
     console.log(lsGameLogic)
-    console.log("pulled from ls after save")
+    console.log("pulled from ls after save");
+    
     // set global state variables
     vueopoly.value = lsVueopoly;
     players.value = lsPlayers;
