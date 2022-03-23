@@ -1,55 +1,49 @@
 <template>
 
 <div class="player-dashboard-wrapper-main">
+
     <div class="player-dashboard-wrapper">
     
-    
         <div class="player-stats-top-wrapper">
-            <button>Manage</button>
+            <button @click="toggleViews">Manage</button>
             <text>{{ this.crntPlayerLogic.crntPlayerName }} - {{ this.crntPlayerLogic.crntPlayerAlias }}</text>
             <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
             <button>Trade</button>
         </div>
 
-        <div id="view-1">
-            <!-- TODO: auto scroll to bottom -->
-            <div class="log-and-dice-wrapper">
-                <div class="gamelog-wrapper-main">
-                    <!-- <text v-for="log in this.gameLogic.gameLog">
-                        would like to be able to <text style=`{{ log.style }}`>{{ log.log }}</text> 
-                    </text> --> 
-                </div>
-                <div class="show-dice-wrapper-main">
-                    {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
-                </div>
+        <!-- TODO: auto scroll to bottom -->
+        <div class="log-and-dice-wrapper">
+            <div class="gamelog-wrapper-main">
+                <!-- <text v-for="log in this.gameLogic.gameLog">
+                    would like to be able to <text style=`{{ log.style }}`>{{ log.log }}</text> 
+                </text> --> 
             </div>
-
-            <div class="roll-dice-end-turn-btn-wrapper">
-                <!-- conditional views -->
-                <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
-                <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
+            <div class="show-dice-wrapper-main">
+                {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
             </div>
-
-            <div class="game-message-wrapper">
-                <text v-show="this.buyAvailable"><a style="text-decoration: underline;" @click="this.showProperty()">{{ this.viewPropertyLink }}</a> is available to buy for ${{ this.viewPayAmount }}</text>
-                <text v-show="this.willPayRent">You payed rent at <a @click="this.showProperty()">{{ this.viewPropertyLink }}</a> for ${{ this.viewPayedAmount }}</text>
-                <!-- conditional view -->
-                <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
-            </div>
-
         </div>
 
-        <div id="view-2">
-
+        <div class="roll-dice-end-turn-btn-wrapper">
+            <!-- conditional views -->
+            <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
+            <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
         </div>
 
-        <div id="view-3">
-
+        <div class="game-message-wrapper">
+            <text v-show="this.buyAvailable"><a style="text-decoration: underline;" @click="this.showProperty()">{{ this.viewPropertyLink }}</a> is available to buy for ${{ this.viewPayAmount }}</text>
+            <text v-show="this.willPayRent">You payed rent at <a @click="this.showProperty()">{{ this.viewPropertyLink }}</a> for ${{ this.viewPayedAmount }}</text>
+            <!-- conditional view -->
+            <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
         </div>
-
 
     </div>
 </div>
+
+
+   
+    <!-- <PlayerManager ref="playerManager" /> -->
+    
+
 
 <SpecialCards ref="specialCards" />
 
@@ -64,6 +58,7 @@ import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
 import { ref } from 'vue';
 import SpecialCards from './SpecialCards.vue';
+import PlayerManager from './PlayerManager.vue';
 
 export default defineComponent({
 
@@ -85,13 +80,16 @@ export default defineComponent({
     },
 
     components: {
-    SpecialCards
+    SpecialCards,
+    PlayerManager
 },
 
     data() {
 
         return {
-            // TODO crntPlayerColor: "" // then have logs and other things in that color
+
+            
+
             buyAvailable: false,
             willPayRent: false,
             diceRolled: false,
@@ -103,6 +101,9 @@ export default defineComponent({
             },
 
             // dom stuff
+
+            
+
             viewPropertyLink: "",
             viewPayAmount: "",
             viewPayedAmount: "",
@@ -133,12 +134,15 @@ export default defineComponent({
 
     mounted() {
 
+       
         this.displayGameLogs();
         this.mainGameLoop();
         
     },
 
     methods: {
+
+        
 
         displayGameLogs() {
             
@@ -153,6 +157,8 @@ export default defineComponent({
                 else {logText.style.color = log.style;};
                 document.querySelector('.gamelog-wrapper-main').append(logText);
             });
+
+            
             return;
         },
 
@@ -567,11 +573,6 @@ export default defineComponent({
     border: 1px solid black;
     width: 18vw;
 }
-.show {
-    display: flex;
-}
-.hide {
-    display: none;
-}
+
 
 </style>
