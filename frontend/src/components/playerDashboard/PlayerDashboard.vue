@@ -136,17 +136,24 @@ export default defineComponent({
             // Function call
             this.startTurn(this.players[gameFunctions.getCrntPlayer()]);
 
-            // this.buyAvailable = false
         },
 
         startTurn(crntPlayer) {
             
+
             // game log
             this.gameLogic.gameLog.push(`${crntPlayer.name}'s turn.`)
             
             // set dom variables
             this.crntPlayerLogic.crntPlayerName = crntPlayer.name;
             this.crntPlayerLogic.crntPlayerAlias = crntPlayer.alias;
+
+            // TODO: handle if player is in jail
+            if(crntPlayer.inJail) {
+                
+                // sendToJail()
+                // maybe a 'jail' view for the dom that only shows name, and chance to roll dice
+            }
         },
 
         endTurn() {
@@ -203,17 +210,18 @@ export default defineComponent({
             switch(propertyAction[0]) {
 
                 case 'chance': // [case, random card number from this.vueopoly.chance[]] string, integer
-                    // this.handleChanceCard(propertyAction[1])
                     this.handleSpecialCard(propertyAction);
                     break;
+
                 case 'communitychest':
-                    // this.handleCommunityChest(propertyAction[1])
                     this.handleSpecialCard(propertyAction);
                     break;
+
                 case 'freeparking':
                     // gameFunctions.handleFreeParking()
                     console.log("freeparking not yet available");
                     break;
+
                 case 'incometax':
 
                     if(gameFunctions.moneyCheck(propertyAction[1], this.players[this.gameLogic.whosTurn])) { // propertyAction[1] amount of money to pay
@@ -248,17 +256,20 @@ export default defineComponent({
                     break;
                 
                 case 'jail':
-                    console.log("jail / just visiting")
+                    // just visiting
                     break;
                 
                 case 'gotojail':
+                    // TODO
                     console.log("handle goto jail here")
                     break;
 
                 case 'go':
-                    console.log("landed on go")
+                    gameFunctions.passGo();
+                    break;
+
                 default:
-                    console.log("unhandled")
+                    console.log("unhandled switch case dtrmPropertyAction() in PlayerDashboard.vue")
                     break;
             };
             
@@ -351,7 +362,7 @@ export default defineComponent({
             console.log("specialAction ^^^^ received from special cards functions")
             
             
-            // gameFunctions.dtrmPropertyAction(this.crntTurnLogic.propertyLandedOn, this.crntTurnLogic.crntDiceRoll);
+            
             // if card moves player
             if(specialAction.movePlayer.willMove) {
 

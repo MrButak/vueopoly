@@ -1,6 +1,14 @@
 const { vueGlobalState } = require('../javascripts/stateStore');
 const { lsInUse, vueopoly, players, gameLogic } = vueGlobalState();
 
+
+exports.passGo = () => {
+
+    let crntPlayer = players.value[gameLogic.value.whosTurn];
+    crntPlayer.money += 200;
+    return;
+};
+
 // Function returns an integer which represents the index position of a player in players array
 exports.getCrntPlayer = () => {
     
@@ -12,11 +20,6 @@ exports.getCrntPlayer = () => {
         return(gameLogic.value.whosTurn)
     };
 
-    // TODO: handle in jail
-    // if(players.value[gameLogic.value.whosTurn].inJail) {
-
-    // };
-
     // if have reached end of player array, return to index 0
     if(gameLogic.value.whosTurn == players.value.length - 1) {
 
@@ -26,8 +29,6 @@ exports.getCrntPlayer = () => {
 
     // increase index position
     gameLogic.value.whosTurn++;
-
-
     return(gameLogic.value.whosTurn);
 };
 
@@ -65,6 +66,8 @@ exports.movePlayerPos = (moveCount) => {
 
     // wrap piece around gameboard
     if(crntPlayer.position + moveCount > 39) {
+        // pass go
+        this.passGo();
         let newPos = moveCount - (39 - crntPlayer.position + 1);
         crntPlayer.position = newPos;
     }
@@ -163,8 +166,7 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                 returnData.push(75);
                 return(returnData);
             
-            // jail / just visiting
-            case 'jail':
+            case 'jail': // just visiting
                 returnData.push('jail');
                 return(returnData);
 
@@ -172,9 +174,12 @@ exports.dtrmPropertyAction = (propertyInfo, crntDiceRoll) => {
                 returnData.push('gotojail');
                 console.log("TODO: handle when land on goto jail");
                 return(returnData);
+
             case 'go':
+                this.passGo();
                 returnData.push('go');
                 return(returnData);
+
             default:
                 console.log("unhandled action in gameFunctions.js dtrmPropertyAction()");
         };
@@ -358,20 +363,18 @@ exports.handleSpecialCard = (cardTitle) => {
         case 'removefunds':
             // If enough money to pay
             if(this.moneyCheck(cardDrawn[0].amount, crntPlayer.money)) {
-                
                 crntPlayer.money -= cardDrawn[0].amount;
                 return(specialAction);
-            }
-            // If not enough money to pay
-            else {
-
-                console.log("not enough funds to pay");
-                return(specialAction);
-                // TODO: send not enough money message (possible write a function to handle if moneyCheck() returns false)
             };
 
+            // TODO
+            console.log("not enough money to pay");
+            return(specialAction);
+             
+
         case 'addfundsfromplayers':
-            console.log("not handled this special card yet");
+            crntPlayer.money += players.value.length * cardDrawn[0].amount;
+            // TODO send logs
             return(specialAction);
             
         case 'removefundstoplayers':
@@ -379,8 +382,18 @@ exports.handleSpecialCard = (cardTitle) => {
             return(specialAction);
 
         case 'propertycharges':
-            console.log("not handled this special card yet");
+            let houseCosts = crntPlayer.buindingCount.houses * cardDrawn.buildings;
+            let hotelCosts = crntPlayer.buindingCount.hotels * cardDrawn.hotels;
+            let totalCostToPay = houseCosts + hotelCosts;
+            if(this.moneyCheck(totalCostToPay, crntPlayer.money)) {
+                crntPlayer.money -= totalCostToPay;
+                return(specialAction);
+            };
+            // TODO
+            console.log("not enough money to pay");
             return(specialAction);
+
+            
 
         case 'move':
             let propIndex;
