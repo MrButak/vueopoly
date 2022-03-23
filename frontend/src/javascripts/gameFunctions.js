@@ -292,12 +292,20 @@ exports.handleSpecialCard = (cardTitle) => {
 
     let crntPlayer = players.value[gameLogic.value.whosTurn];
     let propertyIndex;
-    let propertyMovedTo;
+
+    let propertyMovedTo = () => {
+
+        propertyIndex = vueopoly.value.properties.findIndex((each => each.position == crntPlayer.position));
+        return(vueopoly.value.properties[propertyIndex]);
+
+    };
+
     let specialAction = {
 
         movePlayer: {
             willMove: false,
             position: 0,
+            id: "",
             canOwn: false,
             owned: false,
             backThreeSpaces: false,
@@ -345,129 +353,134 @@ exports.handleSpecialCard = (cardTitle) => {
         case 'addfunds':
            
             crntPlayer.money += cardDrawn[0].amount;
-            
-            return([false, "logs for receive payment on special card"]);
+            return(specialAction);
 
         case 'removefunds':
             // If enough money to pay
             if(this.moneyCheck(cardDrawn[0].amount, crntPlayer.money)) {
                 
                 crntPlayer.money -= cardDrawn[0].amount;
-                return([false, "logs for payment on special card"]);
+                return(specialAction);
             }
             // If not enough money to pay
             else {
 
-                console.log("not enough funds");
-                return([false, "logs for not enough funds for payment on special card"]);
+                console.log("not enough funds to pay");
+                return(specialAction);
                 // TODO: send not enough money message (possible write a function to handle if moneyCheck() returns false)
             };
 
         case 'addfundsfromplayers':
             console.log("not handled this special card yet");
-            console.log([false, "not handled this special card yet"]);
-            return;
+            return(specialAction);
             
         case 'removefundstoplayers':
             console.log("not handled this special card yet");
-            console.log([false, "not handled this special card yet"]);
-            return;
+            return(specialAction);
 
         case 'propertycharges':
             console.log("not handled this special card yet");
-            console.log([false, "not handled this special card yet"]);
-            return;
+            return(specialAction);
 
         case 'move':
-
+            let propIndex;
+            let prop;
             specialAction.movePlayer.willMove = true;
-
+            let propertyObj;
             switch(cardDrawn[0].tileid) {
 
                 case 'go':
                     crntPlayer.position = 0;
                     specialAction.movePlayer.position = 0;
                     specialAction.movePlayer.canOwn = false;
+                    specialAction.movePlayer.id = 'go';
+                    return(specialAction);
 
                 case 'illinoiseave':
                 case 'boardwalk':
                 case 'stcharlesplace':
                 case 'readingrailroad':
 
-                    propertyIndex = vueopoly.value.properties.findIndex((each => each.id == cardDrawn[0].tileid));
-                    propertyMovedTo = vueopoly.value.properties[propertyIndex];
-
-                    crntPlayer.position = propertyMovedTo.position;
-
-                    specialAction.movePlayer.position = propertyMovedTo.position;
-                    specialAction.movePlayer.owned = checkPropOwned(propertyMovedTo)
-
+                    propIndex = vueopoly.value.properties.findIndex((each => each.id == cardDrawn[0].tileid));
+                    prop = vueopoly.value.properties[propIndex];
+                    crntPlayer.position = prop.position;
+                    specialAction.movePlayer.position = prop.position;
+                    specialAction.movePlayer.owned = checkPropOwned(prop); // no need. this is done in PlayerDashboade.vue dtrmProperty...()
+                    specialAction.movePlayer.id = prop.id;
                     return(specialAction);
                     
-                // TODO: try a function call
-                // this.dtrmPropertyAction(property, diceRoll) object, integer
+                // TODO: try a function call to this.dtrmPropertyAction
                 // go back 3 spaces
                 default:
                     crntPlayer.position -= 3;
-                    propertyIndex = vueopoly.value.properties.findIndex((each => each.position == crntPlayer.position));
-                    propertyMovedTo = vueopoly.value.properties[propertyIndex];
-
+      
+                    propertyObj = propertyMovedTo();
                     specialAction.movePlayer.position = crntPlayer.position;
                     specialAction.movePlayer.backThreeSpaces = true;
 
-                    return(specialAction);
-                    
+                    return(specialAction);   
             };
         
         case 'movenearest':
-            // TODO: send back data to handle move
+            
+            specialAction.movePlayer.willMove = true;
+
             switch(cardDrawn[0].groupid) {
 
                 case 'utility':
                     // utility pos 12, 28
-                    switch(crntPlayerPos) {
-                        case (crntPlayer.position > 28): {
-                            crntPlayer.position = 12; // pass go
-                            break;
-                        }
-                        case (crntPlayer.position > 12 && crntPlayer.position < 28): {
-                            crntPlayer.position = 28;
-                            break;
-                        }
-                        
-                    }
-                    console.log("nearest utility not available");
-                    return([false, "logs for nearest utility"]);
+
+                    if(crntPlayer.position > 28) {
+                        crntPlayer.position = 12; // TODO: handle pass go
+                        specialAction.movePlayer.position = 12;
+                        propertyObj = propertyMovedTo();
+                        specialAction.movePlayer.id = propertyObj.id;
+                        return(specialAction);
+                    };
+                   
+                    crntPlayer.position = 28;
+                    specialAction.movePlayer.position = 28;
+                    propertyObj = propertyMovedTo();
+                    specialAction.movePlayer.id = propertyObj.id;
+                    return(specialAction);
 
                 // rr pos 5,15,25,35
                 case 'railroad':
 
-                    switch(crntPlayer.position) {
-
-                        case (crntPlayer.position > 35):
-                            crntPlayer.position = 5; // pass go
-                            break;
-                        case (crntPlayer.position > 5 && crntPlayer.position < 15): {
-                            crntPlayer.position = 15;
-                            break;
-                        }
-                        case (crntPlayer.position > 15 && crntPlayer.position < 25): {
-                            crntPlayer.position = 25;
-                            break;
-                        }
-                        case (crntPlayer.position > 25 && crntPlayer.position < 35): {
-                            crntPlayer.position = 35;
-                            break;
-                        }
-
+                    if(crntPlayer.position > 35) {
+                        crntPlayer.position = 5; // TODO: handle pass go
+                        specialAction.movePlayer.position = 5;
+                        propertyObj = propertyMovedTo();
+                        specialAction.movePlayer.id = propertyObj.id;
+                        return(specialAction);
                     }
-                    console.log("nearest railroad not available");
-                    return([false, "logs for nearest railroad"]);
-            }
+                    else if(crntPlayer.position > 5 && crntPlayer.position < 15) {
+                        crntPlayer.position = 15;
+                        specialAction.movePlayer.position = 15;
+                        propertyObj = propertyMovedTo();
+                        specialAction.movePlayer.id = propertyObj.id;
+                        return(specialAction);
+                    }
+                    else if(crntPlayer.position > 15 && crntPlayer.position < 25) {
+                        crntPlayer.position = 25;
+                        specialAction.movePlayer.position = 25;
+                        propertyObj = propertyMovedTo();
+                        specialAction.movePlayer.id = propertyObj.id;
+                        return(specialAction);
+                    }
+                    else if(crntPlayer.position > 25 && crntPlayer.position < 35) {
+                        crntPlayer.position = 35;
+                        specialAction.movePlayer.position = 35;
+                        propertyObj = propertyMovedTo();
+                        specialAction.movePlayer.id = propertyObj.id;
+                        return(specialAction);
+                    };
+            };
 
         case 'jail':
 
             switch(cardDrawn[0].subaction) {
+
                 case 'getout':
                     // add 'get out of jail free' card to players special card array
                     crntPlayer.position.specialCards.push(cardDrawn[0]);
@@ -475,10 +488,10 @@ exports.handleSpecialCard = (cardTitle) => {
                     // remove 'get out of jail free' card from used cards array
                     if(cardTitle.toLowerCase() == 'chance') {
                         gameLogic.value.usedChance.splice(0, 1); // used cards are inserted into arry using unshift(), so index always 0 here
-                        return([false, "You got a 'get out of jail free' card"]);
+                        return(specialAction);
                     };
                     gameLogic.value.usedCommunityChest.splice(0, 1);
-                    return(false, "You got a 'get out of jail free' card");
+                    return(specialAction);
                     
                 // BUG HERE ******************
                 case 'goto': // 'jail'
@@ -486,10 +499,11 @@ exports.handleSpecialCard = (cardTitle) => {
                     let jailPosIndex = vueopoly.value.tiles.findIndex(each => each.id == 'gotojail');
                     let jailPosition = vueopoly.value.tiles[jailPosIndex].position;
                     crntPlayer.inJail = true;
-                    return([true, jailPosIndex]);
+                    return(specialAction);
             };
+
         default:
             console.log("special card not handled, see what card this is and make a case for .action")
-            return([false, "special card not handled, see what card this is and make a case for .action"]);
+            return(specialAction);
     };
 };

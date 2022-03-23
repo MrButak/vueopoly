@@ -1004,7 +1004,7 @@
             "bottom": "86.6vw",
             "right": "62vw"
         },
-        {
+        {          
             "id": "illinoisave",
             "position": 24,
             "bottom": "86.6vw",
@@ -1110,7 +1110,7 @@
         {
             "title": "Advance to Illinois Avenue - If you pass Go, collect $200",
             "action": "move",
-            "tileid": "illinoiseave"
+            "tileid": "illinoisave"
         },
         {
             "title": "Advance to St. Charles Place - If you pass Go, collect $200",

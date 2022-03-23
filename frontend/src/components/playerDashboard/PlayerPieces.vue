@@ -50,7 +50,7 @@ export default defineComponent({
             this.players.forEach((player) => {
                 propertyIndex = this.vueopoly.properties.findIndex((each => each.position == player.position));
                 propertyId = this.vueopoly.properties[propertyIndex].id;
-                console.log(propertyId, "&&&")
+                
                 this.movePlayerPiece(propertyId, player);
             });
 
@@ -65,8 +65,7 @@ export default defineComponent({
             
             // Reference dom object of property to put player piece using the dataset
             let proptertyToMoveTo = document.querySelectorAll(`[data-id="${propertyId}"]`);
-            console.log(proptertyToMoveTo);
-            console.log("Should return something everytime")
+            
             // Get the location data of that dom object. (More than one dataset attribute with the same names (propertyId) are used on dom elements, so array is returned. Index 0 is the 'out-most' div I position the player pieces on).
             let propertyPosition = proptertyToMoveTo[0].getBoundingClientRect();
 
