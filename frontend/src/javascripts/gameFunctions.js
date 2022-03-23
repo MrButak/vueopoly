@@ -323,9 +323,14 @@ exports.handleSpecialCard = (cardTitle) => {
             log: "optional string for game logs"
         },
         removeFunds: {
-            willRemoveFunds: true,
+            willRemoveFunds: false,
             amount: 0,
             log: "optional string for game logs"
+        },
+        jail: {
+            handleJail: false,
+            willGo: false,
+            getOut: false
         }
     };
     
@@ -489,28 +494,35 @@ exports.handleSpecialCard = (cardTitle) => {
                         return(specialAction);
                     };
             };
-
+            // jail: {
+            //     handleJail: false,
+            //     willGo: false,
+            //     getOut: false
+            // }
         case 'jail':
+
+            specialAction.jail.handleJail = true;
 
             switch(cardDrawn[0].subaction) {
 
                 case 'getout':
+
+                    specialAction.jail.getOut = true;
                     // add 'get out of jail free' card to players special card array
                     crntPlayer.position.specialCards.push(cardDrawn[0]);
-
                     // remove 'get out of jail free' card from used cards array
                     if(cardTitle.toLowerCase() == 'chance') {
                         gameLogic.value.usedChance.splice(0, 1); // used cards are inserted into arry using unshift(), so index always 0 here
                         return(specialAction);
                     };
+
                     gameLogic.value.usedCommunityChest.splice(0, 1);
                     return(specialAction);
                     
-                // BUG HERE ******************
-                case 'goto': // 'jail'
-                    // send player to jail, set jail variable true
-                    let jailPosIndex = vueopoly.value.tiles.findIndex(each => each.id == 'gotojail');
-                    let jailPosition = vueopoly.value.tiles[jailPosIndex].position;
+                case 'goto':
+
+                specialAction.jail.willGo = true;
+                    
                     crntPlayer.inJail = true;
                     return(specialAction);
             };

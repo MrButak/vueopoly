@@ -48,6 +48,7 @@ export default defineComponent({
             let propertyIndex;
             // Function call. Positions player piece on the game board
             this.players.forEach((player) => {
+
                 propertyIndex = this.vueopoly.properties.findIndex((each => each.position == player.position));
                 propertyId = this.vueopoly.properties[propertyIndex].id;
                 
@@ -78,6 +79,10 @@ export default defineComponent({
             playerPiece.style.backgroundColor = player.symbol;
             playerPiece.dataset.player = player.name.toLowerCase(); // dataset attribute
             
+            if(propertyId == 'injail') {
+                console.log(propertyPosition)
+                console.log("goto jail debugging")
+            };
             
             let playerPieceoffSet = playerPieceWidth;
             // do a case for injail
@@ -144,6 +149,16 @@ export default defineComponent({
                     playerPiece.style.right = (propertyPosition.width) - playerPieceWidth + "px";
                     proptertyToMoveTo[0].appendChild(playerPiece);
                     return;
+
+                // in jail    
+                default:
+
+                    playerPiece.style.position = "absolute";
+                    playerPiece.style.top = (propertyPosition.height - playerPieceWidth) + "px";
+                    playerPiece.style.left = (propertyPosition.width / 2) - playerPieceoffSet / 2 + "px";
+                    proptertyToMoveTo[0].appendChild(playerPiece);
+                    return;
+                    
             };
         }
     }

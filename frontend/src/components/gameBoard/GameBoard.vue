@@ -149,13 +149,27 @@
 			</div>
 
 			<div class="pos-bottom row top">
-				<div id="clickable" data-id="jail" class="square2 ">
+                
+                <!-- <div id="clickable" data-id="jail" class="square2 ">
 					<span data-id="jail" class="corner4-left">just</span>
+
 					<div data-id="jail" class="squareCorner">
 						<span data-id="jail" class="corner corner4">in <br />jail</span>
 					</div>
+                    
+					<span data-id="jail" class="corner4-bottom">visiting</span>
+				</div> -->
+
+				<div id="clickable" data-id="jail" class="square2 ">
+					<span data-id="jail" class="corner4-left">just</span>
+
+					<div data-id="injail" class="squareCorner">
+						<span data-id="injail" class="corner corner4">in <br />jail</span>
+					</div>
+
 					<span data-id="jail" class="corner4-bottom">visiting</span>
 				</div>
+
 				<div id="clickable" data-id="connecticutave" class="square1 ">
 					<div data-id="connecticutave" class="header header-bottom lightblue"></div>
 					<div data-id="connecticutave" class="firstLine firstLine-bottom">connecticut avenue</div>

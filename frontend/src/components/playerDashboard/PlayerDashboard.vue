@@ -283,7 +283,6 @@ export default defineComponent({
             let crntLog = {log: `${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`, style: crntPlayer.symbol}
             this.createGameLog(crntLog);
             
-            
 
             // remove player piece before moving to new position
             let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
@@ -410,12 +409,17 @@ export default defineComponent({
         // cardData [chance or commchest, index of random card] (string, integer)
             let crntSpecialCard;
             let specialAction;
+            let crntLog;
             
             switch(cardData[0]) {
 
                 case 'chance':
 
                     crntSpecialCard = this.gameLogic.chance[cardData[1]];
+
+                    // game log
+                    crntLog = {log: `Chance - ${crntSpecialCard.title}.`, style: 'game'};
+                    this.createGameLog(crntLog);
 
                     // send card info to display on dom
                     this.$refs.specialCards.setViewData(cardData, crntSpecialCard);
@@ -425,8 +429,6 @@ export default defineComponent({
                     // remove from original deck
                     this.gameLogic.chance.splice(cardData[1], 1);
                     
-                    // game log
-                    this.gameLogic.gameLog.push(crntSpecialCard.title)
 
                     // Function call to handle all special card actions
                     specialAction = gameFunctions.handleSpecialCard(cardData[0]);
@@ -436,6 +438,11 @@ export default defineComponent({
                 case 'communitychest':
 
                     crntSpecialCard = this.gameLogic.communitychest[cardData[1]];
+
+                    // game log
+                    crntLog = {log: `Community Chest - ${crntSpecialCard.title}.`, style: 'game'};
+                    this.createGameLog(crntLog);
+
                     this.$refs.specialCards.setViewData(cardData, crntSpecialCard);
                     this.gameLogic.usedCommunityChest.unshift(this.gameLogic.communitychest[cardData[1]]);
                     this.gameLogic.communitychest.splice(cardData[1], 1);
@@ -449,6 +456,7 @@ export default defineComponent({
                     console.log("unhandled in PlayerDashboard.vue handleSpecialCard()")
 
             };
+
             // let specialAction = {
 
             //     movePlayer: {
@@ -488,6 +496,14 @@ export default defineComponent({
                 return;
 
             };
+            if(specialAction.jail.handleJail) {
+
+                if(specialAction.jail.willGo) {
+                    this.movePlayerPieceDom('injail');
+                    return
+                };
+                console.log("you got a get out of jail free card")
+            }
              
         },
 
