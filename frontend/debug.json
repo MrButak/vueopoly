@@ -1103,41 +1103,14 @@
     ],
     "chance": [
         {
-            "title": "Advance to Go (Collect $200)",
-            "action": "move",
-            "tileid": "go"
-        },
-        {
-            "title": "Advance to Illinois Avenue - If you pass Go, collect $200",
-            "action": "move",
-            "tileid": "illinoisave"
-        },
-        {
-            "title": "Advance to St. Charles Place - If you pass Go, collect $200",
-            "action": "move",
-            "tileid": "stcharlesplace"
-        },
-        {
-            "title": "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times the amount thrown.",
-            "action": "movenearest",
-            "groupid": "utility",
-            "rentmultiplier": 10
-        },
-        {
-            "title": "Advance token to the nearest Railroad and pay owner twice the rental to which he/she is otherwise entitled. If Railroad is unowned, you may buy it from the Bank.",
-            "action": "movenearest",
-            "groupid": "railroad",
-            "rentmultiplier": 2
-        },
-        {
-            "title": "Get out of Jail Free - This card may be kept until needed, or traded/sold",
+            "title": "Get Out of Jail Free",
             "action": "jail",
             "subaction": "getout"
         },
         {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
+            "title": "Go to Jail - Go directly to jail - Do not pass Go - Do not collect $200",
+            "action": "jail",
+            "subaction": "goto"
         },
         {
             "title": "Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200",
@@ -1145,66 +1118,9 @@
             "subaction": "goto"
         },
         {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
-        },
-        {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
-        },
-        {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
-        },
-        {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
-        },
-        {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
-        },
-        {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
-        },
-        {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
-        },
-        {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
-        },
-        {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
-        },
-        {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
-        },
-        {
-            "title": "Go Back 3 Spaces",
-            "action": "move",
-            "count": -3
-        }
-    ],
-    "communitychest": [
-        {
-            "title": "Advance to Go (Collect $200)",
-            "action": "move",
-            "tileid": "go"
+            "title": "Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200",
+            "action": "jail",
+            "subaction": "goto"
         },
         {
             "title": "Get Out of Jail Free",
@@ -1217,15 +1133,56 @@
             "subaction": "goto"
         },
         {
-            "title": "Grand Opera Night - Collect $50 from every player for opening night seats",
-            "action": "addfundsfromplayers",
-            "amount": 50
+            "title": "Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200",
+            "action": "jail",
+            "subaction": "goto"
         },
         {
-            "title": "You are assessed for street repairs - $40 per house - $115 per hotel",
-            "action": "propertycharges",
-            "buildings": 40,
-            "hotels": 115
+            "title": "Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200",
+            "action": "jail",
+            "subaction": "goto"
+        }
+    ],
+    "communitychest": [
+        {
+            "title": "Get Out of Jail Free",
+            "action": "jail",
+            "subaction": "getout"
+        },
+        {
+            "title": "Go to Jail - Go directly to jail - Do not pass Go - Do not collect $200",
+            "action": "jail",
+            "subaction": "goto"
+        },
+        {
+            "title": "Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200",
+            "action": "jail",
+            "subaction": "goto"
+        },
+        {
+            "title": "Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200",
+            "action": "jail",
+            "subaction": "goto"
+        },
+        {
+            "title": "Get Out of Jail Free",
+            "action": "jail",
+            "subaction": "getout"
+        },
+        {
+            "title": "Go to Jail - Go directly to jail - Do not pass Go - Do not collect $200",
+            "action": "jail",
+            "subaction": "goto"
+        },
+        {
+            "title": "Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200",
+            "action": "jail",
+            "subaction": "goto"
+        },
+        {
+            "title": "Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200",
+            "action": "jail",
+            "subaction": "goto"
         }
     ]
 }
