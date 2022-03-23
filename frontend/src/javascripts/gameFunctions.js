@@ -417,7 +417,7 @@ exports.handleSpecialCard = (cardTitle) => {
                     propertyObj = propertyMovedTo();
                     specialAction.movePlayer.position = crntPlayer.position;
                     specialAction.movePlayer.backThreeSpaces = true;
-
+                    specialAction.movePlayer.id = propertyObj.id;
                     return(specialAction);   
             };
         

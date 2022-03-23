@@ -29,6 +29,7 @@
                 <text v-for="log in this.gameLogic.gameLog">
                     {{ log }}
                 </text>
+               
             </div>
             <div class="show-dice-wrapper-main">
                 {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
@@ -357,24 +358,10 @@ export default defineComponent({
                 // reset local component variable
                 this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(0);
                 // move player piece on the dom
-                
-               
-                // back 3 spaces
-                if(specialAction.movePlayer.backThreeSpaces) {
-                    this.dtrmPropertyAction();
-                    return;
-                };
                 this.movePlayerPieceDom(specialAction.movePlayer.id);
-
                 this.dtrmPropertyAction();
                 return;
-                
-                // if(specialAction.movePlayer.canOwn && !specialAction.movePlayer.owned) {
-                //     this.dtrmPropertyAction();
-                //     return;
-                // };
 
-                
             };
              
         },
@@ -383,24 +370,21 @@ export default defineComponent({
         buyProperty() {
             
 
-            // TODO: reuse some variables below
-
-            // function call
+            // function call money check
             if(gameFunctions.moneyCheck(this.crntTurnLogic.propertyLandedOn.info.price ,this.players[this.gameLogic.whosTurn].money)) {
 
+                let crntPlayer = this.players[this.gameLogic.whosTurn];
                 // deduct the cost of the property from the player
-                this.players[this.gameLogic.whosTurn].money -= this.crntTurnLogic.propertyLandedOn.info.price;
+                crntPlayer.money -= this.crntTurnLogic.propertyLandedOn.info.price;
                 
                 // add purchased property to players[].properties[]
-                this.players[this.gameLogic.whosTurn].properties.push(this.crntTurnLogic.propertyLandedOn.info);
+                crntPlayer.properties.push(this.crntTurnLogic.propertyLandedOn.info);
 
                 // change the owner in vueopoly.properties[].ownedby // possibly here players references vueopoly
-                let currentPlayer = this.players[this.gameLogic.whosTurn]
                 let propertyIndex = this.vueopoly.properties.findIndex(each => each.id == this.crntTurnLogic.propertyLandedOn.info.id);
-                this.vueopoly.properties[propertyIndex].ownedby = currentPlayer.name;
+                this.vueopoly.properties[propertyIndex].ownedby = crntPlayer.name;
 
                 // game log
-                let crntPlayer = this.players[this.gameLogic.whosTurn];
                 this.gameLogic.gameLog.push(`${crntPlayer.name} purchased ${this.crntTurnLogic.propertyLandedOn.info.name} for $${this.crntTurnLogic.propertyLandedOn.info.price}.`);
 
                 // remove buy button and buy message
@@ -416,24 +400,21 @@ export default defineComponent({
 
         payRent(rentAmount) {
 
-            console.log(rentAmount)
-            console.log("rent amount")
+            console.log(rentAmount, "rent amount");
             
-
             if(gameFunctions.moneyCheck(rentAmount, this.players[this.gameLogic.whosTurn].money)) {
-                    
+                   
+                let crntPlayer = this.players[this.gameLogic.whosTurn];
                 let ownersName = this.crntTurnLogic.propertyLandedOn.info.ownedby;
 
-                // deduct the cost of the rent from the player (and from the dom money variable)
+                // deduct the cost of the rent from the player
                 this.players[this.gameLogic.whosTurn].money -= rentAmount;
 
                 // add cost of rent to property owners money
-                let ownersIndex = this.players.findIndex((item) => item.name == ownersName);
+                let ownersIndex = this.players.findIndex((item => item.name == ownersName));
                 this.players[ownersIndex].money += rentAmount;
-                
 
                 // game log
-                let crntPlayer = this.players[this.gameLogic.whosTurn];
                 this.gameLogic.gameLog.push(`${crntPlayer.name} payed ${ownersName} $${rentAmount} in rent for staying at ${this.crntTurnLogic.propertyLandedOn.info.name}.`);    
                 return;
             };
@@ -465,7 +446,7 @@ export default defineComponent({
     border: 1px solid black;
     background-color: white;
     padding: 10px;
-    height: 16vw;
+    
 }
 
 .playerName {
@@ -491,12 +472,11 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     height: 9vw;
-    background-color: gray;
+    background-color: white;
     border: 1px solid black;
     overflow-y: scroll;
-    width: 18vw;
-    
 }
+
 .show-dice-wrapper-main {
     display: flex;
     height:9vw;

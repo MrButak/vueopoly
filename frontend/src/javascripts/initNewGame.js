@@ -30,7 +30,8 @@ exports.initNewGame = (newPlayers) => {
     });
 
     // TODO special cards are also being removed form vueopoly.value.chance/communitychest
-    let gameJson = require('../../vueopoly.json');
+    // let gameJson = require('../../vueopoly.json');
+    let gameJson = require('../../debug.json');
     let communityChestCards = gameJson.communitychest;
     let chanceCards = gameJson.chance;
 
