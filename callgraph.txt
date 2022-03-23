@@ -1,0 +1,5 @@
+dtrmPropertyAction()
+   propertyAction = gameFunctions.dtrmPropertyAction(this.crntTurnLogic.propertyLandedOn, this.crntTurnLogic.crntDiceRoll)
+
+this.handleSpecialCard(propertyAction) [string, integer]
+    specialAction = gameFunctions.handleSpecialCard(cardData[0])

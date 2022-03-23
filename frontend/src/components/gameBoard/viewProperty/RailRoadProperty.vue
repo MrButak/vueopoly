@@ -1,7 +1,7 @@
 <template>
 
 <div class="border-wrapper">
-    <h2>{{ this.propertyName }}</h2>
+    <h2 class="property-name">{{ this.propertyName }}</h2>
 
     <p class="align-center">Price ${{ this.price }}</p>
 

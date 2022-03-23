@@ -1,5 +1,5 @@
 <template>
-    <h2><small>title deed</small><br />{{ this.propertyName }}</h2>
+    <h2 class="property-name"><small>title deed</small><br />{{ this.propertyName }}</h2>
 
     <p class="align-center">Rent ${{ this.rent }}</p>
 

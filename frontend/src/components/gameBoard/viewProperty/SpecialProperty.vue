@@ -1,13 +1,13 @@
 <template>
 
 <div class="border-wrapper">
-    <h2>{{ this.propertyName }}</h2>
+    <h2 class="property-name">{{ this.propertyName }}</h2>
 
     <p class="align-center"></p>
 
     <div class="rent-price-wrapper">
         <div class="name-price-wrapper">
-            <text>test</text><text></text>
+            <text>test</text>
         </div>
     </div>
 
