@@ -44,7 +44,7 @@ exports.initNewGame = (newPlayers) => {
         'playerCount': tmpCnt,
         'whosTurn': 0, // index in players array
         // 'gameLog': ["New game created."],
-        'gameLog': [{ 'logCount': 1, 'log': 'New game created.', 'style': 'game'}],
+        'gameLog': [{log: 'New game created.', style: 'game'}], // first game log!
         'chance': chanceCards,
         'usedChance': [],
         'communitychest': communityChestCards,
