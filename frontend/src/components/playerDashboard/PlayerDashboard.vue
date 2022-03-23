@@ -27,7 +27,8 @@
         <div class="log-and-dice-wrapper">
             <div class="gamelog-wrapper-main">
                 <text v-for="log in this.gameLogic.gameLog">
-                    {{ log }}
+                    <span style="color: {{ log.style }}">{{ log.log }}</span>
+                    
                 </text>
                
             </div>
@@ -119,10 +120,27 @@ export default defineComponent({
 
     mounted() {
         
-        this.mainGameLoop()
+        this.mainGameLoop();
+        // this.displayGameLogs();
     },
 
     methods: {
+
+        displayGameLogs() {
+            
+            
+
+            this.gameLogic.gameLog.forEach((log) => {
+                let logText = document.createElement('text');
+                logText.textContent = log.log;
+                if(log.style == 'game') {
+                    logText.style.color = 'black';
+                };
+                logText.style.color = log.style;
+                document.querySelector('.gamelog-wrapper-main').append(logText);
+            });
+            return;
+        },
 
         // Function is called @click to view current property player landed on
         showProperty() {
@@ -142,7 +160,9 @@ export default defineComponent({
             
 
             // game log
-            this.gameLogic.gameLog.push(`${crntPlayer.name}'s turn.`)
+            let crntLog = {log: `${crntPlayer.name}'s turn.`, style: crntPlayer.symbol}
+            this.gameLogic.gameLog.push(crntLog)
+            
             
             // set dom variables
             this.crntPlayerLogic.crntPlayerName = crntPlayer.name;
@@ -165,14 +185,12 @@ export default defineComponent({
             this.crntPlayerLogic.crntPlayerName = "";
             this.crntPlayerLogic.crntPlayerAlias = "";
             this.crntPlayerLogic.crntPlayerProperties = [];
-
             this.viewPropertyLink = "",
             this.crntTurnLogic.propertyLandedOn = {};
             this.crntTurnLogic.crntDiceRoll = [];
 
             // save to local storage
             handleLs.saveToLs();
-
             this.mainGameLoop();
         },
 
@@ -184,10 +202,13 @@ export default defineComponent({
             this.crntTurnLogic.crntDiceRoll = gameFunctions.rollDice();
             // Function call (local component variable)
             this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
-
+            
             // game log (global state variable)
             let crntPlayer = this.players[this.gameLogic.whosTurn];
-            this.gameLogic.gameLog.push(`${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`)
+            let crntGameLog = {log: `${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`, style: crntPlayer.symbol}
+            this.gameLogic.gameLog.push(crntGameLog);
+            
+            // this.gameLogic.gameLog.push(`${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`)
 
             // remove player piece before moving to new position
             let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
