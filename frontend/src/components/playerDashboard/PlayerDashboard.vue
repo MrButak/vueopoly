@@ -2,40 +2,51 @@
 
 <div class="player-dashboard-wrapper-main">
     <div class="player-dashboard-wrapper">
-        
-        <div class="playerName">
-            {{ this.crntPlayerLogic.crntPlayerName }} - {{ this.crntPlayerLogic.crntPlayerAlias }}
-        </div>
-
-        <div class="manage-trade-btn-wrapper">
+    
+    
+        <div class="player-stats-top-wrapper">
             <button>Manage</button>
+            <text>{{ this.crntPlayerLogic.crntPlayerName }} - {{ this.crntPlayerLogic.crntPlayerAlias }}</text>
             <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
             <button>Trade</button>
         </div>
 
-        <div class="roll-dice-end-turn-btn-wrapper">
-            <!-- different messages and options shown depending on local component variables (data()) -->
-            <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
-            <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
-            <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
-            <text v-show="this.buyAvailable"><a @click="this.showProperty()">{{ this.viewPropertyLink }}</a> is available to buy</text>
-            <text v-show="this.willPayRent">You payed rent at <a @click="this.showProperty()">{{ this.viewPropertyLink }}</a></text>
+        <div id="view-1">
+            <!-- TODO: auto scroll to bottom -->
+            <div class="log-and-dice-wrapper">
+                <div class="gamelog-wrapper-main">
+                    <!-- <text v-for="log in this.gameLogic.gameLog">
+                        would like to be able to <text style=`{{ log.style }}`>{{ log.log }}</text> 
+                    </text> --> 
+                </div>
+                <div class="show-dice-wrapper-main">
+                    {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
+                </div>
+            </div>
+
+            <div class="roll-dice-end-turn-btn-wrapper">
+                <!-- conditional views -->
+                <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
+                <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
+            </div>
+
+            <div class="game-message-wrapper">
+                <text v-show="this.buyAvailable"><a style="text-decoration: underline;" @click="this.showProperty()">{{ this.viewPropertyLink }}</a> is available to buy for ${{ this.viewPayAmount }}</text>
+                <text v-show="this.willPayRent">You payed rent at <a @click="this.showProperty()">{{ this.viewPropertyLink }}</a> for ${{ this.viewPayedAmount }}</text>
+                <!-- conditional view -->
+                <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
+            </div>
 
         </div>
 
-        <!-- shows the game log TODO: make it prettier (player colors) and auto scroll to bottom -->
-        <div class="log-and-dice-wrapper">
-            <div class="gamelog-wrapper-main">
-                <text v-for="log in this.gameLogic.gameLog">
-                    <!-- <span>{{ log.log }}</span> -->
-                    
-                </text>
-               
-            </div>
-            <div class="show-dice-wrapper-main">
-                {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
-            </div>
+        <div id="view-2">
+
         </div>
+
+        <div id="view-3">
+
+        </div>
+
 
     </div>
 </div>
@@ -93,6 +104,8 @@ export default defineComponent({
 
             // dom stuff
             viewPropertyLink: "",
+            viewPayAmount: "",
+            viewPayedAmount: "",
             crntPlayerLogic: {
 
                 crntPlayerName: "",
@@ -129,28 +142,29 @@ export default defineComponent({
 
         displayGameLogs() {
             
-            
-
             this.gameLogic.gameLog.forEach((log) => {
+
                 let logText = document.createElement('text');
                 logText.textContent = log.log;
+                logText.style.fontWeight = '700';
                 if(log.style == 'game') {
-                    logText.style.color = 'black';
+                    logText.style.color = 'white';
                 }
-                else {logText.style.color = log.style;}
+                else {logText.style.color = log.style;};
                 document.querySelector('.gamelog-wrapper-main').append(logText);
             });
             return;
         },
 
-        createTextLog(logObj) {
+        createGameLog(logObj) {
 
             let textElement = document.createElement('text');
             textElement.textContent = logObj.log;
+            textElement.style.fontWeight = '700';
             if(logObj.style == 'game') {
-                logText.style.color = 'black';
+                textElement.style.color = 'white';
             }
-            else{textElement.style.color = logObj.style;}
+            else{textElement.style.color = logObj.style;};
             this.gameLogic.gameLog.push(logObj);
             document.querySelector('.gamelog-wrapper-main').append(textElement);
             return;
@@ -174,8 +188,8 @@ export default defineComponent({
             
 
             // game log
-            let crntLog = {log: `${crntPlayer.name}'s turn.`, style: 'black'}
-            this.createTextLog(crntLog)
+            let crntLog = {log: `${crntPlayer.name}'s turn.`, style: 'game'}
+            this.createGameLog(crntLog)
             
             
             // set dom variables
@@ -220,7 +234,7 @@ export default defineComponent({
             // game log (global state variable)
             let crntPlayer = this.players[this.gameLogic.whosTurn];
             let crntLog = {log: `${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`, style: crntPlayer.symbol}
-            this.createTextLog(crntLog);
+            this.createGameLog(crntLog);
             
             
 
@@ -267,7 +281,7 @@ export default defineComponent({
                         crntPlayer.money -= propertyAction[1];
                         // game log
                         let crntLog = {log: `${crntPlayer.name} payed $${propertyAction[1]} in income tax.`, style: crntPlayer.symbol}
-                        this.createTextLog(crntLog);
+                        this.createGameLog(crntLog);
                         break;
                     }
                     else {
@@ -282,7 +296,7 @@ export default defineComponent({
                         crntPlayer.money -= propertyAction[1];
                         // game log
                         crntLog = {log: `${crntPlayer.name} payed $${propertyAction[1]} in luxury tax.`, style: crntPlayer.symbol}
-                        this.createTextLog(crntLog);
+                        this.createGameLog(crntLog);
                         break;
                     }
                     else {
@@ -294,6 +308,7 @@ export default defineComponent({
                 case 'notowned':
                     this.buyAvailable = true; // shows buy btn in dom
                     this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
+                    this.viewPayAmount = this.crntTurnLogic.propertyLandedOn.info.price;
                     break;
                     
 
@@ -301,6 +316,7 @@ export default defineComponent({
                 case 'owned':
                     this.willPayRent = true;
                     this.viewPropertyLink = this.crntTurnLogic.propertyLandedOn.info.name; // shows property name in dom
+                    this.viewPayedAmount = propertyAction[1];
                     this.payRent(propertyAction[1]); //propertyAction[1] is price
                     break;
                 
@@ -448,7 +464,7 @@ export default defineComponent({
 
                 // game log
                 let crntLog = {log: `${crntPlayer.name} purchased ${propertyToBuy.name} for $${propertyToBuy.price}.`, style: crntPlayer.symbol}
-                this.createTextLog(crntLog);
+                this.createGameLog(crntLog);
 
                 // remove buy button and buy message
                 this.buyAvailable = false;
@@ -479,7 +495,7 @@ export default defineComponent({
 
                 // game log
                 let crntLog = {log: `${crntPlayer.name} payed $${rentAmount} to ${ownersName} for rent at ${this.crntTurnLogic.propertyLandedOn.info.name}.`, style: crntPlayer.symbol}
-                this.createTextLog(crntLog);
+                this.createGameLog(crntLog);
 
                 return;
             };
@@ -514,14 +530,17 @@ export default defineComponent({
     
 }
 
-.playerName {
+.player-stats-top-wrapper {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
+    gap: 4vw;
+    padding: 0 0 10px 0;
 }
-.manage-trade-btn-wrapper {
+.game-message-wrapper {
     display: flex;
     justify-content: space-around;
+    padding: 10px 0 0 0;
 }
 .roll-dice-end-turn-btn-wrapper {
     display: flex;
@@ -537,7 +556,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     height: 15vw;
-    background-color: lightgray;
+    background-color: black;
     border: 1px solid black;
     overflow-y: scroll;
 }
@@ -548,6 +567,11 @@ export default defineComponent({
     border: 1px solid black;
     width: 18vw;
 }
-
+.show {
+    display: flex;
+}
+.hide {
+    display: none;
+}
 
 </style>
