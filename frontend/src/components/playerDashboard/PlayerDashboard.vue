@@ -1,11 +1,11 @@
 <template>
 
-<div class="player-dashboard-wrapper-main">
+<div v-show="this.showViewOne" class="player-dashboard-wrapper-main">
 
     <div class="player-dashboard-wrapper">
     
         <div class="player-stats-top-wrapper">
-            <button @click="toggleViews">Manage</button>
+            <button @click="toggleDashboardViews($event, 1)">Manage</button>
             <text>{{ this.crntPlayerLogic.crntPlayerName }} - {{ this.crntPlayerLogic.crntPlayerAlias }}</text>
             <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
             <button>Trade</button>
@@ -14,6 +14,7 @@
         <!-- TODO: auto scroll to bottom -->
         <div class="log-and-dice-wrapper">
             <div class="gamelog-wrapper-main">
+                
                 <!-- <text v-for="log in this.gameLogic.gameLog">
                     would like to be able to <text style=`{{ log.style }}`>{{ log.log }}</text> 
                 </text> --> 
@@ -40,9 +41,25 @@
 </div>
 
 
-   
-    <!-- <PlayerManager ref="playerManager" /> -->
+<div v-show="this.showViewTwo" class="player-dashboard-wrapper-main">
+
+    <div class="player-dashboard-wrapper">
     
+        <div class="player-stats-top-wrapper">
+            <button @click="toggleDashboardViews($event, 2)">Game</button>
+            <text>{{ this.crntPlayerLogic.crntPlayerName }} - {{ this.crntPlayerLogic.crntPlayerAlias }}</text>
+            <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
+            <button>Trade</button>
+        </div>
+
+
+        
+        <p>View 2 Manage Properties</p>
+       
+
+    </div>
+</div>
+
 
 
 <SpecialCards ref="specialCards" />
@@ -58,7 +75,7 @@ import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
 import { ref } from 'vue';
 import SpecialCards from './SpecialCards.vue';
-import PlayerManager from './PlayerManager.vue';
+import PlayerManagerView from './PlayerManagerView.vue';
 
 export default defineComponent({
 
@@ -81,14 +98,16 @@ export default defineComponent({
 
     components: {
     SpecialCards,
-    PlayerManager
+    PlayerManagerView
 },
 
     data() {
 
         return {
-
-            
+            gameLogDiv: document.querySelector('.gamelog-wrapper-main'),
+            // views (game, manage, trade)
+            showViewOne: true,
+            showViewTwo: false,
 
             buyAvailable: false,
             willPayRent: false,
@@ -134,7 +153,7 @@ export default defineComponent({
 
     mounted() {
 
-       
+        this.initDom();
         this.displayGameLogs();
         this.mainGameLoop();
         
@@ -142,7 +161,26 @@ export default defineComponent({
 
     methods: {
 
-        
+        initDom() {
+            this.gameLogDiv = document.querySelector('.gamelog-wrapper-main');
+            return;
+        },
+
+        toggleDashboardViews(event, viewNum) {
+
+            switch(viewNum) {
+                case 1:
+                    this.showViewOne = false;
+                    this.showViewTwo = true;
+                    return;
+                case 2:
+                    this.showViewOne = true;
+                    this.showViewTwo = false;
+                    return;
+            };
+
+        },
+
 
         displayGameLogs() {
             
@@ -157,6 +195,8 @@ export default defineComponent({
                 else {logText.style.color = log.style;};
                 document.querySelector('.gamelog-wrapper-main').append(logText);
             });
+            // scroll to bottom
+            this.gameLogDiv.scrollTop = this.gameLogDiv.scrollHeight;
 
             
             return;
@@ -173,6 +213,7 @@ export default defineComponent({
             else{textElement.style.color = logObj.style;};
             this.gameLogic.gameLog.push(logObj);
             document.querySelector('.gamelog-wrapper-main').append(textElement);
+            this.gameLogDiv.scrollTop = this.gameLogDiv.scrollHeight; // scroll to bottom
             return;
         },
 
@@ -565,6 +606,7 @@ export default defineComponent({
     background-color: black;
     border: 1px solid black;
     overflow-y: scroll;
+    width: 80%;
 }
 
 .show-dice-wrapper-main {

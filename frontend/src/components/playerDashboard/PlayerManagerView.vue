@@ -21,11 +21,11 @@ import { ref } from 'vue';
 export default defineComponent({
 
 
-    name: 'PlayerManager',
+    name: 'PlayerManagerView',
     setup() {
 
         const { lsInUse, players, vueopoly, gameLogic } = vueGlobalState();
-        const playerDashboard = ref(require('../playerDashboard/PlayerDashboard.vue')); // component
+        // const playerDashboard = ref(require('../playerDashboard/PlayerDashboard.vue')); // component
 
         return { // make it available in <template>
             lsInUse,
