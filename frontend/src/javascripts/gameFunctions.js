@@ -509,7 +509,7 @@ exports.handleSpecialCard = (cardTitle) => {
 
                     specialAction.jail.getOut = true;
                     // add 'get out of jail free' card to players special card array
-                    crntPlayer.position.specialCards.push(cardDrawn[0]);
+                    crntPlayer.specialCards.push(cardDrawn[0]);
                     // remove 'get out of jail free' card from used cards array
                     if(cardTitle.toLowerCase() == 'chance') {
                         gameLogic.value.usedChance.splice(0, 1); // used cards are inserted into arry using unshift(), so index always 0 here

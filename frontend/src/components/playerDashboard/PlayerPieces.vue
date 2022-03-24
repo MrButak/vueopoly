@@ -79,13 +79,13 @@ export default defineComponent({
             playerPiece.style.backgroundColor = player.symbol;
             playerPiece.dataset.player = player.name.toLowerCase(); // dataset attribute
             
-            if(propertyId == 'injail') {
-                console.log(propertyPosition)
-                console.log("goto jail debugging")
-            };
+            // if(propertyId == 'injail') {
+            //     console.log(propertyPosition)
+            //     console.log("goto jail debugging")
+            // };
             
             let playerPieceoffSet = playerPieceWidth;
-            // do a case for injail
+            
             // Determine the 'offset' number to use so all of the player pieces will not be piled on top of each other.
             switch(player.name.toLowerCase()) {
 

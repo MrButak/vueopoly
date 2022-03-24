@@ -246,6 +246,7 @@ export default defineComponent({
             // TODO: handle if player is in jail
             if(crntPlayer.inJail) {
                 
+                console.log("player is in jail")
                 // sendToJail()
                 // maybe a 'jail' view for the dom that only shows name, and chance to roll dice
             }
@@ -410,6 +411,7 @@ export default defineComponent({
             let crntSpecialCard;
             let specialAction;
             let crntLog;
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
             
             switch(cardData[0]) {
 
@@ -500,9 +502,14 @@ export default defineComponent({
 
                 if(specialAction.jail.willGo) {
                     this.movePlayerPieceDom('injail');
+                    // game log go to jail
+                    crntLog = {log: `${crntPlayer.name} has gone to jail.`, style: `${crntPlayer.symbol}`};
+                    this.createGameLog(crntLog);
                     return
                 };
-                console.log("you got a get out of jail free card")
+                // game log get out of jail free card
+                crntLog = {log: `${crntPlayer.name} received a ${crntSpecialCard.title} card.`, style: `${crntPlayer.symbol}`};
+                this.createGameLog(crntLog);
             }
              
         },
