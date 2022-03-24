@@ -42,21 +42,26 @@
 
 
 <div v-show="this.showViewTwo" class="player-dashboard-wrapper-main">
-
     <div class="player-dashboard-wrapper">
-    
         <div class="player-stats-top-wrapper">
             <button @click="toggleDashboardViews($event, 2)">Game</button>
             <text>{{ this.crntPlayerLogic.crntPlayerName }} - {{ this.crntPlayerLogic.crntPlayerAlias }}</text>
             <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
             <button>Trade</button>
         </div>
-
-
-        
         <p>View 2 Manage Properties</p>
-       
+    </div>
+</div>
 
+<div v-show="this.showViewJail" class="player-dashboard-wrapper-main">
+    <div class="player-dashboard-wrapper">
+        <div class="player-stats-top-wrapper">
+            <button @click="toggleDashboardViews($event, 'jail')">Manage</button>
+            <text>{{ this.crntPlayerLogic.crntPlayerName }} - {{ this.crntPlayerLogic.crntPlayerAlias }}</text>
+            <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
+            <button>Trade</button>
+        </div>
+        <p>In Jail View</p>
     </div>
 </div>
 
@@ -108,6 +113,7 @@ export default defineComponent({
             // views (game, manage, trade)
             showViewOne: true,
             showViewTwo: false,
+            showViewJail: false,
 
             buyAvailable: false,
             willPayRent: false,
@@ -153,7 +159,7 @@ export default defineComponent({
 
     mounted() {
 
-        this.initDom();
+        this.initVariables();
         this.displayGameLogs();
         this.mainGameLoop();
         
@@ -161,7 +167,7 @@ export default defineComponent({
 
     methods: {
 
-        initDom() {
+        initVariables() {
             this.gameLogDiv = document.querySelector('.gamelog-wrapper-main');
             return;
         },
@@ -170,13 +176,20 @@ export default defineComponent({
 
             switch(viewNum) {
                 case 1:
+                    this.showViewJail = false;
                     this.showViewOne = false;
                     this.showViewTwo = true;
                     return;
                 case 2:
-                    this.showViewOne = true;
+                    this.showViewJail = false;
                     this.showViewTwo = false;
+                    this.showViewOne = true;
                     return;
+                case 'jail':
+                    this.showViewOne = false;
+                    this.showViewTwo = false;
+                    this.showViewJail = true;
+
             };
 
         },
@@ -217,7 +230,7 @@ export default defineComponent({
             return;
         },
 
-        // Function is called @click to view current property player landed on
+        // Function is called @click on link in player dashboard to view current property player landed on
         showProperty() {
 
             // function call to components/gameBoard/GameBoard.vue to preform .click() on current property using property id as argument. (added to this.propertyLink variable in dom)
@@ -232,7 +245,14 @@ export default defineComponent({
         },
 
         startTurn(crntPlayer) {
-            
+
+             // TODO: handle if player is in jail
+            if(crntPlayer.inJail) {
+
+                this.toggleDashboardViews('event', 'jail'); // set 'in jail' view
+                console.log("player is in jail");
+                
+            }
 
             // game log
             let crntLog = {log: `${crntPlayer.name}'s turn.`, style: 'game'}
@@ -243,13 +263,7 @@ export default defineComponent({
             this.crntPlayerLogic.crntPlayerName = crntPlayer.name;
             this.crntPlayerLogic.crntPlayerAlias = crntPlayer.alias;
 
-            // TODO: handle if player is in jail
-            if(crntPlayer.inJail) {
-                
-                console.log("player is in jail")
-                // sendToJail()
-                // maybe a 'jail' view for the dom that only shows name, and chance to roll dice
-            }
+           
         },
 
         endTurn() {
