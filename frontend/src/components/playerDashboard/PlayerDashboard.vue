@@ -60,7 +60,19 @@
             <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
             <button>Trade</button>
         </div>
-        <p>In Jail View</p>
+
+        <div class="log-and-dice-wrapper">
+            <div class="show-dice-wrapper-main">
+                {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
+            </div>
+            <p>In Jail View</p>
+        </div>
+
+        <div class="roll-dice-end-turn-btn-wrapper">
+            <!-- conditional views -->
+            <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
+            <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
+        </div>
     </div>
 </div>
 
@@ -174,22 +186,23 @@ export default defineComponent({
         toggleDashboardViews(event, viewNum) {
 
             switch(viewNum) {
-                case 1:
+                case 1: // main game dashboard
                     this.showViewJail = false;
                     this.showViewOne = false;
                     this.showViewTwo = true;
-                    return;
-                case 2:
+                    break;
+                case 2: // manage player dashboard
                     this.showViewJail = false;
                     this.showViewTwo = false;
                     this.showViewOne = true;
-                    return;
+                    break;
                 case 'jail':
                     this.showViewOne = false;
                     this.showViewTwo = false;
                     this.showViewJail = true;
-
+                    break;
             };
+            return;
 
         },
 
@@ -216,6 +229,7 @@ export default defineComponent({
 
         createGameLog(logObj) {
 
+            // TODO, for multiple logs, instead of calling this function x times in a row, send logs in array and loop through it
             let textElement = document.createElement('text');
             textElement.textContent = logObj.log;
             textElement.style.fontWeight = '700';
@@ -240,24 +254,49 @@ export default defineComponent({
         mainGameLoop() {
 
             // Function call
-            this.startTurn(this.players[gameFunctions.getCrntPlayer()]);
+            let crntPlayer = this.players[gameFunctions.getCrntPlayer()];
+            // handle in jail
+            if(crntPlayer.inJail) {
+                this.handleInJail(crntPlayer);
+            };
+            this.startTurn(crntPlayer);
+            
 
+        },
+        // view bug
+        handleInJail (crntPlayer) {
+
+            let crntLog;
+
+            if(crntPlayer.turnsInJail > 2) {
+                crntPlayer.inJail = false;
+                crntPlayer.turnsInJail = 0;
+                this.toggleDashboardViews('event', 2);
+                crntLog = {log: `${crntPlayer.name} was released from jail.`, style: `${crntPlayer.symbol}`};
+                this.createGameLog(crntLog);
+                return;
+            }
+            
+            crntPlayer.turnsInJail++;
+            this.toggleDashboardViews('event', 'jail'); // set 'in jail' view
+            console.log("player is in jail");  
         },
 
         startTurn(crntPlayer) {
-
-             // TODO: handle if player is in jail
+           
+           // handle in jail
+           let crntLog;
+           // game log
             if(crntPlayer.inJail) {
-
-                this.toggleDashboardViews('event', 'jail'); // set 'in jail' view
-                console.log("player is in jail");
-                
+                crntLog = {log: `${crntPlayer.name}'s turn.`, style: 'game'};
+                this.createGameLog(crntLog);
+                crntLog = {log: `${crntPlayer.name} is in jail.`, style: `${crntPlayer.symbol}`};
+                this.createGameLog(crntLog);
             }
-
-            // game log
-            let crntLog = {log: `${crntPlayer.name}'s turn.`, style: 'game'}
-            this.createGameLog(crntLog)
-            
+            else {
+                let crntLog = {log: `${crntPlayer.name}'s turn.`, style: 'game'};
+                this.createGameLog(crntLog);
+            };
             
             // set dom variables
             this.crntPlayerLogic.crntPlayerName = crntPlayer.name;
@@ -267,6 +306,8 @@ export default defineComponent({
         },
 
         endTurn() {
+
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
 
             // clear local component variables
             this.buyAvailable = false;
@@ -279,6 +320,10 @@ export default defineComponent({
             this.crntTurnLogic.propertyLandedOn = {};
             this.crntTurnLogic.crntDiceRoll = [];
 
+            // handle in jail
+            if(crntPlayer.inJail) {
+                this.toggleDashboardViews('event', 2);
+            };
             // save to local storage
             handleLs.saveToLs();
             this.mainGameLoop();
@@ -286,28 +331,44 @@ export default defineComponent({
 
         rollDice() {
 
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
             this.diceRolled = true; // hide roll dice btn
+
+
 
             // Function call (local component variable)
             this.crntTurnLogic.crntDiceRoll = gameFunctions.rollDice();
-            // Function call (local component variable)
-            this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
+
+            // handle in jail
+            if(crntPlayer.inJail) {
+                
+                if(crntDiceRoll[0] == 6 && crntDiceRoll[1] == 6) {
+                    console.log("you rolled doubled 6s! You get out of jail!");
+                    return;
+                };
+                return;
+            }
+
+            else {
+                // Function call (local component variable)
+                this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
+                
+                // game log (global state variable)
+                let crntLog = {log: `${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`, style: crntPlayer.symbol}
+                this.createGameLog(crntLog);
+                
+
+                // remove player piece before moving to new position
+                let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
+                crntPlayerPiece.remove()
+
+                // Function call to move physical (dom) player piece
+                let propertyId = this.crntTurnLogic.propertyLandedOn.info.id;
+                this.playerPieces.default.methods.movePlayerPiece(propertyId, crntPlayer);
+
+                this.dtrmPropertyAction()
+            };
             
-            // game log (global state variable)
-            let crntPlayer = this.players[this.gameLogic.whosTurn];
-            let crntLog = {log: `${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`, style: crntPlayer.symbol}
-            this.createGameLog(crntLog);
-            
-
-            // remove player piece before moving to new position
-            let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
-            crntPlayerPiece.remove()
-
-            // Function call to move physical (dom) player piece
-            let propertyId = this.crntTurnLogic.propertyLandedOn.info.id;
-            this.playerPieces.default.methods.movePlayerPiece(propertyId, crntPlayer);
-
-            this.dtrmPropertyAction()
         },
 
 
@@ -386,7 +447,6 @@ export default defineComponent({
                     break;
                 
                 case 'gotojail':
-                    // TODO
                     crntPlayer.inJail = true;
                     this.movePlayerPieceDom('injail');
                     // game log go to jail
