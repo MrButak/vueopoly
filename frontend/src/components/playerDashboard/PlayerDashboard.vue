@@ -337,7 +337,7 @@ export default defineComponent({
             // Function call (local component variable)
             this.crntTurnLogic.crntDiceRoll = gameFunctions.rollDice();
 
-            // handle in jail
+        // handle in jail
             if(crntPlayer.inJail) {
                 
                 // if roll doubles, get out of jail
@@ -365,7 +365,7 @@ export default defineComponent({
                 };
                 return;
             }
-
+        // not in jail
             else {
                 // Function call (local component variable)
                 this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
