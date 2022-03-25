@@ -304,6 +304,7 @@ exports.handleSpecialCard = (cardTitle) => {
         return(vueopoly.value.properties[propertyIndex]);
 
     };
+    cardTitle = cardTitle.toLowerCase();
 
     let specialAction = {
 
@@ -314,7 +315,9 @@ exports.handleSpecialCard = (cardTitle) => {
             canOwn: false,
             owned: false,
             backThreeSpaces: false,
-            log: "optional string for game logs"
+            log: "optional string for game logs",
+            moveNearest: false,
+            willPassGo: false
         },
         addFunds: {
 
@@ -334,21 +337,21 @@ exports.handleSpecialCard = (cardTitle) => {
         }
     };
     
-    cardTitle = cardTitle.toLowerCase();
+    
 
     // Function handles special card "move" action. Checks property moved to, to see if buyable or must pay rent
-    let checkPropOwned = (property) => {
+    // let checkPropOwned = (property) => {
 
-        if(property.ownedby == -1) {
-            specialAction.movePlayer.canOwn = true;
-            specialAction.movePlayer.owned = false;
-            return false;
-        };
-        specialAction.movePlayer.canOwn = true;
-        specialAction.movePlayer.owned = true;
-        return true;
+    //     if(property.ownedby == -1) {
+    //         specialAction.movePlayer.canOwn = true;
+    //         specialAction.movePlayer.owned = false;
+    //         return false;
+    //     };
+    //     specialAction.movePlayer.canOwn = true;
+    //     specialAction.movePlayer.owned = true;
+    //     return true;
 
-    };
+    // };
 
     
 
@@ -423,15 +426,14 @@ exports.handleSpecialCard = (cardTitle) => {
                     prop = vueopoly.value.properties[propIndex];
                     crntPlayer.position = prop.position;
                     specialAction.movePlayer.position = prop.position;
-                    specialAction.movePlayer.owned = checkPropOwned(prop); // no need. this is done in PlayerDashboade.vue dtrmProperty...()
+                    console.log(crntPlayer.position, "should be property specified on card")
+                    // specialAction.movePlayer.owned = checkPropOwned(prop); // no need. this is done in PlayerDashboade.vue dtrmProperty...()
                     specialAction.movePlayer.id = prop.id;
                     return(specialAction);
                     
-                // TODO: try a function call to this.dtrmPropertyAction
                 // go back 3 spaces
                 default:
                     crntPlayer.position -= 3;
-      
                     propertyObj = propertyMovedTo();
                     specialAction.movePlayer.position = crntPlayer.position;
                     specialAction.movePlayer.backThreeSpaces = true;
@@ -442,6 +444,7 @@ exports.handleSpecialCard = (cardTitle) => {
         case 'movenearest':
             
             specialAction.movePlayer.willMove = true;
+            specialAction.movePlayer.moveNearest = true;
 
             switch(cardDrawn[0].groupid) {
 
@@ -450,12 +453,13 @@ exports.handleSpecialCard = (cardTitle) => {
 
                     if(crntPlayer.position > 28) {
                         crntPlayer.position = 12; // TODO: handle pass go
+                        specialAction.movePlayer.willP = true;
                         specialAction.movePlayer.position = 12;
                         propertyObj = propertyMovedTo();
                         specialAction.movePlayer.id = propertyObj.id;
                         return(specialAction);
                     };
-                   
+                    
                     crntPlayer.position = 28;
                     specialAction.movePlayer.position = 28;
                     propertyObj = propertyMovedTo();
@@ -492,6 +496,9 @@ exports.handleSpecialCard = (cardTitle) => {
                         propertyObj = propertyMovedTo();
                         specialAction.movePlayer.id = propertyObj.id;
                         return(specialAction);
+                    }
+                    else {
+                        console.log("unhandled situation @ move to nearest in gameFunction.js handleSpecialCard()");
                     };
             };
             // jail: {
@@ -509,7 +516,7 @@ exports.handleSpecialCard = (cardTitle) => {
 
                     specialAction.jail.getOut = true;
                     // add 'get out of jail free' card to players special card array
-                    crntPlayer.position.specialCards.push(cardDrawn[0]);
+                    crntPlayer.specialCards.push(cardDrawn[0]);
                     // remove 'get out of jail free' card from used cards array
                     if(cardTitle.toLowerCase() == 'chance') {
                         gameLogic.value.usedChance.splice(0, 1); // used cards are inserted into arry using unshift(), so index always 0 here
