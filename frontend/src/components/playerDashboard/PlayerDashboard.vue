@@ -25,7 +25,7 @@
         <div class="roll-dice-end-turn-btn-wrapper">
             <!-- conditional views -->
             <button v-show="!this.diceRolled" @click="this.rollDice">Roll Dice</button>
-            <button v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
+            <button class="endTurnBtn" v-show="this.diceRolled" @click="this.endTurn">End Turn</button>
         </div>
 
         <div class="game-message-wrapper">
@@ -306,7 +306,7 @@ export default defineComponent({
         },
 
         endTurn() {
-
+            console.log("should log after go to jail")
             let crntPlayer = this.players[this.gameLogic.whosTurn];
 
             // clear local component variables
@@ -455,7 +455,7 @@ export default defineComponent({
                     crntLog = {log: `${crntPlayer.name} has gone to jail.`, style: `${crntPlayer.symbol}`};
                     this.createGameLog(crntLog);
                     crntPlayer.position = 10
-                    console.log("handle goto jail here")
+                    this.endTurn(); // directly end turn after player has gone to jail
                     break;
 
                 case 'go':
@@ -588,7 +588,8 @@ export default defineComponent({
                     // game log go to jail
                     crntLog = {log: `${crntPlayer.name} has gone to jail.`, style: `${crntPlayer.symbol}`};
                     this.createGameLog(crntLog);
-                    return
+                    this.endTurn();
+                    return;
                 };
                 // game log get out of jail free card
                 crntLog = {log: `${crntPlayer.name} received a ${crntSpecialCard.title} card.`, style: `${crntPlayer.symbol}`};
