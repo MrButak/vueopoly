@@ -251,6 +251,7 @@ export default defineComponent({
             this.gameBoard.default.methods.showProperty(event, this.crntTurnLogic.propertyLandedOn.info.id)
         },
 
+
         mainGameLoop() {
 
             // Function call
@@ -260,10 +261,9 @@ export default defineComponent({
                 this.handleInJail(crntPlayer);
             };
             this.startTurn(crntPlayer);
-            
-
         },
-        // view bug
+
+
         handleInJail (crntPlayer) {
 
             let crntLog;
@@ -279,7 +279,6 @@ export default defineComponent({
             
             crntPlayer.turnsInJail++;
             this.toggleDashboardViews('event', 'jail'); // set 'in jail' view
-            console.log("player is in jail");  
         },
 
         startTurn(crntPlayer) {
@@ -301,11 +300,10 @@ export default defineComponent({
             // set dom variables
             this.crntPlayerLogic.crntPlayerName = crntPlayer.name;
             this.crntPlayerLogic.crntPlayerAlias = crntPlayer.alias;
-
-           
         },
 
         endTurn() {
+
             console.log("should log after go to jail")
             let crntPlayer = this.players[this.gameLogic.whosTurn];
 
@@ -333,7 +331,7 @@ export default defineComponent({
 
             let crntPlayer = this.players[this.gameLogic.whosTurn];
             this.diceRolled = true; // hide roll dice btn
-
+            let crntLog;
 
 
             // Function call (local component variable)
@@ -342,8 +340,27 @@ export default defineComponent({
             // handle in jail
             if(crntPlayer.inJail) {
                 
-                if(crntDiceRoll[0] == 6 && crntDiceRoll[1] == 6) {
-                    console.log("you rolled doubled 6s! You get out of jail!");
+                // if roll doubles, get out of jail
+                if(this.crntTurnLogic.crntDiceRoll[0] == this.crntTurnLogic.crntDiceRoll[1]) {
+                
+
+                    crntPlayer.inJail = false;
+                    crntPlayer.turnsInJail = 0;
+                    this.toggleDashboardViews('event', 2);
+                    // game logs
+                    crntLog = {log: `${crntPlayer.name} rolled doubles and got out of jail!`, style: `${crntPlayer.symbol}`};
+                    this.createGameLog(crntLog);
+
+                    // remove player piece before moving to new position
+                    let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
+                    crntPlayerPiece.remove()
+                    
+                    this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
+                    // Function call to move physical (dom) player piece
+                    let propertyId = this.crntTurnLogic.propertyLandedOn.info.id;
+                    this.playerPieces.default.methods.movePlayerPiece(propertyId, crntPlayer);
+
+                    this.dtrmPropertyAction()
                     return;
                 };
                 return;
@@ -368,7 +385,6 @@ export default defineComponent({
 
                 this.dtrmPropertyAction()
             };
-            
         },
 
 
