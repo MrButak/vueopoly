@@ -11,10 +11,8 @@
             <button>Trade</button>
         </div>
 
-        <!-- TODO: auto scroll to bottom -->
         <div class="log-and-dice-wrapper">
             <div class="gamelog-wrapper-main">
-                
                 <!-- <text v-for="log in this.gameLogic.gameLog">
                     would like to be able to <text style=`{{ log.style }}`>{{ log.log }}</text> 
                 </text> --> 
@@ -40,7 +38,7 @@
     </div>
 </div>
 
-
+<!-- manage player view -->
 <div v-show="this.showViewTwo" class="player-dashboard-wrapper-main">
     <div class="player-dashboard-wrapper">
         <div class="player-stats-top-wrapper">
@@ -53,6 +51,7 @@
     </div>
 </div>
 
+<!-- in jail view -->
 <div v-show="this.showViewJail" class="player-dashboard-wrapper-main">
     <div class="player-dashboard-wrapper">
         <div class="player-stats-top-wrapper">
@@ -88,8 +87,8 @@ export default defineComponent({
     setup() {
 
         const { lsInUse, players, vueopoly, gameLogic } = vueGlobalState();
-        const gameBoard = ref(require('../gameBoard/GameBoard.vue')); // component
-        const playerPieces = ref(require('../playerDashboard/PlayerPieces.vue')); // component
+        const gameBoard = ref(require('../gameBoard/GameBoard.vue')); // component. for function calls
+        const playerPieces = ref(require('../playerDashboard/PlayerPieces.vue')); // component. for function calls
 
         return { // make it available in <template>
             lsInUse,
@@ -140,7 +139,7 @@ export default defineComponent({
                 crntPlayerProperties: [],
 
             },
-            // player pieces (PlayerPieces.vew). elements in (Gameboard.vue)
+            // player pieces (PlayerPieces.vew). dom elements in (Gameboard.vue)
             // used to remove player piece when moving to new position. These elements are inserted into the dom from PlayerPieces.vue, and are inserted into GameBoard.vue's html
             playerElements: {
                 p1DomEl: document.querySelector('[data-player="player1"]'),
@@ -221,11 +220,12 @@ export default defineComponent({
             textElement.textContent = logObj.log;
             textElement.style.fontWeight = '700';
             if(logObj.style == 'game') {
-                textElement.style.color = 'white';
+                textElement.style.color = 'white'; // default color for 'game master' logs
             }
             else{textElement.style.color = logObj.style;};
             this.gameLogic.gameLog.push(logObj);
             document.querySelector('.gamelog-wrapper-main').append(textElement);
+
             this.gameLogDiv.scrollTop = this.gameLogDiv.scrollHeight; // scroll to bottom
             return;
         },
@@ -387,6 +387,14 @@ export default defineComponent({
                 
                 case 'gotojail':
                     // TODO
+                    crntPlayer.inJail = true;
+                    this.movePlayerPieceDom('injail');
+                    // game log go to jail
+                    crntLog = {log: `Go to Jail, go directly to Jail, do not pass Go do not collect $200.`, style: `game`};
+                    this.createGameLog(crntLog);
+                    crntLog = {log: `${crntPlayer.name} has gone to jail.`, style: `${crntPlayer.symbol}`};
+                    this.createGameLog(crntLog);
+                    crntPlayer.position = 10
                     console.log("handle goto jail here")
                     break;
 
@@ -516,6 +524,7 @@ export default defineComponent({
 
                 if(specialAction.jail.willGo) {
                     this.movePlayerPieceDom('injail');
+                    crntPlayer.position = 10
                     // game log go to jail
                     crntLog = {log: `${crntPlayer.name} has gone to jail.`, style: `${crntPlayer.symbol}`};
                     this.createGameLog(crntLog);
