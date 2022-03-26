@@ -47,7 +47,13 @@
             <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
             <button>Trade</button>
         </div>
-        <p>View 2 Manage Properties</p>
+
+         <div class="player-property-wrapper-main">
+            <!-- <text v-for="log in this.gameLogic.gameLog">
+                would like to be able to <text style=`{{ log.style }}`>{{ log.log }}</text> 
+            </text> -->
+        </div>
+        
     </div>
 </div>
 
@@ -121,6 +127,7 @@ export default defineComponent({
 
         return {
             gameLogDiv: document.querySelector('.gamelog-wrapper-main'),
+            playerPropertyDiv: document.querySelector('.player-property-wrapper-main'),
             // views (game, manage, trade)
             showViewOne: true,
             showViewTwo: false,
@@ -171,7 +178,8 @@ export default defineComponent({
     mounted() {
 
         this.initVariables();
-        this.displayGameLogs();
+        this.displayGameLogs(); // game dashboard view
+        this.displayPlayerProperties(); // manage player dashboard view
         this.mainGameLoop();
         
     },
@@ -180,6 +188,7 @@ export default defineComponent({
 
         initVariables() {
             this.gameLogDiv = document.querySelector('.gamelog-wrapper-main');
+            this.playerPropertyDiv = document.querySelector('.player-property-wrapper-main');
             return;
         },
 
@@ -206,6 +215,26 @@ export default defineComponent({
 
         },
 
+        displayPlayerProperties() {
+
+            this.players[this.gameLogic.whosTurn].properties.forEach((property) => {
+                //this.playerPropertyDiv = document.querySelector('.player-property-wrapper-main');
+                let playerPropertyText = document.createElement('text');
+                playerPropertyText.textContent = property.name;
+                this.playerPropertyDiv.append(playerPropertyText)
+                return;
+
+            });
+        },
+
+        addPlayerPropertiesToDom() {
+
+            //this.playerPropertyDiv = document.querySelector('.player-property-wrapper-main');
+            let playerPropertyText = document.createElement('text');
+            playerPropertyText.textContent = property.name;
+            this.playerPropertyDiv.append(playerPropertyText)
+            return;
+        },
 
         displayGameLogs() {
             
@@ -739,5 +768,9 @@ export default defineComponent({
     width: 18vw;
 }
 
-
+/* player manager view */
+.player-property-wrapper-main {
+    display: flex;
+    flex-direction: column;
+}
 </style>
