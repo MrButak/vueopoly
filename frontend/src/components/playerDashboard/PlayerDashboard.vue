@@ -56,13 +56,24 @@
                 <div v-for="property in this.players[this.gameLogic.whosTurn].properties" class="player-properties-wrapper">
                     <text @click="this.showProperty($event, property.id)" style="text-decoration: underline;">{{ property.name }}</text>
                     <div class="player-manager-btn-wrapper">
-                        <button>Mortgage</button>
+                        <button v-show="!property.mortgaged" @click="handleMortgageProperty.initMortgageProperty($event, property.id)">Mortgage</button>
+                        <button v-show="property.mortgaged" @click="handleMortgageProperty.initUnMortgageProperty($event, property.id)">Mortgage</button>
                         <button>Upgrade</button>
                     </div>
                 </div>
             </div>
-            <div class="property-log-wrapper-main">
-                
+            <div class="prop-log-and-btns-wrpper">
+                <div class="property-log-wrapper-main">
+
+                </div>
+                <div v-show="this.showMortgageBtns" class="mortgage-prop-btn-wrapper">
+                    <button class="mortgage-btn">Yes</button>
+                    <button class="mortgage-btn">No</button>
+                </div>
+                <div v-show="this.showUnMortgageBtns" class="mortgage-prop-btn-wrapper">
+                    <button class="mortgage-btn">Yes</button>
+                    <button class="mortgage-btn">No</button>
+                </div>
             </div>
         </div>
 
@@ -139,11 +150,16 @@ export default defineComponent({
 
         return {
             gameLogDiv: document.querySelector('.gamelog-wrapper-main'),
+            managePropertyLog: document.querySelector('.property-log-wrapper-main'),
             playerPropertyDiv: document.querySelector('.player-property-wrapper-main'),
+
             // views (game, manage, trade)
             showViewOne: true,
             showViewTwo: false,
             showViewJail: false,
+
+            showMortgageBtns: false,
+            showUnMortgageBtns: false,
 
             buyAvailable: false,
             willPayRent: false,
@@ -198,10 +214,53 @@ export default defineComponent({
 
     methods: {
 
+        handleMortgageProperty(event, propertyId) {
+
+            let propertyLogText = document.createElement('text');
+            let mortgagePropIndex = this.vueopoly.properties.findIndex((property => property.id == propertyId));
+            let propToMortgage = this.vueopoly.properties[mortgagePropIndex];
+            
+
+            exports.initUnMortgageProperty = function() {
+                this.showMortgageBtns = false;
+                this.showUnMortgageBtns = true;
+                propertyLogText.textContent = `Un-mortgage ${propToMortgage.name} for $${propToMortgage.price / 2} ?`;
+                propertyLogText.style.color = 'white';
+                this.managePropertyLog.append(propertyLogText);
+                propToMortgage.mortgaged = false;
+                return;
+
+            };
+
+            exports.initMortgageProperty = function() {
+
+                this.showMortgageBtns = true;
+                this.showUnMortgageBtns = false;
+                propertyLogText.textContent = `Mortgage ${propToMortgage.name} for $${propToMortgage.price / 2} ?`;
+                propertyLogText.style.color = 'white';
+                this.managePropertyLog.append(propertyLogText);
+                propToMortgage.mortgaged = true;
+                return;
+            };
+
+             
+            // propToMortgage.mortgaged = false;
+            
+            
+
+            console.log(propToMortgage)
+            console.log("here ^^")
+        },
+
+        unMortgageProperty(event, propertyId) {
+
+        },
+
         initVariables() {
 
             this.gameLogDiv = document.querySelector('.gamelog-wrapper-main');
             this.playerPropertyDiv = document.querySelector('.player-property-wrapper-main');
+            this.managePropertyLog = document.querySelector('.property-log-wrapper-main');
             return;
         },
 
@@ -811,16 +870,31 @@ export default defineComponent({
     width: 50%;
     gap: 6px;
 }
+.prop-log-and-btns-wrpper {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+}
 .property-log-wrapper-main {
     display: flex;
-    width: 40%;
+    width: 100%;
     background-color: black;
     border: 1px solid black;
     overflow-y: scroll;
-    min-height: 15vw;
+    min-height: 8vw;
 }
 .player-manager-btn-wrapper {
     display: flex;
     gap: 6px;
+}
+.mortgage-prop-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 0 0;
+    gap: 16px;
+}
+.mortgage-btn {
+    padding: 1px 5px;
+    width: 20%;
 }
 </style>
