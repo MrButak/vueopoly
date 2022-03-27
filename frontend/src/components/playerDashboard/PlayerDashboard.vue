@@ -29,8 +29,8 @@
         </div>
 
         <div class="game-message-wrapper">
-            <text v-show="this.buyAvailable"><a style="text-decoration: underline;" @click="this.showProperty()">{{ this.viewPropertyLink }}</a> is available to buy for ${{ this.viewPayAmount }}</text>
-            <text v-show="this.willPayRent">You payed rent at <a @click="this.showProperty()">{{ this.viewPropertyLink }}</a> for ${{ this.viewPayedAmount }}</text>
+            <text v-show="this.buyAvailable"><a style="text-decoration: underline;" @click="this.showProperty($event, this.crntTurnLogic.propertyLandedOn.info.id)">{{ this.viewPropertyLink }}</a> is available to buy for ${{ this.viewPayAmount }}</text>
+            <text v-show="this.willPayRent">You payed rent at <a @click="this.showProperty($event, this.crntTurnLogic.propertyLandedOn.info.id)">{{ this.viewPropertyLink }}</a> for ${{ this.viewPayedAmount }}</text>
             <!-- conditional view -->
             <button v-show="this.buyAvailable" @click="this.buyProperty">Buy</button>
         </div>
@@ -48,10 +48,8 @@
             <button>Trade</button>
         </div>
 
-         <div class="player-property-wrapper-main">
-            <!-- <text v-for="log in this.gameLogic.gameLog">
-                would like to be able to <text style=`{{ log.style }}`>{{ log.log }}</text> 
-            </text> -->
+        <div v-for="property in this.players[this.gameLogic.whosTurn].properties" class="player-property-wrapper-main">
+            <text @click="this.showProperty($event, property.id)" style="text-decoration: underline;">{{ property.name }}</text>
         </div>
         
     </div>
@@ -179,7 +177,7 @@ export default defineComponent({
 
         this.initVariables();
         this.displayGameLogs(); // game dashboard view
-        this.displayPlayerProperties(); // manage player dashboard view
+       // this.displayPlayerProperties(); // manage player dashboard view
         this.mainGameLoop();
         
     },
@@ -187,6 +185,7 @@ export default defineComponent({
     methods: {
 
         initVariables() {
+
             this.gameLogDiv = document.querySelector('.gamelog-wrapper-main');
             this.playerPropertyDiv = document.querySelector('.player-property-wrapper-main');
             return;
@@ -215,21 +214,24 @@ export default defineComponent({
 
         },
 
+        // Function called when player starts new turn. Populates dom with player properties in 'manage player view'
         displayPlayerProperties() {
-
+            
+            while (this.playerPropertyDiv.firstChild) {
+                this.playerPropertyDiv.removeChild(this.playerPropertyDiv.firstChild);
+            };
+            
             this.players[this.gameLogic.whosTurn].properties.forEach((property) => {
-                //this.playerPropertyDiv = document.querySelector('.player-property-wrapper-main');
+                console.log(property);
                 let playerPropertyText = document.createElement('text');
                 playerPropertyText.textContent = property.name;
-                this.playerPropertyDiv.append(playerPropertyText)
-                return;
-
+                this.playerPropertyDiv.append(playerPropertyText);
             });
+            return;
         },
 
-        addPlayerPropertiesToDom() {
+        addPlayerPropertiesToDom(property) {
 
-            //this.playerPropertyDiv = document.querySelector('.player-property-wrapper-main');
             let playerPropertyText = document.createElement('text');
             playerPropertyText.textContent = property.name;
             this.playerPropertyDiv.append(playerPropertyText)
@@ -274,17 +276,22 @@ export default defineComponent({
         },
 
         // Function is called @click on link in player dashboard to view current property player landed on
-        showProperty() {
+        showProperty(event, propertyId) {
 
-            // function call to components/gameBoard/GameBoard.vue to preform .click() on current property using property id as argument. (added to this.propertyLink variable in dom)
-            this.gameBoard.default.methods.showProperty(event, this.crntTurnLogic.propertyLandedOn.info.id)
+            // function call to components/gameBoard/GameBoard.vue to perform .click() on current property using property id as argument. (added to this.propertyLink variable in dom)
+            this.gameBoard.default.methods.showProperty(event, propertyId)
         },
 
 
         mainGameLoop() {
 
-            // Function call
+            
+            // Function call moves to next player after previous player's turn ends
             let crntPlayer = this.players[gameFunctions.getCrntPlayer()];
+
+            // populate 'manage player view' with player properties
+           // this.displayPlayerProperties();
+
             // handle in jail
             if(crntPlayer.inJail) {
                 this.handleInJail(crntPlayer);
@@ -314,6 +321,7 @@ export default defineComponent({
            
            // handle in jail
            let crntLog;
+
            // game log
             if(crntPlayer.inJail) {
                 crntLog = {log: `${crntPlayer.name}'s turn.`, style: 'game'};
@@ -347,7 +355,7 @@ export default defineComponent({
             this.crntTurnLogic.propertyLandedOn = {};
             this.crntTurnLogic.crntDiceRoll = [];
 
-            // handle in jail
+            // change views if was in jail
             if(crntPlayer.inJail) {
                 this.toggleDashboardViews('event', 2);
             };
@@ -664,6 +672,9 @@ export default defineComponent({
                 // game log
                 let crntLog = {log: `${crntPlayer.name} purchased ${propertyToBuy.name} for $${propertyToBuy.price}.`, style: crntPlayer.symbol}
                 this.createGameLog(crntLog);
+
+                // add property to 'manage player' view
+                // this.addPlayerPropertiesToDom(propertyToBuy)
 
                 // remove buy button and buy message
                 this.buyAvailable = false;
