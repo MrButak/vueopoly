@@ -47,11 +47,25 @@
             <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
             <button>Trade</button>
         </div>
+        <text>Properties</text>
+       
+            
+        <div class="player-properties-wrapper-main">
 
-        <div v-for="property in this.players[this.gameLogic.whosTurn].properties" class="player-property-wrapper-main">
-            <text @click="this.showProperty($event, property.id)" style="text-decoration: underline;">{{ property.name }}</text>
+            <div class="property-wrapper">
+                <div v-for="property in this.players[this.gameLogic.whosTurn].properties" class="player-properties-wrapper">
+                    <text @click="this.showProperty($event, property.id)" style="text-decoration: underline;">{{ property.name }}</text>
+                    <div class="player-manager-btn-wrapper">
+                        <button>Mortgage</button>
+                        <button>Upgrade</button>
+                    </div>
+                </div>
+            </div>
+            <div class="property-log-wrapper-main">
+                
+            </div>
         </div>
-        
+
     </div>
 </div>
 
@@ -780,8 +794,33 @@ export default defineComponent({
 }
 
 /* player manager view */
-.player-property-wrapper-main {
+.player-properties-wrapper-main {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+.player-properties-wrapper {
+    display: flex;
+    justify-content: space-between;
+
+}
+.property-wrapper {
     display: flex;
     flex-direction: column;
+    width: 50%;
+    gap: 6px;
+}
+.property-log-wrapper-main {
+    display: flex;
+    width: 40%;
+    background-color: black;
+    border: 1px solid black;
+    overflow-y: scroll;
+    min-height: 15vw;
+}
+.player-manager-btn-wrapper {
+    display: flex;
+    gap: 6px;
 }
 </style>
