@@ -56,8 +56,8 @@
                 <div v-for="property in this.players[this.gameLogic.whosTurn].properties" class="player-properties-wrapper">
                     <text @click="this.showProperty($event, property.id)" style="text-decoration: underline;">{{ property.name }}</text>
                     <div class="player-manager-btn-wrapper">
-                        <button v-show="!property.mortgaged" @click="handleMortgageProperty.initMortgageProperty($event, property.id)">Mortgage</button>
-                        <button v-show="property.mortgaged" @click="handleMortgageProperty.initUnMortgageProperty($event, property.id)">Mortgage</button>
+                        <button v-show="!property.mortgaged" @click="this.handleMortgageProperty($event, property.id, ['mortgage', null])">Mortgage</button>
+                        <button v-show="property.mortgaged" @click="this.handleMortgageProperty($event, property.id, ['unmortgage', null])">UnMortgage</button>
                         <button>Upgrade</button>
                     </div>
                 </div>
@@ -67,12 +67,12 @@
 
                 </div>
                 <div v-show="this.showMortgageBtns" class="mortgage-prop-btn-wrapper">
-                    <button class="mortgage-btn">Yes</button>
-                    <button class="mortgage-btn">No</button>
+                    <button @click="this.handleMortgageProperty($event, null, ['confirm', 'confirmmortgage'])" class="mortgage-btn">Yes</button>
+                    <button @click="this.handleMortgageProperty($event, null, ['cancel', null])" class="mortgage-btn">No</button>
                 </div>
                 <div v-show="this.showUnMortgageBtns" class="mortgage-prop-btn-wrapper">
-                    <button class="mortgage-btn">Yes</button>
-                    <button class="mortgage-btn">No</button>
+                <button @click="this.handleMortgageProperty($event, null, ['confirm', 'confirmunmortgage'])" class="mortgage-btn">Yes</button>
+                    <button @click="this.handleMortgageProperty($event, null, ['cancel', null])" class="mortgage-btn">No</button>
                 </div>
             </div>
         </div>
@@ -120,7 +120,7 @@ import { defineComponent } from 'vue';
 import { vueGlobalState } from '/src/javascripts/stateStore';
 import { ref } from 'vue';
 import SpecialCards from './SpecialCards.vue';
-import PlayerManagerView from './PlayerManagerView.vue';
+// import PlayerManagerView from './PlayerManagerView.vue';
 
 export default defineComponent({
 
@@ -142,8 +142,8 @@ export default defineComponent({
     },
 
     components: {
-    SpecialCards,
-    PlayerManagerView
+    SpecialCards
+    // PlayerManagerView
 },
 
     data() {
@@ -169,6 +169,7 @@ export default defineComponent({
             crntTurnLogic: {
                 propertyLandedOn: {},
                 crntDiceRoll: [],
+                crntMortgageProperty: {}
             },
 
             // dom stuff
@@ -214,47 +215,86 @@ export default defineComponent({
 
     methods: {
 
-        handleMortgageProperty(event, propertyId) {
+        handleMortgageProperty(event, propertyId, action) {
 
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
+            let crntLog;
             let propertyLogText = document.createElement('text');
-            let mortgagePropIndex = this.vueopoly.properties.findIndex((property => property.id == propertyId));
-            let propToMortgage = this.vueopoly.properties[mortgagePropIndex];
+            let mortgagePropIndex = crntPlayer.properties.findIndex((prop => prop.id == propertyId));
+            let propToMortgage = crntPlayer.properties[mortgagePropIndex]
+            // let mortgagePropIndex = this.vueopoly.properties.findIndex((property => property.id == propertyId));
+            // let propToMortgage = this.vueopoly.properties[mortgagePropIndex];
+
+            // Set this.crntTurnLogic.crntMortgageProperty the first time the 'mortgaged' btns are clicked because
+            // the 'yes', 'no' btns do not have the propertyId sent with them, so I have no access to the property variable otherwise.
+            if(propToMortgage) {this.crntTurnLogic.crntMortgageProperty = crntPlayer.properties[mortgagePropIndex]};
             
+        
+            switch(action[0]) {
 
-            exports.initUnMortgageProperty = function() {
-                this.showMortgageBtns = false;
-                this.showUnMortgageBtns = true;
-                propertyLogText.textContent = `Un-mortgage ${propToMortgage.name} for $${propToMortgage.price / 2} ?`;
-                propertyLogText.style.color = 'white';
-                this.managePropertyLog.append(propertyLogText);
-                propToMortgage.mortgaged = false;
-                return;
+                case 'mortgage':
+                    this.showMortgageBtns = true;
+                    this.showUnMortgageBtns = false;
+                    propertyLogText.textContent = `Mortgage ${propToMortgage.name} for $${propToMortgage.price / 2} ?`;
+                    propertyLogText.style.color = 'white';
+                    this.managePropertyLog.append(propertyLogText);
+                    break;
 
+                case 'unmortgage':
+                    this.showMortgageBtns = false;
+                    this.showUnMortgageBtns = true;
+                    propertyLogText.textContent = `Un-mortgage ${propToMortgage.name} for $${propToMortgage.price / 2} ?`;
+                    propertyLogText.style.color = 'white';
+                    this.managePropertyLog.append(propertyLogText);
+                    break;
+
+                case 'cancel':
+                    this.showMortgageBtns = false;
+                    this.showUnMortgageBtns = false;
+                    propertyLogText.textContent = 'Cancled.';
+                    propertyLogText.style.color = 'red';
+                    this.managePropertyLog.append(propertyLogText);
+                    break;
+
+                case 'confirm':
+
+                    
+                    mortgagePropIndex = crntPlayer.properties.findIndex((prop => prop.id == this.crntTurnLogic.crntMortgageProperty.id))
+                    
+                    switch(action[1]) {
+
+
+                        case 'confirmmortgage':
+
+                            crntPlayer.properties[mortgagePropIndex].mortgaged = true; // also changes this.vueopoly.properties[].mortgaged because crntPlayer.properties[] was pushed into array from it
+                            crntPlayer.money += crntPlayer.properties[mortgagePropIndex].price / 2;
+
+                            // manage player logs
+                            propertyLogText.textContent = `You mortgaged ${crntPlayer.properties[mortgagePropIndex].name} for $${crntPlayer.properties[mortgagePropIndex].price / 2}.`;
+                            propertyLogText.style.color = 'white';
+                            this.managePropertyLog.append(propertyLogText);
+
+                            // game logs
+                            crntLog = {log: `${crntPlayer.name} mortgaged ${crntPlayer.properties[mortgagePropIndex].name} for $${crntPlayer.properties[mortgagePropIndex].price / 2}.`, style: `${crntPlayer.symbol}`};
+                            this.createGameLog(crntLog);
+
+                            this.showMortgageBtns = false;
+                            
+                            
+                            break;
+
+                        case 'confirmunmortgage':
+                            // TODO: gameFunction.moneyCheck(), "" "" "" ^^^
+                            crntPlayer.properties[mortgagePropIndex].mortgaged = false;
+                            this.showUnMortgageBtns = false;
+                            
+                            break;
+                    };
             };
-
-            exports.initMortgageProperty = function() {
-
-                this.showMortgageBtns = true;
-                this.showUnMortgageBtns = false;
-                propertyLogText.textContent = `Mortgage ${propToMortgage.name} for $${propToMortgage.price / 2} ?`;
-                propertyLogText.style.color = 'white';
-                this.managePropertyLog.append(propertyLogText);
-                propToMortgage.mortgaged = true;
-                return;
-            };
-
-             
-            // propToMortgage.mortgaged = false;
-            
-            
-
-            console.log(propToMortgage)
-            console.log("here ^^")
         },
 
-        unMortgageProperty(event, propertyId) {
 
-        },
+
 
         initVariables() {
 
@@ -414,7 +454,6 @@ export default defineComponent({
 
         endTurn() {
 
-            console.log("should log after go to jail")
             let crntPlayer = this.players[this.gameLogic.whosTurn];
 
             // clear local component variables
@@ -432,6 +471,12 @@ export default defineComponent({
             if(crntPlayer.inJail) {
                 this.toggleDashboardViews('event', 2);
             };
+
+            // clear out 'manage player view' logs by removing all children
+            while (this.managePropertyLog.firstChild) {
+                this.managePropertyLog.removeChild(this.managePropertyLog.firstChild);
+            };
+            
             // save to local storage
             handleLs.saveToLs();
             this.mainGameLoop();
@@ -877,6 +922,7 @@ export default defineComponent({
 }
 .property-log-wrapper-main {
     display: flex;
+    flex-direction: column;
     width: 100%;
     background-color: black;
     border: 1px solid black;
