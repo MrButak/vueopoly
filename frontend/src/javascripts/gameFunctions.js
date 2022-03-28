@@ -539,3 +539,40 @@ exports.handleSpecialCard = (cardTitle) => {
             return(specialAction);
     };
 };
+
+// Handle buy buildings
+
+// Fuction checks if player owns the whole group of properties (is eligble to build)
+exports.canBuyBuilding = (property) => {
+
+    let crntPlayer = players.value[gameLogic.value.whosTurn];
+
+    let checkIfGroupOwned = (property) => {
+
+        let allPropsInGroup = vueopoly.value.properties.filter(prop => prop.group.toLowerCase() == property.group.toLowerCase());
+        allPropsInGroup.forEach = ((each) => {
+
+            if(each.mortgaged || each.ownedby != crntPlayer.name) {
+                return false
+            };
+            return true
+            
+        });
+    };
+
+    switch(property.group.toLowerCase()) {
+
+        case 'railroad':
+        case 'utilities':
+            return false;
+        default:
+            return(checkIfGroupOwned(property));
+
+    }
+};
+
+exports.handleBuyBuilding = (property) => {
+
+    
+
+};
