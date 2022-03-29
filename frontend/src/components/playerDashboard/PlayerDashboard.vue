@@ -140,12 +140,19 @@
             <button>Trade</button>
         </div>
         <div id="player-building-prop-wrapper-main">
+            
+            <!-- prices can only be shown if object exists -->
+            <div class="building-cost-wrapper" v-if="this.crntTurnLogic.crntBuildingProperties[0]">
+                <text>Buy ${{ this.crntTurnLogic.crntBuildingProperties[0].ohousecost }}</text>
+                <text>Sell ${{ this.crntTurnLogic.crntBuildingProperties[0].ohousecost / 2}}</text>
+            </div>
+            
             <form>
                 <div v-for="prop in this.crntTurnLogic.crntBuildingProperties" class="player-building-prop-wrapper">
                     
                     <!-- Only show properties that are not mortgaged (v-if="!prop.mortgaged") -->
                     <input v-if="!prop.mortgaged" type="radio" name="property-buildings" :value="prop.id">
-                    <div v-if="!prop.mortgaged" class="property-buildings-list">{{ prop.name }} -${{ prop.ohousecost }} per house</div>
+                    <div v-if="!prop.mortgaged" class="property-buildings-list">{{ prop.name }}</div>
                     <!-- v-if="prop.buildings < 5" -->
                     <!-- for houses  -->
                     <div v-for="building in prop.buildings" class="property-buildings-wrapper">
@@ -154,7 +161,8 @@
                     </div>
                     <!-- v-if="prop.buildings > 4" -->
                 </div>
-                <button type="submit" @click="purchaseBuilding($event)">Buy</button>
+                <button type="submit" @click="purchaseBuilding($event, 'buy')">Buy</button>
+                <button type="submit" @click="purchaseBuilding($event, 'sell')">Sell</button>
             </form>
         </div>
     </div>
@@ -299,7 +307,7 @@ export default defineComponent({
         },
 
         // Function is fired when 'buy building' btn is clicked
-        purchaseBuilding(event) {
+        purchaseBuilding(event, action) {
 
             event.preventDefault();
 
@@ -316,6 +324,7 @@ export default defineComponent({
                 propToBuyBuildingIndex = this.vueopoly.properties.findIndex((prop => prop.id == propId));
                 propToBuyBuilding = this.vueopoly.properties[propToBuyBuildingIndex];
                 
+                // loop through all properties in group
                 for(let i = 0; i < allPropsInGroup.length; i++) {
 
                     // skip property to build on
@@ -338,22 +347,64 @@ export default defineComponent({
                 
             };
 
+            let canSellBuilding = (propId) => {
+
+                propToBuyBuildingIndex = this.vueopoly.properties.findIndex((prop => prop.id == propId));
+                propToBuyBuilding = this.vueopoly.properties[propToBuyBuildingIndex];
+                
+                // if no buildings to sell
+                if(propToBuyBuilding.buildings < 1) {
+                    return false;
+                };
+
+                // loop through all properties in group
+                for(let i = 0; i < allPropsInGroup.length; i++) {
+
+                    // skip property to sell building on
+                    if(allPropsInGroup[i].id == propToBuyBuilding.id) {
+                        continue;
+                    };
+                    // can only build buildings evenly (can't put 2nd building on property until each property has 1 building)
+                    if(allPropsInGroup[i].buildings > propToBuyBuilding.buildings) {
+                        return false;
+                    };
+
+                    crntPlayer.money += propToBuyBuilding.ohousecost / 2; // add cost of building to player
+                    return true;
+                };
+            };
+
 
             // Main function calls
             for(let i = 0; i < propCheckBoxes.length - 1; i++) {
                 if(propCheckBoxes[i].checked) {
 
-                    
-                    if(canBuyBuilding(propCheckBoxes[i].value)) {
+                    switch(action) {
 
-                        // add a building to the property
-                        propToBuyBuilding.buildings++;
-                        return;
-                    }
-                    else {
-                        console.log("can'ttttt buy building here");
-                        return;
+                        case 'buy':
+                            if(canBuyBuilding(propCheckBoxes[i].value)) {
+
+                                // add a building to the property
+                                propToBuyBuilding.buildings++;
+                                return;
+                            }
+                            
+                            console.log("can't buy building here");
+                            return;
+                        
+
+                        case 'sell':
+                            
+                            if(canSellBuilding(propCheckBoxes[i].value)) {
+
+                                propToBuyBuilding.buildings--;
+                                return;
+                            }
+                            console.log("can't sell building here");
+                            return;
+
                     };
+                    
                 };
                 
             };
@@ -1167,5 +1218,8 @@ export default defineComponent({
     width: 30px;
     height: 30px;
     background-color: green;
+}
+.building-cost-wrapper {
+    display: flex;
 }
 </style>
