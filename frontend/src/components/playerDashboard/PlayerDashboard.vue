@@ -315,9 +315,11 @@ export default defineComponent({
                         return false;
                     };
                 };
-
+            
                 // check if enough money to purchase building
-                if(gameFunctions.moneyCheck(propToBuyBuilding.ohousecose, crntPlayer.money)) {
+                if(gameFunctions.moneyCheck(propToBuyBuilding.ohousecost, crntPlayer.money)) {
+
+                    crntPlayer.money -= propToBuyBuilding.ohousecost; // deduct cost of building from player
                     return true;
                 };
                 return false;
