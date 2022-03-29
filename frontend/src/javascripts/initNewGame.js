@@ -26,7 +26,7 @@ exports.initNewGame = (newPlayers) => {
     let tmpCnt = 0;
     Object.keys(newPlayers).forEach((player) => {
         playersArr[tmpCnt] = player;
-        playersArr[tmpCnt] = new Player(player, newPlayers[player].alias, newPlayers[player].symbol, 0, [], 500, false, false, [], 0, {houses: 0, hotels: 0});
+        playersArr[tmpCnt] = new Player(player, newPlayers[player].alias, newPlayers[player].symbol, 0, [], 3500, false, false, [], 0, {houses: 0, hotels: 0});
         tmpCnt++;
     });
 

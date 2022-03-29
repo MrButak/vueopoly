@@ -13,9 +13,7 @@
 
         <div class="log-and-dice-wrapper">
             <div class="gamelog-wrapper-main">
-                <!-- <text v-for="log in this.gameLogic.gameLog">
-                    would like to be able to <text style=`{{ log.style }}`>{{ log.log }}</text> 
-                </text> --> 
+                <!-- I could consider doing a loop through the array of objects here, using v-bind for the style :style="{ 'color': log.style }" --> 
             </div>
             <div class="show-dice-wrapper-main">
                 {{ this.crntTurnLogic.crntDiceRoll[0] }} , {{ this.crntTurnLogic.crntDiceRoll[1] }}
@@ -24,6 +22,7 @@
 
         <div class="roll-dice-end-turn-btn-wrapper">
             <!-- conditional views -->
+
 
             <!-- DEBUG roll dice manually -->
             <input id="debug-dice-roll-one" type="text" placeholder="Enter dice roll">
@@ -65,11 +64,19 @@
                     <!-- mortgaged -->
                     <text v-if="property.mortgaged" @click="this.showProperty($event, property.id)" :style="{'color': property.group, 'text-decoration': 'line-through'}">{{ property.name }}</text>
                     <div class="player-manager-btn-wrapper">
-                        <button v-show="!property.mortgaged" @click="this.handleMortgageProperty($event, property.id, ['mortgage', null])">Mortgage</button>
+
+                        <!-- can only mortgage property if no buildings on property -->
+                        <span v-show="property.buildings < 1">
+                            <button v-show="!property.mortgaged" @click="this.handleMortgageProperty($event, property.id, ['mortgage', null])">Mortgage</button>
+                        </span>
                         <button v-show="property.mortgaged" @click="this.handleMortgageProperty($event, property.id, ['unmortgage', null])">UnMortgage</button>
-                        <!-- buy building -->
-                        <button v-show="!ownsAllPropsInGroup(property)" style="text-decoration: line-through;">Upgrade</button>
-                        <button v-show="ownsAllPropsInGroup(property)" @click="this.handleBuyBuilding($event, property)" style="background-color: green;">Upgrade</button>
+
+                        <!-- buy buildings -->
+                         <!-- can only buy buildings if property is not mortgaged-->
+                        <span v-show="!property.mortgaged">
+                            <button v-show="!ownsAllPropsInGroup(property)" style="text-decoration: line-through;">Buildings</button>
+                            <button v-show="ownsAllPropsInGroup(property)" @click="this.handleBuyBuilding($event, property)" style="background-color: green;">Buildings</button>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -89,9 +96,13 @@
         </div>
 
         <text>Cards</text>
-        <div v-for="card in this.players[this.gameLogic.whosTurn].specialCards" class="player-card-wrapper-main">
-            <text>{{ card.title }}</text>
-        </div>
+        <form>
+            <div v-for="card in this.players[this.gameLogic.whosTurn].specialCards" class="player-card-wrapper-main">
+                <input type="radio" name="player-cards">
+                <text>{{ card.title }}</text>
+            </div>
+            <button type="submit" @click="useGetOutOfJailCard($event)">Use card</button>
+        </form>
 
     </div>
 </div>
@@ -133,20 +144,37 @@
             <button>Trade</button>
         </div>
         <div id="player-building-prop-wrapper-main">
+            
+            <!-- prices can only be shown if object exists -->
+            <div class="building-cost-wrapper" v-if="this.crntTurnLogic.crntBuildingProperties[0]">
+                <text>Buy ${{ this.crntTurnLogic.crntBuildingProperties[0].ohousecost }}</text>
+                <text>Sell ${{ this.crntTurnLogic.crntBuildingProperties[0].ohousecost / 2}}</text>
+            </div>
+            
             <form>
                 <div v-for="prop in this.crntTurnLogic.crntBuildingProperties" class="player-building-prop-wrapper">
                     
-                    <input type="radio" name="property-buildings" :value="prop.id">
-                    <div class="property-buildings-list">{{ prop.name }} -${{ prop.ohousecost }} per house</div>
-                    <!-- v-if="prop.buildings < 5" -->
+                    <!-- Only show properties that are not mortgaged (v-if="!prop.mortgaged") -->
+                    <input v-if="!prop.mortgaged" type="radio" name="property-buildings" :value="prop.id">
+                    <div v-if="!prop.mortgaged" class="property-buildings-list">{{ prop.name }}</div>
+
                     <!-- for houses  -->
-                    <div v-for="building in prop.buildings" class="property-buildings-wrapper">
-                        <div class="player-building-div"> 
+                    <span v-if="prop.buildings < 5" class="property-buildings-wrapper">    
+                        <div v-for="building in prop.buildings">
+                            <div class="playerdashboard-house-div"> 
+                            </div>
                         </div>
-                    </div>
-                    <!-- v-if="prop.buildings > 4" -->
+                    </span>
+                    <!-- for hotel -->
+                    <span v-if="prop.buildings > 4" class="property-buildings-wrapper">
+                        <div class="playerdashboard-hotel-div"> 
+                        </div>
+
+                    </span>
+
                 </div>
-                <button type="submit" @click="purchaseBuilding($event)">Buy</button>
+                <button type="submit" @click="buySellBuilding($event, 'buy')">Buy</button>
+                <button type="submit" @click="buySellBuilding($event, 'sell')">Sell</button>
             </form>
         </div>
     </div>
@@ -197,8 +225,7 @@ export default defineComponent({
             gameLogDiv: document.querySelector('.gamelog-wrapper-main'),
             managePropertyLog: document.querySelector('.property-log-wrapper-main'),
             playerPropertyDiv: document.querySelector('.player-property-wrapper-main'),
-            // building view
-            playerBuildingPropWrapperMain: document.getElementById('player-building-prop-wrapper-main'),
+            
             
 
             // views (game, manage, trade, buildings)
@@ -219,6 +246,7 @@ export default defineComponent({
                 propertyLandedOn: {},
                 crntDiceRoll: [],
                 crntMortgageProperty: {},
+                // array of properties to purchase buildings for
                 crntBuildingProperties: []
             },
 
@@ -233,6 +261,7 @@ export default defineComponent({
                 crntPlayerAlias: "",
                 crntPlayerMoney: 0,
                 crntPlayerProperties: [],
+                crntPlayerSpecialCards: [], // TODO: add to this array when special card is obtained
 
             },
             // player pieces (PlayerPieces.vew). dom elements in (Gameboard.vue)
@@ -260,10 +289,26 @@ export default defineComponent({
 
     methods: {
 
+        // TODO
+        useGetOutOfJailCard(event) {
 
-    // *** Handles buying buildings *** //
+            event.preventDefault();
 
-        // Function checks to see if player is eligible to build on property
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
+
+            // can only use card if in jail
+            if(!crntPlayer.inJail) {return}
+            
+            console.log("handle using get out of jail free card")
+
+        },
+
+// *** Handles buying buildings *** //
+
+        // TODO: make is so player can't buy buildings for property if property is mortgaged
+
+
+        // Function checks to see if player is eligible to build on property. Determines is 'buildings' btn is shown on player dashbord
         ownsAllPropsInGroup(property) {
 
             if(gameFunctions.canBuyBuilding(property)) {
@@ -272,8 +317,9 @@ export default defineComponent({
             return false;
         },
 
-        
+        // Function shows all properties in group and 'buy building view'
         handleBuyBuilding(event, property) {
+
 
             // get all properties in group
             let allPropsInGroup = this.vueopoly.properties.filter(prop => prop.group.toLowerCase() == property.group.toLowerCase());
@@ -283,100 +329,119 @@ export default defineComponent({
             
             // show 'building view'
             this.toggleDashboardViews(event, 'building');
-
-            // this.playerBuildingPropWrapperMain = document.getElementById('player-building-prop-wrapper-main');
-            // let propBuildingParendDiv = document.getElementById('player-building-prop-wrapper-main');
-            // let children = propBuildingParendDiv.children
-            // let children = this.playerBuildingPropWrapperMain.children;
-           
-        
-            
            
         },
-        purchaseBuilding(event) {
 
-            event.preventDefault()
-            
+        // Function is fired when 'buy building' btn is clicked
+        buySellBuilding(event, action) {
+
+            event.preventDefault();
+
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
+            let allPropsInGroup =  this.crntTurnLogic.crntBuildingProperties;
             let propCheckBoxes = event.path[1];
+
+            let propToBuildIndex;
+            let propToBuild;
+
+            // Function return boolean if player can purchase building on property
+            let canBuyBuilding = (propId) => {
+                
+                propToBuildIndex = this.vueopoly.properties.findIndex((prop => prop.id == propId));
+                propToBuild = this.vueopoly.properties[propToBuildIndex];
+
+                // can only have 5 buildings per property (1 hotel = 5 buildings)
+                if(propToBuild.buildings > 5) {
+                    return false;
+                }
+                
+                // loop through all properties in group
+                for(let i = 0; i < allPropsInGroup.length; i++) {
+
+                    // skip property to build on
+                    if(allPropsInGroup[i].id == propToBuild.id) {
+                        continue;
+                    };
+                    // can only have buildings 'evenly' on properties (can't have 2nd building on property until each property has 1 building)
+                    if(allPropsInGroup[i].buildings < propToBuild.buildings) {
+                        return false;
+                    };
+                };
             
+                // check if enough money to purchase building
+                if(gameFunctions.moneyCheck(propToBuild.ohousecost, crntPlayer.money)) {
+
+                    crntPlayer.money -= propToBuild.ohousecost; // deduct cost of building from player
+                    return true;
+                };
+                return false;
+                
+            };
+
+            let canSellBuilding = (propId) => {
+
+                propToBuildIndex = this.vueopoly.properties.findIndex((prop => prop.id == propId));
+                propToBuild = this.vueopoly.properties[propToBuildIndex];
+                
+                // if no buildings to sell
+                if(propToBuild.buildings < 1) {
+                    return false;
+                };
+
+                // loop through all properties in group
+                for(let i = 0; i < allPropsInGroup.length; i++) {
+
+                    // skip property to sell building on
+                    if(allPropsInGroup[i].id == propToBuild.id) {
+                        continue;
+                    };
+                    // can only have buildings 'evenly' on properties (can't have 2nd building on property until each property has 1 building)
+                    if(allPropsInGroup[i].buildings > propToBuild.buildings) {
+                        return false;
+                    };
+
+                    crntPlayer.money += propToBuild.ohousecost / 2; // add cost of building to player
+                    return true;
+                };
+            };
+
+
+            // Main function calls
             for(let i = 0; i < propCheckBoxes.length - 1; i++) {
                 if(propCheckBoxes[i].checked) {
-                    console.log(propCheckBoxes[i].value)
-                }
-                
-            }
-            
-        },
 
-        
+                    switch(action) {
 
-        // DEBUG purposes only. Ender dice roll manually
-        debugDiceRoll() {
+                        case 'buy':
+                            if(canBuyBuilding(propCheckBoxes[i].value)) {
 
-            let value = document.getElementById('debug-dice-roll-one').value;
-            let value2 = document.getElementById('debug-dice-roll-two').value;
-            
-            let dice = [parseInt(value), parseInt(value2)];
-            let crntPlayer = this.players[this.gameLogic.whosTurn];
-            this.diceRolled = true; // hide roll dice btn
-            let crntLog;
+                                // add a building to the property
+                                propToBuild.buildings++;
+                                return;
+                            }
+                            
+                            console.log("can't buy building here");
+                            return;
+                        
+                        case 'sell':
+                            
+                            if(canSellBuilding(propCheckBoxes[i].value)) {
 
-            // Function call (local component variable)
-            this.crntTurnLogic.crntDiceRoll = dice;
-
-        // handle in jail
-            if(crntPlayer.inJail) {
-                
-                // if roll doubles, get out of jail
-                if(this.crntTurnLogic.crntDiceRoll[0] == this.crntTurnLogic.crntDiceRoll[1]) {
-                
-
-                    crntPlayer.inJail = false;
-                    crntPlayer.turnsInJail = 0;
-                    this.toggleDashboardViews('event', 2);
-                    // game logs
-                    crntLog = {log: `${crntPlayer.name} rolled doubles and got out of jail!`, style: `${crntPlayer.symbol}`};
-                    this.createGameLog(crntLog);
-
-                    // remove player piece before moving to new position
-                    let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
-                    crntPlayerPiece.remove()
+                                propToBuild.buildings--;
+                                return;
+                            }
+                            console.log("can't sell building here");
+                            return;
+                    };
                     
-                    this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
-                    // Function call to move physical (dom) player piece
-                    let propertyId = this.crntTurnLogic.propertyLandedOn.info.id;
-                    this.playerPieces.default.methods.movePlayerPiece(propertyId, crntPlayer);
-
-                    this.dtrmPropertyAction()
-                    return;
-                }
-            }
-
-            // not in jail
-            else {
-    
-                // Function call (local component variable)
-                this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
+                };
                 
-                // game log (global state variable)
-                let crntLog = {log: `${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`, style: crntPlayer.symbol}
-                this.createGameLog(crntLog);
-                
-
-                // remove player piece before moving to new position
-                let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
-                crntPlayerPiece.remove()
-
-                // Function call to move physical (dom) player piece
-                let propertyId = this.crntTurnLogic.propertyLandedOn.info.id;
-                this.playerPieces.default.methods.movePlayerPiece(propertyId, crntPlayer);
-
-                this.dtrmPropertyAction()
             };
-            return;
-        
+            
         },
 
+        
+// *** Handles mortgaging properties *** //
 
         // Function handles all mortgage action - in 'manage player view'
         handleMortgageProperty(event, propertyId, action) {
@@ -384,6 +449,8 @@ export default defineComponent({
             let crntPlayer = this.players[this.gameLogic.whosTurn];
             let crntLog;
             let propertyLogText = document.createElement('text');
+
+            // I should consider using this.vueopoly.properties (so I'm altering variables from one/main source)
             let mortgagePropIndex = crntPlayer.properties.findIndex((prop => prop.id == propertyId));
             let propToMortgage = crntPlayer.properties[mortgagePropIndex];
             // let mortgagePropIndex = this.vueopoly.properties.findIndex((property => property.id == propertyId));
@@ -391,7 +458,9 @@ export default defineComponent({
 
             // Set this.crntTurnLogic.crntMortgageProperty the first time the 'mortgaged' btns are clicked because
             // the 'yes', 'no' btns do not have the propertyId sent with them, so I have no access to the property variable otherwise.
-            if(propToMortgage) {this.crntTurnLogic.crntMortgageProperty = crntPlayer.properties[mortgagePropIndex]};
+            if(propToMortgage) {
+                this.crntTurnLogic.crntMortgageProperty = crntPlayer.properties[mortgagePropIndex]
+            };
             
         
             switch(action[0]) {
@@ -479,14 +548,79 @@ export default defineComponent({
         },
 
 
+        // DEBUG purposes only. Ender dice roll manually
+        debugDiceRoll() {
+
+            let value = document.getElementById('debug-dice-roll-one').value;
+            let value2 = document.getElementById('debug-dice-roll-two').value;
+            
+            let dice = [parseInt(value), parseInt(value2)];
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
+            this.diceRolled = true; // hide roll dice btn
+            let crntLog;
+
+            // Function call (local component variable)
+            this.crntTurnLogic.crntDiceRoll = dice;
+
+        // handle in jail
+            if(crntPlayer.inJail) {
+                
+                // if roll doubles, get out of jail
+                if(this.crntTurnLogic.crntDiceRoll[0] == this.crntTurnLogic.crntDiceRoll[1]) {
+                
+
+                    crntPlayer.inJail = false;
+                    crntPlayer.turnsInJail = 0;
+                    this.toggleDashboardViews('event', 2);
+                    // game logs
+                    crntLog = {log: `${crntPlayer.name} rolled doubles and got out of jail!`, style: `${crntPlayer.symbol}`};
+                    this.createGameLog(crntLog);
+
+                    // remove player piece before moving to new position
+                    let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
+                    crntPlayerPiece.remove()
+                    
+                    this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
+                    // Function call to move physical (dom) player piece
+                    let propertyId = this.crntTurnLogic.propertyLandedOn.info.id;
+                    this.playerPieces.default.methods.movePlayerPiece(propertyId, crntPlayer);
+
+                    this.dtrmPropertyAction()
+                    return;
+                }
+            }
+
+            // not in jail
+            else {
+    
+                // Function call (local component variable)
+                this.crntTurnLogic.propertyLandedOn = gameFunctions.movePlayerPos(this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]);
+                
+                // game log (global state variable)
+                let crntLog = {log: `${crntPlayer.name} rolled for ${this.crntTurnLogic.crntDiceRoll[0] + this.crntTurnLogic.crntDiceRoll[1]} and landed on ${this.crntTurnLogic.propertyLandedOn.info.name}.`, style: crntPlayer.symbol}
+                this.createGameLog(crntLog);
+                
+
+                // remove player piece before moving to new position
+                let crntPlayerPiece = document.querySelector(`[data-player="${crntPlayer.name.toLowerCase()}"]`);
+                crntPlayerPiece.remove()
+
+                // Function call to move physical (dom) player piece
+                let propertyId = this.crntTurnLogic.propertyLandedOn.info.id;
+                this.playerPieces.default.methods.movePlayerPiece(propertyId, crntPlayer);
+
+                this.dtrmPropertyAction()
+            };
+            return;
+        
+        },
+
         // set dom variables
         initVariables() {
 
             this.gameLogDiv = document.querySelector('.gamelog-wrapper-main');
             this.playerPropertyDiv = document.querySelector('.player-property-wrapper-main');
             this.managePropertyLog = document.querySelector('.property-log-wrapper-main');
-            // building view
-            this.playerBuildingPropWrapperMain = document.getElementById('player-building-prop-wrapper-main');
             return;
         },
 
@@ -521,16 +655,6 @@ export default defineComponent({
             return;
         },
 
-
-
-        // can possibly remove this
-        addPlayerPropertiesToDom(property) {
-
-            let playerPropertyText = document.createElement('text');
-            playerPropertyText.textContent = property.name;
-            this.playerPropertyDiv.append(playerPropertyText)
-            return;
-        },
 
 // *** Game Logs *** //
         displayGameLogs() {
@@ -725,6 +849,8 @@ export default defineComponent({
         // },
 
 
+// ***  Handles what happens after dice are rolled  *** //
+
         // Function handles square player lands on
         dtrmPropertyAction() {
 
@@ -824,6 +950,8 @@ export default defineComponent({
         },
 
 
+// *** Special Cards (chance, community chest)  *** //
+
         // Function moves player piece after Chance or Community Chest dictates a move
         movePlayerPieceDom(propertyId) {
 
@@ -894,29 +1022,6 @@ export default defineComponent({
 
             };
 
-            // let specialAction = {
-
-            //     movePlayer: {
-            //         willMove: false,
-            //         position: 0,
-            //         canOwn: false,
-            //         owned: false,
-            //         backThreeSpaces: false,
-            //         log: "optional string for game logs"
-            //     },
-            //     addFunds: {
-
-            //         willAddFunds: false,
-            //         amount: 0,
-            //         log: "optional string for game logs"
-            //     },
-            //     removeFunds: {
-            //         willRemoveFunds: true,
-            //         amount: 0,
-            //         log: "optional string for game logs"
-            //     }
-            // };
-
             // if card moves player
             if(specialAction.movePlayer.willMove) {
 
@@ -928,6 +1033,8 @@ export default defineComponent({
                 return;
 
             };
+
+            // if card gives 'get out of jail card' or puts player in jail
             if(specialAction.jail.handleJail) {
 
                 if(specialAction.jail.willGo) {
@@ -939,7 +1046,9 @@ export default defineComponent({
                     this.endTurn();
                     return;
                 };
+
                 // game log get out of jail free card
+                // crntPlayerLogic.crntPlayerSpecialCards
                 crntLog = {log: `${crntPlayer.name} received a ${crntSpecialCard.title} card.`, style: `${crntPlayer.symbol}`};
                 this.createGameLog(crntLog);
             }
@@ -967,9 +1076,6 @@ export default defineComponent({
                 // game log
                 let crntLog = {log: `${crntPlayer.name} purchased ${propertyToBuy.name} for $${propertyToBuy.price}.`, style: crntPlayer.symbol}
                 this.createGameLog(crntLog);
-
-                // add property to 'manage player' view
-                // this.addPlayerPropertiesToDom(propertyToBuy)
 
                 // remove buy button and buy message
                 this.buyAvailable = false;
@@ -1130,13 +1236,20 @@ export default defineComponent({
 }
 .property-buildings-wrapper {
     display: flex;
-
 }
-.player-building-div {
-
+.playerdashboard-house-div {
     display: flex;
     width: 30px;
     height: 30px;
     background-color: green;
+}
+.playerdashboard-hotel-div {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    background-color: red;
+}
+.building-cost-wrapper {
+    display: flex;
 }
 </style>
