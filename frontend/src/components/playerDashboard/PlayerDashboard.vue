@@ -153,16 +153,25 @@
                     <!-- Only show properties that are not mortgaged (v-if="!prop.mortgaged") -->
                     <input v-if="!prop.mortgaged" type="radio" name="property-buildings" :value="prop.id">
                     <div v-if="!prop.mortgaged" class="property-buildings-list">{{ prop.name }}</div>
-                    <!-- v-if="prop.buildings < 5" -->
+
                     <!-- for houses  -->
-                    <div v-for="building in prop.buildings" class="property-buildings-wrapper">
-                        <div class="player-building-div"> 
+                    <span v-if="prop.buildings < 5" class="property-buildings-wrapper">    
+                        <div v-for="building in prop.buildings">
+                            <div class="playerdashboard-house-div"> 
+                            </div>
                         </div>
-                    </div>
-                    <!-- v-if="prop.buildings > 4" -->
+                    </span>
+                    <!-- for hotel -->
+                    <span v-if="prop.buildings > 4" class="property-buildings-wrapper">
+                        <div class="playerdashboard-hotel-div"> 
+                        </div>
+
+                    </span>
+
+
                 </div>
-                <button type="submit" @click="purchaseBuilding($event, 'buy')">Buy</button>
-                <button type="submit" @click="purchaseBuilding($event, 'sell')">Sell</button>
+                <button type="submit" @click="buySellBuilding($event, 'buy')">Buy</button>
+                <button type="submit" @click="buySellBuilding($event, 'sell')">Sell</button>
             </form>
         </div>
     </div>
@@ -307,7 +316,7 @@ export default defineComponent({
         },
 
         // Function is fired when 'buy building' btn is clicked
-        purchaseBuilding(event, action) {
+        buySellBuilding(event, action) {
 
             event.preventDefault();
 
@@ -315,32 +324,37 @@ export default defineComponent({
             let allPropsInGroup =  this.crntTurnLogic.crntBuildingProperties;
             let propCheckBoxes = event.path[1];
 
-            let propToBuyBuildingIndex;
-            let propToBuyBuilding;
+            let propToBuildIndex;
+            let propToBuild;
 
             // Function return boolean if player can purchase building on property
             let canBuyBuilding = (propId) => {
                 
-                propToBuyBuildingIndex = this.vueopoly.properties.findIndex((prop => prop.id == propId));
-                propToBuyBuilding = this.vueopoly.properties[propToBuyBuildingIndex];
+                propToBuildIndex = this.vueopoly.properties.findIndex((prop => prop.id == propId));
+                propToBuild = this.vueopoly.properties[propToBuildIndex];
+
+                // can only have 5 buildings per property (1 hotel = 5 buildings)
+                if(propToBuild.buildings > 5) {
+                    return false;
+                }
                 
                 // loop through all properties in group
                 for(let i = 0; i < allPropsInGroup.length; i++) {
 
                     // skip property to build on
-                    if(allPropsInGroup[i].id == propToBuyBuilding.id) {
+                    if(allPropsInGroup[i].id == propToBuild.id) {
                         continue;
                     };
-                    // can only build buildings evenly (can't put 2nd building on property until each property has 1 building)
-                    if(allPropsInGroup[i].buildings < propToBuyBuilding.buildings) {
+                    // can only have buildings 'evenly' on properties (can't have 2nd building on property until each property has 1 building)
+                    if(allPropsInGroup[i].buildings < propToBuild.buildings) {
                         return false;
                     };
                 };
             
                 // check if enough money to purchase building
-                if(gameFunctions.moneyCheck(propToBuyBuilding.ohousecost, crntPlayer.money)) {
+                if(gameFunctions.moneyCheck(propToBuild.ohousecost, crntPlayer.money)) {
 
-                    crntPlayer.money -= propToBuyBuilding.ohousecost; // deduct cost of building from player
+                    crntPlayer.money -= propToBuild.ohousecost; // deduct cost of building from player
                     return true;
                 };
                 return false;
@@ -349,11 +363,11 @@ export default defineComponent({
 
             let canSellBuilding = (propId) => {
 
-                propToBuyBuildingIndex = this.vueopoly.properties.findIndex((prop => prop.id == propId));
-                propToBuyBuilding = this.vueopoly.properties[propToBuyBuildingIndex];
+                propToBuildIndex = this.vueopoly.properties.findIndex((prop => prop.id == propId));
+                propToBuild = this.vueopoly.properties[propToBuildIndex];
                 
                 // if no buildings to sell
-                if(propToBuyBuilding.buildings < 1) {
+                if(propToBuild.buildings < 1) {
                     return false;
                 };
 
@@ -361,15 +375,15 @@ export default defineComponent({
                 for(let i = 0; i < allPropsInGroup.length; i++) {
 
                     // skip property to sell building on
-                    if(allPropsInGroup[i].id == propToBuyBuilding.id) {
+                    if(allPropsInGroup[i].id == propToBuild.id) {
                         continue;
                     };
-                    // can only build buildings evenly (can't put 2nd building on property until each property has 1 building)
-                    if(allPropsInGroup[i].buildings > propToBuyBuilding.buildings) {
+                    // can only have buildings 'evenly' on properties (can't have 2nd building on property until each property has 1 building)
+                    if(allPropsInGroup[i].buildings > propToBuild.buildings) {
                         return false;
                     };
 
-                    crntPlayer.money += propToBuyBuilding.ohousecost / 2; // add cost of building to player
+                    crntPlayer.money += propToBuild.ohousecost / 2; // add cost of building to player
                     return true;
                 };
             };
@@ -385,24 +399,22 @@ export default defineComponent({
                             if(canBuyBuilding(propCheckBoxes[i].value)) {
 
                                 // add a building to the property
-                                propToBuyBuilding.buildings++;
+                                propToBuild.buildings++;
                                 return;
                             }
                             
                             console.log("can't buy building here");
                             return;
                         
-
                         case 'sell':
                             
                             if(canSellBuilding(propCheckBoxes[i].value)) {
 
-                                propToBuyBuilding.buildings--;
+                                propToBuild.buildings--;
                                 return;
                             }
                             console.log("can't sell building here");
                             return;
-
                     };
                     
                 };
@@ -1210,14 +1222,18 @@ export default defineComponent({
 }
 .property-buildings-wrapper {
     display: flex;
-
 }
-.player-building-div {
-
+.playerdashboard-house-div {
     display: flex;
     width: 30px;
     height: 30px;
     background-color: green;
+}
+.playerdashboard-hotel-div {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    background-color: red;
 }
 .building-cost-wrapper {
     display: flex;
