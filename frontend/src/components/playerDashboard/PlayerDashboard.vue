@@ -61,15 +61,15 @@
             <div class="property-wrapper">
                 <div v-for="property in this.players[this.gameLogic.whosTurn].properties" class="player-properties-wrapper">
                     <!-- not mortgaged -->
-                    <text v-if="!property.mortgaged" @click="this.showProperty($event, property.id)" style="text-decoration: underline;">{{ property.name }}</text>
+                    <text v-if="!property.mortgaged" @click="this.showProperty($event, property.id)" :style="{'color': property.group, 'text-decoration': 'underline'}">{{ property.name }}</text>
                     <!-- mortgaged -->
-                    <text v-if="property.mortgaged" @click="this.showProperty($event, property.id)" style="text-decoration: line-through;">{{ property.name }}</text>
+                    <text v-if="property.mortgaged" @click="this.showProperty($event, property.id)" :style="{'color': property.group, 'text-decoration': 'line-through'}">{{ property.name }}</text>
                     <div class="player-manager-btn-wrapper">
                         <button v-show="!property.mortgaged" @click="this.handleMortgageProperty($event, property.id, ['mortgage', null])">Mortgage</button>
                         <button v-show="property.mortgaged" @click="this.handleMortgageProperty($event, property.id, ['unmortgage', null])">UnMortgage</button>
                         <!-- buy building -->
-                        <button v-if="!this.handleBuyBuilding(property)" style="text-decoration: line-through;">Upgrade</button>
-                        <button v-if="this.handleBuyBuilding(property)" @click="this.handleBuyBuilding(property)">Upgrade</button>
+                        <button v-show="!ownsAllPropsInGroup(property)" style="text-decoration: line-through;">Upgrade</button>
+                        <button v-show="ownsAllPropsInGroup(property)" @click="this.handleBuyBuilding($event, property)" style="background-color: green;">Upgrade</button>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
 
         <text>Cards</text>
         <div v-for="card in this.players[this.gameLogic.whosTurn].specialCards" class="player-card-wrapper-main">
-            <text>{{ card }}</text>
+            <text>{{ card.title }}</text>
         </div>
 
     </div>
@@ -123,7 +123,34 @@
 </div>
 
 
-
+<!-- building view -->
+<div v-show="this.showViewBuilding" class="player-dashboard-wrapper-main">
+    <div class="player-dashboard-wrapper">
+        <div class="player-stats-top-wrapper">
+            <button @click="toggleDashboardViews($event, 1)">Manage</button>
+            <text>{{ this.crntPlayerLogic.crntPlayerName }} - {{ this.crntPlayerLogic.crntPlayerAlias }}</text>
+            <text>${{ this.players[this.gameLogic.whosTurn].money }}</text>
+            <button>Trade</button>
+        </div>
+        <div id="player-building-prop-wrapper-main">
+            <form>
+                <div v-for="prop in this.crntTurnLogic.crntBuildingProperties" class="player-building-prop-wrapper">
+                    
+                    <input type="radio" name="property-buildings" :value="prop.id">
+                    <div class="property-buildings-list">{{ prop.name }} -${{ prop.ohousecost }} per house</div>
+                    <!-- v-if="prop.buildings < 5" -->
+                    <!-- for houses  -->
+                    <div v-for="building in prop.buildings" class="property-buildings-wrapper">
+                        <div class="player-building-div"> 
+                        </div>
+                    </div>
+                    <!-- v-if="prop.buildings > 4" -->
+                </div>
+                <button type="submit" @click="purchaseBuilding($event)">Buy</button>
+            </form>
+        </div>
+    </div>
+</div>
 <SpecialCards ref="specialCards" />
 
 </template>
@@ -170,11 +197,15 @@ export default defineComponent({
             gameLogDiv: document.querySelector('.gamelog-wrapper-main'),
             managePropertyLog: document.querySelector('.property-log-wrapper-main'),
             playerPropertyDiv: document.querySelector('.player-property-wrapper-main'),
+            // building view
+            playerBuildingPropWrapperMain: document.getElementById('player-building-prop-wrapper-main'),
+            
 
-            // views (game, manage, trade)
+            // views (game, manage, trade, buildings)
             showViewOne: true,
             showViewTwo: false,
             showViewJail: false,
+            showViewBuilding: false,
 
             showMortgageBtns: false,
             showUnMortgageBtns: false,
@@ -187,7 +218,8 @@ export default defineComponent({
             crntTurnLogic: {
                 propertyLandedOn: {},
                 crntDiceRoll: [],
-                crntMortgageProperty: {}
+                crntMortgageProperty: {},
+                crntBuildingProperties: []
             },
 
             // dom stuff
@@ -228,17 +260,57 @@ export default defineComponent({
 
     methods: {
 
-        handleBuyBuilding(property) {
+
+    // *** Handles buying buildings *** //
+
+        // Function checks to see if player is eligible to build on property
+        ownsAllPropsInGroup(property) {
 
             if(gameFunctions.canBuyBuilding(property)) {
-
+                return true;
             };
-            return;
-           
+            return false;
         },
 
+        
+        handleBuyBuilding(event, property) {
 
-        // DEBUG purposes. Ender dice roll amount manually
+            // get all properties in group
+            let allPropsInGroup = this.vueopoly.properties.filter(prop => prop.group.toLowerCase() == property.group.toLowerCase());
+
+            // set local variable (displays on dom)
+            this.crntTurnLogic.crntBuildingProperties = allPropsInGroup;
+            
+            // show 'building view'
+            this.toggleDashboardViews(event, 'building');
+
+            // this.playerBuildingPropWrapperMain = document.getElementById('player-building-prop-wrapper-main');
+            // let propBuildingParendDiv = document.getElementById('player-building-prop-wrapper-main');
+            // let children = propBuildingParendDiv.children
+            // let children = this.playerBuildingPropWrapperMain.children;
+           
+        
+            
+           
+        },
+        purchaseBuilding(event) {
+
+            event.preventDefault()
+            
+            let propCheckBoxes = event.path[1];
+            
+            for(let i = 0; i < propCheckBoxes.length - 1; i++) {
+                if(propCheckBoxes[i].checked) {
+                    console.log(propCheckBoxes[i].value)
+                }
+                
+            }
+            
+        },
+
+        
+
+        // DEBUG purposes only. Ender dice roll manually
         debugDiceRoll() {
 
             let value = document.getElementById('debug-dice-roll-one').value;
@@ -250,7 +322,6 @@ export default defineComponent({
             let crntLog;
 
             // Function call (local component variable)
-            
             this.crntTurnLogic.crntDiceRoll = dice;
 
         // handle in jail
@@ -305,6 +376,7 @@ export default defineComponent({
             return;
         
         },
+
 
         // Function handles all mortgage action - in 'manage player view'
         handleMortgageProperty(event, propertyId, action) {
@@ -413,49 +485,45 @@ export default defineComponent({
             this.gameLogDiv = document.querySelector('.gamelog-wrapper-main');
             this.playerPropertyDiv = document.querySelector('.player-property-wrapper-main');
             this.managePropertyLog = document.querySelector('.property-log-wrapper-main');
+            // building view
+            this.playerBuildingPropWrapperMain = document.getElementById('player-building-prop-wrapper-main');
             return;
         },
 
         toggleDashboardViews(event, viewNum) {
 
             switch(viewNum) {
-                case 1: // main game dashboard
+                case 1: // manage player dashboard
                     this.showViewJail = false;
                     this.showViewOne = false;
+                    this.showViewBuilding = false;
                     this.showViewTwo = true;
                     break;
-                case 2: // manage player dashboard
+                case 2: // main game dashboard 
                     this.showViewJail = false;
                     this.showViewTwo = false;
+                    this.showViewBuilding = false;
                     this.showViewOne = true;
                     break;
                 case 'jail':
                     this.showViewOne = false;
                     this.showViewTwo = false;
+                    this.showViewBuilding = false;
                     this.showViewJail = true;
+                    break;
+                case 'building':
+                    this.showViewOne = false;
+                    this.showViewTwo = false;
+                    this.showViewBuilding = false;
+                    this.showViewBuilding = true;
                     break;
             };
             return;
         },
 
 
-        // Function called when player starts new turn. Populates dom with player properties in 'manage player view'
-        // displayPlayerProperties() {
-            
-        //     while (this.playerPropertyDiv.firstChild) {
-        //         this.playerPropertyDiv.removeChild(this.playerPropertyDiv.firstChild);
-        //     };
-            
-        //     this.players[this.gameLogic.whosTurn].properties.forEach((property) => {
-        //         console.log(property);
-        //         let playerPropertyText = document.createElement('text');
-        //         playerPropertyText.textContent = property.name;
-        //         this.playerPropertyDiv.append(playerPropertyText);
-        //     });
-        //     return;
-        // },
 
-
+        // can possibly remove this
         addPlayerPropertiesToDom(property) {
 
             let playerPropertyText = document.createElement('text');
@@ -464,7 +532,7 @@ export default defineComponent({
             return;
         },
 
-
+// *** Game Logs *** //
         displayGameLogs() {
             
             this.gameLogic.gameLog.forEach((log) => {
@@ -577,6 +645,7 @@ export default defineComponent({
             this.viewPropertyLink = "",
             this.crntTurnLogic.propertyLandedOn = {};
             this.crntTurnLogic.crntDiceRoll = [];
+            this.crntTurnLogic.crntBuildingProperties = [];
 
             // change views if was in jail
             if(crntPlayer.inJail) {
@@ -1054,5 +1123,20 @@ export default defineComponent({
 }
 .player-card-wrapper-main {
 
+}
+/* building view */
+.player-building-prop-wrapper {
+    display: flex;
+}
+.property-buildings-wrapper {
+    display: flex;
+
+}
+.player-building-div {
+
+    display: flex;
+    width: 30px;
+    height: 30px;
+    background-color: green;
 }
 </style>
