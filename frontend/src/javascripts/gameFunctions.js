@@ -271,7 +271,7 @@ exports.getTotalRentAmount = (propertyInfo) => { // propertyInfo{info: propertyO
                     return((crntDiceRoll[0] + crntDiceRoll[1]) * 4)
                     
                 case 'waterworks':
-                    // get index of waterworks and check to see if owned
+                    // get index of electriccompany and check to see if owned
                     let electricCompanyIndex = vueopoly.value.properties.findIndex(item => item.id == 'electriccompany');
                     // if owner owns both utilities
                     if(vueopoly.value.properties[electricCompanyIndex].ownedby == propertyInfo.info.ownedby) {
@@ -288,6 +288,8 @@ exports.getTotalRentAmount = (propertyInfo) => { // propertyInfo{info: propertyO
                 return(propertyInfo.info.rent)
             };
             // with buildings
+            console.log(propertyInfo.info.multpliedrent[propertyInfo.info.buildings])
+            console.log("rent with buildings ^^^")
             return(propertyInfo.info.multpliedrent[propertyInfo.info.buildings])
     };
 }
@@ -337,22 +339,6 @@ exports.handleSpecialCard = (cardTitle) => {
         }
     };
     
-    
-
-    // Function handles special card "move" action. Checks property moved to, to see if buyable or must pay rent
-    // let checkPropOwned = (property) => {
-
-    //     if(property.ownedby == -1) {
-    //         specialAction.movePlayer.canOwn = true;
-    //         specialAction.movePlayer.owned = false;
-    //         return false;
-    //     };
-    //     specialAction.movePlayer.canOwn = true;
-    //     specialAction.movePlayer.owned = true;
-    //     return true;
-
-    // };
-
     
 
     // determine which special card to take action on
@@ -501,22 +487,20 @@ exports.handleSpecialCard = (cardTitle) => {
                         console.log("unhandled situation @ move to nearest in gameFunction.js handleSpecialCard()");
                     };
             };
-            // jail: {
-            //     handleJail: false,
-            //     willGo: false,
-            //     getOut: false
-            // }
+            
         case 'jail':
 
             specialAction.jail.handleJail = true;
 
             switch(cardDrawn[0].subaction) {
 
+                // get out of jail free card
                 case 'getout':
 
                     specialAction.jail.getOut = true;
                     // add 'get out of jail free' card to players special card array
                     crntPlayer.specialCards.push(cardDrawn[0]);
+                    
                     // remove 'get out of jail free' card from used cards array
                     if(cardTitle.toLowerCase() == 'chance') {
                         gameLogic.value.usedChance.splice(0, 1); // used cards are inserted into arry using unshift(), so index always 0 here
@@ -525,7 +509,8 @@ exports.handleSpecialCard = (cardTitle) => {
 
                     gameLogic.value.usedCommunityChest.splice(0, 1);
                     return(specialAction);
-                    
+                
+                // goto jail
                 case 'goto':
 
                 specialAction.jail.willGo = true;

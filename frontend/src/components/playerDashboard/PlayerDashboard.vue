@@ -96,9 +96,13 @@
         </div>
 
         <text>Cards</text>
-        <div v-for="card in this.players[this.gameLogic.whosTurn].specialCards" class="player-card-wrapper-main">
-            <text>{{ card.title }}</text>
-        </div>
+        <form>
+            <div v-for="card in this.players[this.gameLogic.whosTurn].specialCards" class="player-card-wrapper-main">
+                <input type="radio" name="player-cards">
+                <text>{{ card.title }}</text>
+            </div>
+            <button type="submit" @click="useGetOutOfJailCard($event)">Use card</button>
+        </form>
 
     </div>
 </div>
@@ -167,7 +171,6 @@
                         </div>
 
                     </span>
-
 
                 </div>
                 <button type="submit" @click="buySellBuilding($event, 'buy')">Buy</button>
@@ -258,6 +261,7 @@ export default defineComponent({
                 crntPlayerAlias: "",
                 crntPlayerMoney: 0,
                 crntPlayerProperties: [],
+                crntPlayerSpecialCards: [], // TODO: add to this array when special card is obtained
 
             },
             // player pieces (PlayerPieces.vew). dom elements in (Gameboard.vue)
@@ -285,13 +289,26 @@ export default defineComponent({
 
     methods: {
 
+        // TODO
+        useGetOutOfJailCard(event) {
+
+            event.preventDefault();
+
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
+
+            // can only use card if in jail
+            if(!crntPlayer.inJail) {return}
+            
+            console.log("handle using get out of jail free card")
+
+        },
 
 // *** Handles buying buildings *** //
 
         // TODO: make is so player can't buy buildings for property if property is mortgaged
 
 
-        // Function checks to see if player is eligible to build on property. Determines is 'buildings btn' is shown
+        // Function checks to see if player is eligible to build on property. Determines is 'buildings' btn is shown on player dashbord
         ownsAllPropsInGroup(property) {
 
             if(gameFunctions.canBuyBuilding(property)) {
@@ -422,11 +439,6 @@ export default defineComponent({
             };
             
         },
-
-        
-
-        
-
 
         
 // *** Handles mortgaging properties *** //
@@ -1034,7 +1046,9 @@ export default defineComponent({
                     this.endTurn();
                     return;
                 };
+
                 // game log get out of jail free card
+                // crntPlayerLogic.crntPlayerSpecialCards
                 crntLog = {log: `${crntPlayer.name} received a ${crntSpecialCard.title} card.`, style: `${crntPlayer.symbol}`};
                 this.createGameLog(crntLog);
             }
