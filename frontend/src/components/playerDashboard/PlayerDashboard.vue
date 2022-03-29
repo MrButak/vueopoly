@@ -197,8 +197,7 @@ export default defineComponent({
             gameLogDiv: document.querySelector('.gamelog-wrapper-main'),
             managePropertyLog: document.querySelector('.property-log-wrapper-main'),
             playerPropertyDiv: document.querySelector('.player-property-wrapper-main'),
-            // building view
-            playerBuildingPropWrapperMain: document.getElementById('player-building-prop-wrapper-main'),
+            
             
 
             // views (game, manage, trade, buildings)
@@ -261,7 +260,7 @@ export default defineComponent({
     methods: {
 
 
-    // *** Handles buying buildings *** //
+// *** Handles buying buildings *** //
 
         // Function checks to see if player is eligible to build on property
         ownsAllPropsInGroup(property) {
@@ -283,28 +282,65 @@ export default defineComponent({
             
             // show 'building view'
             this.toggleDashboardViews(event, 'building');
-
-            // this.playerBuildingPropWrapperMain = document.getElementById('player-building-prop-wrapper-main');
-            // let propBuildingParendDiv = document.getElementById('player-building-prop-wrapper-main');
-            // let children = propBuildingParendDiv.children
-            // let children = this.playerBuildingPropWrapperMain.children;
-           
-        
-            
            
         },
+
+        // Function is fired when 'buy building' btn is clicked
         purchaseBuilding(event) {
 
-            event.preventDefault()
             
+            event.preventDefault();
+
+            let crntPlayer = this.players[this.gameLogic.whosTurn];
+            let allPropsInGroup =  this.crntTurnLogic.crntBuildingProperties;
             let propCheckBoxes = event.path[1];
-            
+
+            let propToBuyBuildingIndex;
+            let propToBuyBuilding;
+
+            // Function return boolean if player can purchase building on property
+            let canBuyBuilding = (propId) => {
+                
+                propToBuyBuildingIndex = this.vueopoly.properties.findIndex((prop => prop.id == propId));
+                propToBuyBuilding = this.vueopoly.properties[propToBuyBuildingIndex];
+                
+                for(let i = 0; i < allPropsInGroup.length; i++) {
+
+                    // skip property to build on
+                    if(allPropsInGroup[i].id == propToBuyBuilding.id) {
+                        continue;
+                    };
+                    // can only build buildings evenly (can't put 2nd building on property until each property has 1 building)
+                    if(allPropsInGroup[i].buildings < propToBuyBuilding.buildings) {
+                        return false;
+                    };
+                };
+
+                // check if enough money to purchase building
+                if(gameFunctions.moneyCheck(propToBuyBuilding.ohousecose, crntPlayer.money)) {
+                    return true;
+                };
+                return false;
+                
+            };
+
+            // main function call
             for(let i = 0; i < propCheckBoxes.length - 1; i++) {
                 if(propCheckBoxes[i].checked) {
-                    console.log(propCheckBoxes[i].value)
-                }
+
+                    if(canBuyBuilding(propCheckBoxes[i].value)) {
+
+                        // add a building to the property
+                        propToBuyBuilding.buildings++;
+                        return;
+                    }
+                    else {
+                        console.log("can'ttttt buy building here");
+                        return;
+                    };
+                };
                 
-            }
+            };
             
         },
 
@@ -485,8 +521,6 @@ export default defineComponent({
             this.gameLogDiv = document.querySelector('.gamelog-wrapper-main');
             this.playerPropertyDiv = document.querySelector('.player-property-wrapper-main');
             this.managePropertyLog = document.querySelector('.property-log-wrapper-main');
-            // building view
-            this.playerBuildingPropWrapperMain = document.getElementById('player-building-prop-wrapper-main');
             return;
         },
 
