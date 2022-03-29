@@ -226,6 +226,7 @@ export default defineComponent({
                 propertyLandedOn: {},
                 crntDiceRoll: [],
                 crntMortgageProperty: {},
+                // array of properties to purchase buildings for
                 crntBuildingProperties: []
             },
 
@@ -773,6 +774,8 @@ export default defineComponent({
         // },
 
 
+// ***  Handles what happens after dice are rolled  *** //
+
         // Function handles square player lands on
         dtrmPropertyAction() {
 
@@ -870,6 +873,7 @@ export default defineComponent({
             };
             
         },
+
 
 // *** Special Cards (chance, community chest)  *** //
 
