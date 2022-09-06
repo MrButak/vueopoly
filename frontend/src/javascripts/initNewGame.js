@@ -26,7 +26,7 @@ exports.initNewGame = (newPlayers) => {
     let tmpCnt = 0;
     Object.keys(newPlayers).forEach((player) => {
         playersArr[tmpCnt] = player;
-        playersArr[tmpCnt] = new Player(player, newPlayers[player].alias, newPlayers[player].symbol, 0, [], 3500, false, false, [], 0, {houses: 0, hotels: 0});
+        playersArr[tmpCnt] = new Player(player, newPlayers[player].alias, newPlayers[player].symbol, 0, [], 1500, false, false, [], 0, {houses: 0, hotels: 0});
         tmpCnt++;
     });
 
@@ -43,7 +43,6 @@ exports.initNewGame = (newPlayers) => {
         'firstTurn': true,
         'playerCount': tmpCnt,
         'whosTurn': 0, // index in players array
-        // 'gameLog': ["New game created."],
         'gameLog': [{log: 'New game created.', style: 'game'}], // first game log!
         'chance': chanceCards,
         'usedChance': [],
